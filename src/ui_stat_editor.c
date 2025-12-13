@@ -636,6 +636,8 @@ static void PrintMonStats()
     u8 i;
     u16 currentStat;
     u8 text[2];
+    u8 nature;
+    u8 abilityNum;
     u16 level = GetMonData(ReturnPartyMon(), MON_DATA_LEVEL);
     u16 personality = GetMonData(ReturnPartyMon(), MON_DATA_PERSONALITY);
     u16 gender = GetGenderFromSpeciesAndPersonality(sStatEditorDataPtr->speciesID, personality);
@@ -723,11 +725,12 @@ static void PrintMonStats()
         AddTextPrinterParameterized4(WINDOW_3, FONT_NORMAL, 41 + 8, 19, 0, 0, sGenderColors[(gender == MON_FEMALE)], TEXT_SKIP_DRAW, text);
     }
 
-    Nature = GetNature(ReturnPartyMon());
-    StringCopy(gStringVar2, gNatureNamePointers[Nature]);
+    nature = GetNature(ReturnPartyMon());
+    ConvertIntToDecimalStringN(gStringVar2, nature, STR_CONV_MODE_RIGHT_ALIGN, 2);
     AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 50, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
-    StringCopy(gStringVar2, gAbilityNames[gSpeciesInfo[sStatEditorDataPtr->speciesID].abilities[GetMonData(ReturnPartyMon(), MON_DATA_ABILITY_NUM)]]);
+    abilityNum = gSpeciesInfo[sStatEditorDataPtr->speciesID].abilities[GetMonData(ReturnPartyMon(), MON_DATA_ABILITY_NUM)];
+    ConvertIntToDecimalStringN(gStringVar2, abilityNum, STR_CONV_MODE_RIGHT_ALIGN, 2);
     AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 34, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
     PutWindowTilemap(WINDOW_3);
