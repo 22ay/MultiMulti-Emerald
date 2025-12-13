@@ -439,7 +439,7 @@ static bool8 StatEditor_LoadGraphics(void)
     case 1:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LZDecompressWram(sStatEditorBgTilemap, sBg1TilemapBuffer);
+            FastLZ77UnCompWram(sStatEditorBgTilemap, sBg1TilemapBuffer);
             sStatEditorDataPtr->gfxLoadState++;
         }
         break;
@@ -635,7 +635,6 @@ static void PrintMonStats()
 {
     u8 i;
     u16 currentStat;
-    u16 nature;
     u8 text[2];
     u16 level = GetMonData(ReturnPartyMon(), MON_DATA_LEVEL);
     u16 personality = GetMonData(ReturnPartyMon(), MON_DATA_PERSONALITY);
@@ -724,8 +723,8 @@ static void PrintMonStats()
         AddTextPrinterParameterized4(WINDOW_3, FONT_NORMAL, 41 + 8, 19, 0, 0, sGenderColors[(gender == MON_FEMALE)], TEXT_SKIP_DRAW, text);
     }
 
-    nature = GetNature(ReturnPartyMon());
-    StringCopy(gStringVar2, gNatureNamePointers[nature]);
+    Nature = GetNature(ReturnPartyMon());
+    StringCopy(gStringVar2, gNatureNamePointers[Nature]);
     AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 50, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
     StringCopy(gStringVar2, gAbilityNames[gSpeciesInfo[sStatEditorDataPtr->speciesID].abilities[GetMonData(ReturnPartyMon(), MON_DATA_ABILITY_NUM)]]);
