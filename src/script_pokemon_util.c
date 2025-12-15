@@ -477,7 +477,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
 }
 
 
-u32 BirchCase_GiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, bool8 gMaxFactor, u8 teraType, bool8 isShinyExpansion)
+u32 BirchCase_GiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, bool8 gmaxFactor, u8 teraType, bool8 isShinyExpansion)
 {
     //
     //  This function is created by Lunos and Ghoulslash as part of the custom givemon script in Expansion. I had to port it and rename it so that - 
@@ -523,7 +523,7 @@ u32 BirchCase_GiveMonParameterized(u16 species, u8 level, u16 item, u8 ball, u8 
     SetMonData(&mon, MON_DATA_IS_SHINY, &isShinyExpansion);
 
     // gigantamax factor
-    SetMonData(&mon, MON_DATA_GIGANTAMAX_FACTOR, &gMaxFactor);
+    SetMonData(&mon, MON_DATA_GIGANTAMAX_FACTOR, &gmaxFactor);
 
     // tera type
     if (teraType >= NUMBER_OF_MON_TYPES)
