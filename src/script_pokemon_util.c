@@ -27,6 +27,8 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"
+#include "constants/abilities.h"
+#include "wild_encounter.h"
 
 static void CB2_ReturnFromChooseHalfParty(void);
 static void CB2_ReturnFromChooseBattleFrontierParty(void);
