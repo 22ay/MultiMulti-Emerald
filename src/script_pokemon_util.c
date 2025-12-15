@@ -27,8 +27,6 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"
-#include "constants/abilities.h"
-#include "wild_encounter.h"
 
 static void CB2_ReturnFromChooseHalfParty(void);
 static void CB2_ReturnFromChooseBattleFrontierParty(void);
@@ -335,6 +333,150 @@ void SetTeraType(struct ScriptContext *ctx)
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
  */
 static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
+{
+    enum NationalDexOrder nationalDexNum;
+    int sentToPc;
+    struct Pokemon mon;
+    u32 i;
+    u8 genderRatio = gSpeciesInfo[species].genderRatio;
+    u16 targetSpecies;
+    bool32 isShiny;
+
+    // check whether to use a specific nature or a random one
+    if (nature >= NUM_NATURES)
+    {
+        if (OW_SYNCHRONIZE_NATURE >= GEN_6
+         && (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED || OW_SYNCHRONIZE_NATURE == GEN_7))
+            nature = PickWildMonNature();
+        else
+            nature = Random() % NUM_NATURES;
+    }
+
+    // create a Pokémon with basic data
+    if ((gender == MON_MALE && genderRatio != MON_FEMALE && genderRatio != MON_GENDERLESS)
+     || (gender == MON_FEMALE && genderRatio != MON_MALE && genderRatio != MON_GENDERLESS)
+     || (gender == MON_GENDERLESS && genderRatio == MON_GENDERLESS))
+        CreateMonWithGenderNatureLetter(&mon, species, level, 32, gender, nature, 0);
+    else
+        CreateMonWithNature(&mon, species, level, 32, nature);
+
+    // shininess
+    if (shinyMode == SHINY_MODE_ALWAYS || (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY)))
+        isShiny = TRUE;
+    else if (shinyMode == SHINY_MODE_NEVER || (P_FLAG_FORCE_NO_SHINY != 0 && FlagGet(P_FLAG_FORCE_NO_SHINY)))
+        isShiny = FALSE;
+    else
+        isShiny = GetMonData(&mon, MON_DATA_IS_SHINY);
+
+    SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
+
+    // gigantamax factor
+    SetMonData(&mon, MON_DATA_GIGANTAMAX_FACTOR, &gmaxFactor);
+
+    // Dynamax Level
+    SetMonData(&mon, MON_DATA_DYNAMAX_LEVEL, &dmaxLevel);
+
+    // tera type
+    if (teraType == TYPE_NONE || teraType == TYPE_MYSTERY || teraType >= NUMBER_OF_MON_TYPES)
+        teraType = GetTeraTypeFromPersonality(&mon);
+    SetMonData(&mon, MON_DATA_TERA_TYPE, &teraType);
+
+    // EV and IV
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        // EV
+        if (evs[i] <= MAX_PER_STAT_EVS)
+            SetMonData(&mon, MON_DATA_HP_EV + i, &evs[i]);
+
+        // IV
+        if (ivs[i] <= MAX_PER_STAT_IVS)
+            SetMonData(&mon, MON_DATA_HP_IV + i, &ivs[i]);
+    }
+    CalculateMonStats(&mon);
+
+    // moves
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[0] == MOVE_NONE)
+            break;
+        if (moves[i] >= MOVES_COUNT)
+            continue;
+        SetMonMoveSlot(&mon, moves[i], i);
+    }
+
+    // ability
+    if (abilityNum == NUM_ABILITY_PERSONALITY)
+    {
+        abilityNum = GetMonData(&mon, MON_DATA_PERSONALITY) & 1;
+    }
+    else if (abilityNum > NUM_NORMAL_ABILITY_SLOTS || GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE)
+    {
+        do {
+            abilityNum = Random() % NUM_ABILITY_SLOTS; // includes hidden abilities
+        } while (GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE);
+    }
+    SetMonData(&mon, MON_DATA_ABILITY_NUM, &abilityNum);
+
+    // ball
+    if (ball > POKEBALL_COUNT)
+        ball = BALL_POKE;
+    SetMonData(&mon, MON_DATA_POKEBALL, &ball);
+
+    // held item
+    SetMonData(&mon, MON_DATA_HELD_ITEM, &item);
+
+    // In case a mon with a form changing item is given. Eg: SPECIES_ARCEUS_NORMAL with ITEM_SPLASH_PLATE will transform into SPECIES_ARCEUS_WATER upon gifted.
+    targetSpecies = GetFormChangeTargetSpecies(&mon, FORM_CHANGE_ITEM_HOLD, 0);
+    if (targetSpecies != SPECIES_NONE)
+        SetMonData(&mon, MON_DATA_SPECIES, &targetSpecies);
+
+    // assign OT name and gender
+    SetMonData(&mon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
+    SetMonData(&mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
+
+    if (slot < PARTY_SIZE)
+    {
+        if (side == 0)
+            CopyMon(&gPlayerParty[slot], &mon, sizeof(struct Pokemon));
+        else
+            CopyMon(&gEnemyParty[slot], &mon, sizeof(struct Pokemon));
+        sentToPc = MON_GIVEN_TO_PARTY;
+    }
+    else
+    {
+        // find empty party slot to decide whether the Pokémon goes to the Player's party or the storage system.
+        for (i = 0; i < PARTY_SIZE; i++)
+        {
+            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+                break;
+        }
+        if (i >= PARTY_SIZE)
+        {
+            sentToPc = CopyMonToPC(&mon);
+        }
+        else
+        {
+            sentToPc = MON_GIVEN_TO_PARTY;
+            CopyMon(&gPlayerParty[i], &mon, sizeof(mon));
+            gPlayerPartyCount = i + 1;
+        }
+    }
+
+    if (side == 0)
+    {
+        // set pokédex flags
+        nationalDexNum = SpeciesToNationalPokedexNum(species);
+        if (sentToPc != MON_CANT_GIVE)
+        {
+            GetSetPokedexFlag(nationalDexNum, FLAG_SET_SEEN);
+            GetSetPokedexFlag(nationalDexNum, FLAG_SET_CAUGHT);
+        }
+    }
+
+    return sentToPc;
+}
+
+static u32 BirchCase_GiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
 {
     enum NationalDexOrder nationalDexNum;
     int sentToPc;
