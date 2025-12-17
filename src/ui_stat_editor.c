@@ -728,7 +728,8 @@ static void PrintMonStats()
     StringCopy(gStringVar2, gNaturesInfo[nature].name);
     AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 50, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
-    StringCopy(gStringVar2, gAbilitiesInfo[gSpeciesInfo[sStatEditorDataPtr->speciesID].abilities[GetMonData(ReturnPartyMon(), MON_DATA_ABILITY_NUM)]].name);
+    u16 abilityId = GetAbilityBySpecies(sStatEditorDataPtr->speciesID,GetMonData(ReturnPartyMon(), MON_DATA_ABILITY_NUM));
+    StringCopy(gStringVar2, gAbilitiesInfo[abilityId].name);
     AddTextPrinterParameterized4(WINDOW_3, FONT_SMALL_NARROW, 4, 34, 0, 0, sMenuWindowFontColors[FONT_WHITE], 0xFF, gStringVar2);
 
     PutWindowTilemap(WINDOW_3);
