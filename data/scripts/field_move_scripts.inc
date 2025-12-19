@@ -67,19 +67,19 @@ Movement_CutTreeDown:
     step_end
 
 Text_WantToCutWithPokemon:
-    .string "This tree can be CUT down.\n"
+    .string "This tree can be Cut down.\n"
     .string "Want {STR_VAR_1} to help?$"
 
 Text_MonHelpedCut:
     .string "{STR_VAR_1} helped you clear the way!$"
 
 Text_WantToCutWithItem:
-    .string "This tree can be CUT down.\n"
+    .string "This tree can be Cut down.\n"
     .string "Use the {STR_VAR_2}?$"
 
 Text_CantCut:
-    .string "This tree looks like it can be\n"
-    .string "CUT down!$"
+	.string "This tree looks like it can be\n"
+	.string "Cut down!$"
 
 Text_MonUsedFieldMove:
     .string "{STR_VAR_1} used {STR_VAR_2}!$"

@@ -60,3 +60,7 @@ __pycache__
 notes/
 tools/poryscript/poryscript
 data/maps/**/scripts.inc
+/.vs
+*.xlsx
+*.bak
+*.xcf
