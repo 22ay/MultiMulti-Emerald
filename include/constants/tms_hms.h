@@ -172,15 +172,14 @@
     F(SUPER_FANG) \
     F(VACUUM_WAVE) \
     F(LUNGE) \
-    F(IRON_TAIL) \
     F(HIGH_HORSEPOWER) \
-    F(ICICLE_CRASH) \
+    F(ICICLE_SPEAR) \
     F(SCALD) \
     F(HEAT_CRASH) \
     F(SOLAR_BLADE) \
     F(UPROAR) \
     F(WEATHER_BALL) \
-    F(GRASSY_SLIDE) \
+    F(GRASSY_GLIDE) \
     F(BURNING_JEALOUSY) \
     F(FLIP_TURN) \
     F(DUAL_WINGBEAT) \
