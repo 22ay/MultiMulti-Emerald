@@ -34,7 +34,7 @@
 #define B_ROUGH_SKIN_DMG            GEN_LATEST // In Gen4+, Rough Skin contact damage is 1/8th of max HP instead of 1/16th. This will also affect Iron Barbs.
 #define B_KNOCK_OFF_DMG             GEN_LATEST // In Gen6+, Knock Off deals 50% more damage when knocking off an item.
 #define B_SPORT_DMG_REDUCTION       GEN_LATEST // In Gen5+, Water/Mud Sport reduce Fire/Electric Damage by 67% instead of 50%.
-#define B_EXPLOSION_DEFENSE         GEN_LATEST // In Gen5+, Self-Destruct and Explosion don't halve the targets' defense.
+#define B_EXPLOSION_DEFENSE         GEN_4 // In Gen5+, Self-Destruct and Explosion don't halve the targets' defense.
 #define B_PARENTAL_BOND_DMG         GEN_LATEST // In Gen7+, Parental Bond's second hit does 25% of the initial hits damage. Before, it did 50%.
 #define B_MULTIPLE_TARGETS_DMG      GEN_LATEST // In Gen4+, damage dealt by moves that hit multiple targets at once is reduced to 75%. Before, it was 50%.
 
@@ -107,7 +107,7 @@
 #define B_METRONOME_MOVES           GEN_LATEST // This config will determine up to which generation will Metronome pull moves from.
 #define B_TELEPORT_BEHAVIOR         GEN_LATEST // In LGPE onwards (Gen8+ here), Teleport allows the user to swap out with another party member.
 #define B_BEAT_UP                   GEN_LATEST // In Gen5+, Beat Up uses a different formula to calculate its damage, and deals Dark-type damage. Prior to Gen 5, each hit also announces the party member's name.
-#define B_DARK_VOID_FAIL            GEN_LATEST // In Gen7+, only Darkrai can use Dark Void.
+#define B_DARK_VOID_FAIL            GEN_6 // In Gen7+, only Darkrai can use Dark Void.
 #define B_BURN_HIT_THAW             GEN_LATEST // In Gen6+, damaging moves with a chance of burn will thaw the target, regardless if they're fire-type moves or not.
 #define B_HEALING_WISH_SWITCH       GEN_LATEST // In Gen5+, the mon receiving Healing Wish is sent out at the end of the turn.
                                                // Additionally, in gen8+ the Healing Wish's effect will be stored until the user switches into a statused or hurt mon.
@@ -119,7 +119,7 @@
 #define B_QUICK_GUARD               GEN_LATEST // In Gen5 only, Quick Guard has a chance to fail if used consecutively.
 #define B_IMPRISON                  GEN_LATEST // In Gen5+, Imprison doesn't fail if opposing pokemon don't have any moves the user knows.
 #define B_ALLY_SWITCH_FAIL_CHANCE   GEN_LATEST // In Gen9, using Ally Switch consecutively decreases the chance of success for each consecutive use.
-#define B_SKETCH_BANS               GEN_LATEST // In Gen9+, Sketch is unable to copy more moves than in previous generations.
+#define B_SKETCH_BANS               GEN_8 // In Gen9+, Sketch is unable to copy more moves than in previous generations.
 #define B_KNOCK_OFF_REMOVAL         GEN_LATEST // In Gen5+, Knock Off removes the foe's item instead of rendering it unusable.
 #define B_HEAL_BELL_SOUNDPROOF      GEN_LATEST // In Gen5, Heal Bell affects all mons with Soundproof.  In Gen6-8 it affects inactive mons, but not battlers. In Gen9 it always affects the user.
 #define B_CHARGE                    GEN_LATEST // In Gen8-, Charge status is lost regardless of the typing of the next move.
@@ -164,7 +164,7 @@
                                                // In Gen4, it's 30%. In Gen5+ it has 11% to sleep, 9% chance to poison and 10% chance to paralyze.
 #define B_PICKUP_WILD               GEN_LATEST // In Gen9+, Pickup allows its user to pickup its own used item at the end of the turn in wild battles.
 #define B_MAGIC_GUARD               GEN_LATEST // In Gen4 only, Magic Guard ignores immobilization caused by paralysis
-#define B_BATTLE_BOND               GEN_LATEST // In Gen9+, Battle Bond increases Atk, SpAtk and Speed by one stage, once per battle
+#define B_BATTLE_BOND               GEN_8 // In Gen9+, Battle Bond increases Atk, SpAtk and Speed by one stage, once per battle
 #define B_ATE_MULTIPLIER            GEN_LATEST // In Gen7+, -ate abilities (Aerilate, Galvanize, Normalize, Pixilate, Refrigerate) multiply damage by 1.2. Otherwise, it's 1.3, except Normalize which has no multiplier.
 #define B_DEFIANT_STICKY_WEB        GEN_LATEST // In Gen9+, Defiant activates on Sticky Web regardless of who set it up. In Gen8, Defiant does not activate on Sticky Web set up by an ally after Court Change swaps its side.
 #define B_POWDER_OVERCOAT           GEN_LATEST // In Gen6+, Overcoat blocks powder and spore moves from affecting the user.

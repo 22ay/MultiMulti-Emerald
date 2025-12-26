@@ -1629,7 +1629,7 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
                     + (gBattleMons[battlerAtk].volatiles.dragonCheer != 0 ? 1 : 0)
                     + GetMoveCriticalHitStage(move)
                     + GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk)
-                    + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
+                    + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 1 : 0)
                     + (abilityAtk == ABILITY_SUPER_LUCK ? 1 : 0)
                     + gBattleMons[battlerAtk].volatiles.bonusCritStages;
 
@@ -1945,9 +1945,9 @@ static void Cmd_adjustdamage(void)
         }
         else if (B_AFFECTION_MECHANICS == TRUE && IsOnPlayerSide(battlerDef) && affectionScore >= AFFECTION_THREE_HEARTS)
         {
-            if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 20)
-             || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
-             || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
+            if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 15)
+             || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 10)
+             || (affectionScore == AFFECTION_THREE_HEARTS && rand < 5))
             {
                 enduredHit |= 1u << battlerDef;
                 gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
@@ -10969,10 +10969,27 @@ static void Cmd_tryKO(void)
     }
     else if (B_AFFECTION_MECHANICS == TRUE && IsOnPlayerSide(gBattlerTarget) && affectionScore >= AFFECTION_THREE_HEARTS)
     {
-        if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 20)
-         || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
-         || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
+        // Block affection endurance if Destiny Bond is active 
+        if (gBattleStruct->tryDestinyBond == TRUE) 
+        { 
+            // Do nothing — skip affection endurance 
+        } 
+        // Block if Endure, Sturdy, Focus Sash, or Focus Band already apply 
+        else if (gSpecialStatuses[gBattlerTarget].enduredDamage == TRUE 
+            || GetBattlerAbility(gBattlerTarget) == ABILITY_STURDY 
+            || holdEffect == HOLD_EFFECT_FOCUS_SASH 
+            || holdEffect == HOLD_EFFECT_FOCUS_BAND) 
+        { 
+            // Do nothing — skip affection endurance 
+        } 
+        else
+        {
+
+        if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 15)
+         || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 10)
+         || (affectionScore == AFFECTION_THREE_HEARTS && rand < 5))
             endured = AFFECTION_ENDURED;
+        }    
     }
 
     if (targetAbility == ABILITY_STURDY)

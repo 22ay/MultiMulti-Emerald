@@ -10961,7 +10961,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkA
         calc = (calc * 5) / 3; // 1.66 Gravity acc boost
 
     if (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerDef) == AFFECTION_FIVE_HEARTS)
-        calc = (calc * 90) / 100;
+        calc = (calc * 95) / 100;
 
     if (HasWeatherEffect() && gBattleWeather & B_WEATHER_FOG)
         calc = (calc * 60) / 100; // modified by 3/5
