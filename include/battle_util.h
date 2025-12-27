@@ -67,6 +67,23 @@ enum AbilityEffect
     ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES,
 };
 
+#define STORE_BATTLER_TRAITS(battler) \
+({for (int traitLoop = 0; traitLoop < MAX_MON_TRAITS; traitLoop++)\
+{battlerTraits[traitLoop] = GetBattlerTrait(battler, traitLoop, FALSE);\
+}}) 
+//DebugPrintf("%S - Battler[%d] - Trait[%d]: %S", GetSpeciesName(gBattleMons[battler].species), battler, traitLoop,  gAbilitiesInfo[battlerTraits[traitLoop]].name);\
+
+#define STORE_BATTLER_TRAITS_IGNORE_MOLDBREAKER(battler) \
+({for (int traitLoop = 0; traitLoop < MAX_MON_TRAITS; traitLoop++)\
+{battlerTraits[traitLoop] = GetBattlerTrait(battler, traitLoop, TRUE);\
+}}) 
+
+// For functions that might pass an AI Logic Ability to check
+#define STORE_BATTLER_ABILITYINNATES(battler, ability) \
+({for (int traitLoop = 0; traitLoop < MAX_MON_TRAITS; traitLoop++)\
+{if (traitLoop == 0){battlerTraits[traitLoop] = ability;}else{battlerTraits[traitLoop] = GetBattlerTrait(battler, traitLoop, FALSE);\
+}}}) 
+
 enum ItemEffect
 {
     ITEM_NO_EFFECT,
@@ -253,7 +270,7 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check);
 bool32 AreAllMovesUnusable(u32 battler);
 u8 GetImprisonedMovesCount(u32 battler, u16 move);
 s32 GetDrainedBigRootHp(u32 battler, s32 hp);
-bool32 IsAbilityAndRecord(u32 battler, enum Ability battlerAbility, enum Ability abilityToCheck);
+bool32 IsAbilityAndRecord(u32 battler, enum Ability abilityToCheck);
 u32 DoEndTurnEffects(void);
 bool32 HandleFaintedMonActions(void);
 void TryClearRageAndFuryCutter(void);
@@ -290,11 +307,11 @@ u8 GetAttackerObedienceForAction();
 enum HoldEffect GetBattlerHoldEffect(u32 battler);
 enum HoldEffect GetBattlerHoldEffectIgnoreAbility(u32 battler);
 enum HoldEffect GetBattlerHoldEffectIgnoreNegation(u32 battler);
-enum HoldEffect GetBattlerHoldEffectInternal(u32 battler, u32 ability);
+enum HoldEffect GetBattlerHoldEffectInternal(u32 battler, bool32 ignoreAbility);
 u32 GetBattlerHoldEffectParam(u32 battler);
 bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 move);
 bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 move);
-bool32 IsBattlerGrounded(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
+bool32 IsBattlerGrounded(u32 battler, enum HoldEffect holdEffect);
 u32 GetMoveSlot(u16 *moves, u32 move);
 u32 GetBattlerWeight(u32 battler);
 u32 CalcRolloutBasePower(u32 battlerAtk, u32 basePower, u32 rolloutTimer);
@@ -304,7 +321,7 @@ s32 CalculateMoveDamageVars(struct DamageContext *ctx);
 s32 DoFixedDamageMoveCalc(struct DamageContext *ctx);
 s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg);
 uq4_12_t CalcTypeEffectivenessMultiplier(struct DamageContext *ctx);
-uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Ability abilityDef);
+uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Ability abilityDef, struct Pokemon *mon);
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType);
 uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType);
 void UpdateMoveResultFlags(uq4_12_t modifier, u16 *resultFlags);
@@ -338,7 +355,7 @@ bool32 CanFling(u32 battler);
 bool32 IsTelekinesisBannedSpecies(u16 species);
 bool32 IsHealBlockPreventingMove(u32 battler, u32 move);
 bool32 IsBelchPreventingMove(u32 battler, u32 move);
-bool32 HasEnoughHpToEatBerry(u32 battler, enum Ability ability, u32 hpFraction, u32 itemId);
+bool32 HasEnoughHpToEatBerry(u32 battler, u32 hpFraction, u32 itemId);
 bool32 IsPartnerMonFromSameTrainer(u32 battler);
 enum DamageCategory GetCategoryBasedOnStats(u32 battler);
 void SetShellSideArmCategory(void);
@@ -350,7 +367,8 @@ void TrySaveExchangedItem(u32 battler, u16 stolenItem);
 bool32 IsPartnerMonFromSameTrainer(u32 battler);
 bool32 IsBattlerAffectedByHazards(u32 battler, bool32 toxicSpikes);
 void SortBattlersBySpeed(u8 *battlers, bool32 slowToFast);
-bool32 CompareStat(u32 battler, enum Stat statId, u8 cmpTo, u8 cmpKind, enum Ability ability);
+bool32 CompareStat(u32 battler, enum Stat statId, u8 cmpTo, u8 cmpKind);
+bool32 CompareStatIgnoreContrary(u32 battler, enum Stat statId, u8 cmpTo, u8 cmpKind);
 bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
 bool32 PickupHasValidTarget(u32 battler);
 bool32 CantPickupItem(u32 battler);
@@ -370,7 +388,7 @@ bool32 CanTargetPartner(u32 battlerAtk, u32 battlerDef);
 bool32 TargetFullyImmuneToCurrMove(u32 battlerAtk, u32 battlerDef);
 bool32 MoodyCantRaiseStat(u32 stat);
 bool32 MoodyCantLowerStat(u32 stat);
-bool32 IsBattlerTerrainAffected(u32 battler, enum Ability ability, enum HoldEffect holdEffect, u32 terrainFlag);
+bool32 IsBattlerTerrainAffected(u32 battler, enum HoldEffect holdEffect, u32 terrainFlag);
 u32 GetHighestStatId(u32 battler);
 u32 GetParadoxHighestStatId(u32 battler);
 u32 GetParadoxBoostedStatId(u32 battler);
@@ -431,13 +449,22 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkA
 bool32 IsSemiInvulnerable(u32 battler, enum SemiInvulnerableExclusion excludeCommander);
 bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move);
 bool32 HasPartnerTrainer(u32 battler);
-bool32 IsAffectedByPowderMove(u32 battler, u32 ability, enum HoldEffect holdEffect);
+bool32 IsAffectedByPowderMove(u32 battler, enum HoldEffect holdEffect);
 u32 GetNaturePowerMove(u32 battler);
 u32 GetNaturePowerMove(u32 battler);
 void RemoveAbilityFlags(u32 battler);
-bool32 IsDazzlingAbility(enum Ability ability);
+bool32 HasDazzlingAbility(u32 battler);
 bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
+
+enum Ability GetBattlerTrait(u8 battler, u8 traitNum, u32 ignoreMoldBreaker);
+u8 BattlerHasInnate(u8 battlerId, enum Ability ability);
+u8 BattlerHasTrait(u8 battlerId, enum Ability ability); //Returns the trait slot number of the given ability. Starts at 1 for the primary Ability and returns 0 if the ability is not found. 
+u8 BattlerHasTraitPlain(u8 battlerId, enum Ability ability); //BattlerHasTrait for functions already under GetBattlerAbility to avoid infinite loops.
+void PushTraitStack(u8 battlerId, enum Ability ability); //Pushes an ability to the trait stack
+u8 PullTraitStackBattler(void); //Pulls a battler from the trait stack
+enum Ability PullTraitStackAbility(void); //Pulls a battler from the trait stack
+void PopTraitStack(void); //Pops an ability from the trait stack and clears the slot
 
 #endif // GUARD_BATTLE_UTIL_H

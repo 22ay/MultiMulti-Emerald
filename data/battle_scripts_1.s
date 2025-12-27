@@ -517,6 +517,7 @@ BattleScript_Teatimevul:
 	moveendcase MOVEEND_CLEAR_BITS
 	goto BattleScript_MoveEnd
 BattleScript_Teatimesorb:
+	pushtraitstack BS_TARGET ABILITY_VOLT_ABSORB @ Generates placeholder popup entry
 	call BattleScript_AbilityPopUpTarget
 	tryhealquarterhealth BS_TARGET, BattleScript_Teatimesorb_end
 	healthbarupdate BS_TARGET, PASSIVE_HP_UPDATE
@@ -529,6 +530,7 @@ BattleScript_Teatimesorb_end:
 	moveendcase MOVEEND_CLEAR_BITS
 	goto BattleScript_MoveEnd
 BattleScript_Teatimerod:
+	pushtraitstack BS_TARGET ABILITY_LIGHTNING_ROD
 	call BattleScript_AbilityPopUpTarget
 	setstatchanger STAT_SPATK, 1, FALSE
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_TeatimeBuffer
@@ -540,6 +542,7 @@ BattleScript_Teatimerod:
 	moveendcase MOVEEND_CLEAR_BITS
 	goto BattleScript_MoveEnd
 BattleScript_Teatimemotor:
+	pushtraitstack BS_TARGET ABILITY_MOTOR_DRIVE
 	call BattleScript_AbilityPopUpTarget
 	setstatchanger STAT_SPEED, 1, FALSE
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_TeatimeBuffer
@@ -1066,6 +1069,7 @@ BattleScript_StrengthSapManipulateDmg:
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 BattleScript_StrengthSapLiquidOoze:
+	pushtraitstack BS_TARGET ABILITY_LIQUID_OOZE
 	call BattleScript_AbilityPopUpTarget
 	manipulatedamage DMG_CHANGE_SIGN
 	setbyte cMULTISTRING_CHOOSER, B_MSG_ABSORB_OOZE
@@ -2489,6 +2493,7 @@ BattleScript_FlowerVeilProtects::
 
 BattleScript_SweetVeilProtectsRet::
 	pause B_WAIT_TIME_SHORT
+	pushtraitstack BS_TARGET ABILITY_SWEET_VEIL
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_FLOWERVEILPROTECTED
 	waitmessage B_WAIT_TIME_LONG
@@ -3007,6 +3012,7 @@ BattleScript_MoveEffectAuroraVeil::
 	return
 
 BattleScript_VoltAbsorbHeal:
+	pushtraitstack BS_TARGET ABILITY_VOLT_ABSORB
 	copybyte gBattlerAbility, gBattlerTarget
 	tryhealquarterhealth BS_TARGET, BattleScript_MonMadeMoveUseless @ Check if max hp
 	goto BattleScript_MoveHPDrain
@@ -3467,6 +3473,7 @@ BattleScript_PerishSongLoopIncrement::
 
 BattleScript_PerishSongBlocked::
 	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNSXBLOCKSY2
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_PerishSongLoopIncrement
@@ -3837,6 +3844,10 @@ BattleScript_NotAffectedAbilityPopUp::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_GenerateAbilityPopUp::
+	call BattleScript_AbilityPopUp
+	return
+
 BattleScript_EffectStockpile::
 	attackcanceler
 	stockpile 0
@@ -4196,10 +4207,12 @@ BattleScript_EffectSkillSwap::
 	attackanimation
 	waitanimation
 	jumpiftargetally BattleScript_EffectSkillSwap_AfterAbilityPopUp
+	pushtraitstack BS_ATTACKER ABILITY_VOLT_ABSORB @ Generates placeholder popup entry
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	copybyte gBattlerAbility, gBattlerTarget
 	copyhword sABILITY_OVERWRITE, gLastUsedAbility
+	pushtraitstack BS_TARGET ABILITY_VOLT_ABSORB @ Generates placeholder popup entry
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 BattleScript_EffectSkillSwap_AfterAbilityPopUp:
 	recordability BS_ATTACKER
@@ -4933,6 +4946,7 @@ BattleScript_SafeguardEnds::
 BattleScript_LeechSeedTurnDrainLiquidOoze::
 	call BattleScript_LeechSeedTurnDrain
 	copybyte gBattlerAbility, gBattlerAttacker
+	pushtraitstack BS_ATTACKER ABILITY_LIQUID_OOZE
 	call BattleScript_AbilityPopUp
 	copybyte gBattlerAttacker, gBattlerTarget   @ needed to get liquid ooze message correct
 	jumpifability BS_TARGET, ABILITY_MAGIC_GUARD, BattleScript_LeechSeedTurnDrainHealBlockEnd2
@@ -6006,11 +6020,10 @@ BattleScript_CottonDownLoopIncrement:
 	return
 
 BattleScript_AnticipationActivates::
-	pause 5
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ANTICIPATIONACTIVATES
 	waitmessage B_WAIT_TIME_LONG
-	return
+	end3
 
 BattleScript_AftermathDmg::
 	pause B_WAIT_TIME_SHORT
@@ -6030,6 +6043,7 @@ BattleScript_DampPreventsAftermath::
 	pause 40
 	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
+	sethword gDisplayAbility2, ABILITY_AFTERMATH
 	printstring STRINGID_PKMNSABILITYPREVENTSABILITY
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -6131,7 +6145,8 @@ BattleScript_PowderMoveNoEffect::
 	printstring STRINGID_SAFETYGOGGLESPROTECTED
 	goto BattleScript_PowderMoveNoEffectWaitMsg
 BattleScript_PowderMoveNoEffectOvercoat:
-	call BattleScript_AbilityPopUpTarget
+	pushtraitstack BS_TARGET ABILITY_OVERCOAT
+	call BattleScript_AbilityPopUp
 BattleScript_PowderMoveNoEffectPrint:
 	printstring STRINGID_ITDOESNTAFFECT
 BattleScript_PowderMoveNoEffectWaitMsg:
@@ -6611,8 +6626,8 @@ BattleScript_SolarPowerActivates::
 
 BattleScript_HealerActivates::
 	call BattleScript_AbilityPopUp
-	curestatus BS_SCRIPTING
-	updatestatusicon BS_SCRIPTING
+	curestatus BS_SCRIPTING_PARTNER
+	updatestatusicon BS_SCRIPTING_PARTNER
 	printstring STRINGID_HEALERCURE
 	waitmessage B_WAIT_TIME_LONG
 	end2
@@ -6661,7 +6676,7 @@ BattleScript_TryIntimidateHoldEffects:
 	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPEED, MAX_STAT_STAGE, BattleScript_TryIntimidateHoldEffectsRet
 	setstatchanger STAT_SPEED, 1, FALSE
 	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
-	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_TryIntimidateHoldEffectsRet
+	statbuffchange3 BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_TryIntimidateHoldEffectsRet
 	copybyte sBATTLER, gBattlerTarget
 	setlastuseditem BS_TARGET
 	printstring STRINGID_USINGITEMSTATOFPKMNROSE
@@ -6675,14 +6690,15 @@ BattleScript_IntimidateActivates::
 	call BattleScript_AbilityPopUp
 	setbyte gBattlerTarget, 0
 BattleScript_IntimidateLoop:
+	setbyte gDisplayAbility ABILITY_INTIMIDATE
 	jumpiftargetally BattleScript_IntimidateLoopIncrement
 	jumpifabsent BS_TARGET, BattleScript_IntimidateLoopIncrement
 	jumpifvolatile BS_TARGET, VOLATILE_SUBSTITUTE, BattleScript_IntimidateLoopIncrement
 	jumpifintimidateabilityprevented
 BattleScript_IntimidateEffect:
 	copybyte sBATTLER, gBattlerAttacker
-	setstatchanger STAT_ATK, 1, TRUE
-	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_IntimidateLoopIncrement
+	setstatchanger3 STAT_ATK, 1, TRUE
+	statbuffchange3 BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_IntimidateLoopIncrement
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_IntimidateWontDecrease
 	printstring STRINGID_PKMNCUTSATTACKWITH
 BattleScript_IntimidateEffect_WaitString:
@@ -6711,6 +6727,11 @@ BattleScript_IntimidatePrevented::
 
 BattleScript_IntimidateWontDecrease:
 	printstring STRINGID_STATSWONTDECREASE
+	goto BattleScript_IntimidateEffect_WaitString
+
+BattleScript_IntimidateContrary:
+	pushtraitstack BS_TARGET ABILITY_CONTRARY
+	printfromtable gStatUpStringIds
 	goto BattleScript_IntimidateEffect_WaitString
 
 BattleScript_IntimidateInReverse::
@@ -6817,7 +6838,25 @@ BattleScript_QuarkDriveActivates::
 	waitmessage B_WAIT_TIME_MED
 	end3
 
-BattleScript_RuinAbilityActivates::
+BattleScript_RuinAbilityActivatesVessel::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ABILITYWEAKENEDSURROUNDINGMONSSTAT
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_RuinAbilityActivatesSword::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ABILITYWEAKENEDSURROUNDINGMONSSTAT
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_RuinAbilityActivatesTablets::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ABILITYWEAKENEDSURROUNDINGMONSSTAT
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_RuinAbilityActivatesBeads::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ABILITYWEAKENEDSURROUNDINGMONSSTAT
 	waitmessage B_WAIT_TIME_LONG
@@ -7115,6 +7154,7 @@ BattleScript_FlinchPrevention::
 
 BattleScript_OwnTempoPrevents::
 	pause B_WAIT_TIME_SHORT
+	pushtraitstack BS_TARGET ABILITY_OWN_TEMPO
 	call BattleScript_AbilityPopUp
 	copybyte sBATTLER, gBattlerTarget
 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
@@ -7169,6 +7209,7 @@ BattleScript_StickyHoldActivates::
 
 BattleScript_StickyHoldActivatesRet::
 	pause B_WAIT_TIME_SHORT
+	pushtraitstack BS_TARGET ABILITY_STICKY_HOLD
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNSXMADEYINEFFECTIVE
 	waitmessage B_WAIT_TIME_LONG
@@ -7213,6 +7254,10 @@ BattleScript_MummyActivates::
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	recordability BS_TARGET
 	recordability BS_ATTACKER
+	setbyte gDisplayAbility, ABILITY_MUMMY
+	jumpifability BS_TARGET, ABILITY_MUMMY, BattleScript_MummyCalled
+	sethword gDisplayAbility, ABILITY_LINGERING_AROMA
+BattleScript_MummyCalled::
 	printstring STRINGID_ATTACKERACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
@@ -7244,19 +7289,80 @@ BattleScript_WanderingSpiritActivatesRet:
 
 BattleScript_TargetsStatWasMaxedOut::
 	call BattleScript_AbilityPopUp
-	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_TargetsStatWasMaxedOutRet
+	statbuffchange2 BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_TargetsStatWasMaxedOutRet
 	printstring STRINGID_TARGETSSTATWASMAXEDOUT
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_TargetsStatWasMaxedOutRet:
 	return
 
-BattleScript_BattlerAbilityStatRaiseOnSwitchIn::
+BattleScript_BattlerAbilityStatRaiseOnSwitchInIntrepid::
 	call BattleScript_AbilityPopUpScripting
-	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInRet
+	setstatchanger STAT_ATK, 1, FALSE
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInIntrepidRet
 	waitanimation
 	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_BattlerAbilityStatRaiseOnSwitchInRet:
+BattleScript_BattlerAbilityStatRaiseOnSwitchInIntrepidRet:
+	end3
+
+BattleScript_BattlerAbilityStatRaiseOnSwitchInDauntless::
+	call BattleScript_AbilityPopUpScripting
+	setstatchanger STAT_DEF, 1, FALSE
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInDauntlessRet
+	waitanimation
+	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_BattlerAbilityStatRaiseOnSwitchInDauntlessRet:
+	end3
+
+BattleScript_BattlerAbilityStatRaiseOnSwitchInWindRider::
+	call BattleScript_AbilityPopUpScripting
+	setstatchanger STAT_ATK, 1, FALSE
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInWindRiderRet
+	waitanimation
+	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_BattlerAbilityStatRaiseOnSwitchInWindRiderRet:
+	end3
+
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectTeal::
+	call BattleScript_AbilityPopUpScripting
+	setstatchanger STAT_SPEED, 1, FALSE
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectTealRet
+	waitanimation
+	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectTealRet:
+	end3
+
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectHearthFlame::
+	call BattleScript_AbilityPopUpScripting
+	setstatchanger STAT_ATK, 1, FALSE
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectHearthFlameRet
+	waitanimation
+	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectHearthFlameRet:
+	end3
+
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectWellSpring::
+	call BattleScript_AbilityPopUpScripting
+	setstatchanger STAT_SPDEF, 1, FALSE
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectWellSpringRet
+	waitanimation
+	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectWellSpringRet:
+	end3
+
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectCornerStone::
+	call BattleScript_AbilityPopUpScripting
+	setstatchanger STAT_DEF, 1, FALSE
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectCornerStoneRet
+	waitanimation
+	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_BattlerAbilityStatRaiseOnSwitchInEmbodyAspectCornerStoneRet:
 	end3
 
 BattleScript_ScriptingAbilityStatRaise::
@@ -7306,15 +7412,55 @@ BattleScript_WeakArmorSpeedPrintString:
 BattleScript_WeakArmorActivatesEnd:
 	return
 
-BattleScript_RaiseStatOnFaintingTarget::
-	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_RaiseStatOnFaintingTarget_End
+BattleScript_RaiseStatOnFaintingTargetMoxie::
+	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_RaiseStatOnFaintingTargetMoxie_End
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
-	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseStatOnFaintingTarget_End
+	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseStatOnFaintingTargetMoxie_End
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_RaiseStatOnFaintingTarget_End:
+BattleScript_RaiseStatOnFaintingTargetMoxie_End:
 	return
+
+BattleScript_RaiseStatOnFaintingTargetChilling::
+	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_RaiseStatOnFaintingTargetChilling_End
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseStatOnFaintingTargetChilling_End
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_RaiseStatOnFaintingTargetChilling_End:
+	return
+
+BattleScript_RaiseStatOnFaintingTargetGrim::
+	statbuffchange2 BS_ATTACKER, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_RaiseStatOnFaintingTargetGrim_End
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+	statbuffchange2 BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseStatOnFaintingTargetGrim_End
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_RaiseStatOnFaintingTargetGrim_End:
+	return
+
+BattleScript_RaiseStatOnFaintingTargetBeastBoost::
+	statbuffchange3 BS_ATTACKER, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_RaiseStatOnFaintingTargetBeastBoost_End
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+	statbuffchange3 BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseStatOnFaintingTargetBeastBoost_End
+	printfromtable gStatUpStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_RaiseStatOnFaintingTargetBeastBoost_End:
+	return
+	
+BattleScript_AttackerDownloadStatRaise::
+	statbuffchange2 BS_SCRIPTING, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_AttackerDownloadStatRaise_End
+	call BattleScript_AbilityPopUpScripting
+	statbuffchange2 BS_SCRIPTING, STAT_CHANGE_ALLOW_PTR, BattleScript_AttackerDownloadStatRaise_End
+	printstring STRINGID_ATTACKERABILITYSTATRAISE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_AttackerDownloadStatRaise_End:
+	restoreattacker
+	end3
 
 BattleScript_AttackerAbilityStatRaise::
 	statbuffchange BS_SCRIPTING, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_AttackerAbilityStatRaise_End
@@ -7355,15 +7501,26 @@ BattleScript_SwitchInAbilityMsgRet::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_NeutralizingGasActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_NEUTRALIZINGGASENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_NeutralizingGasActivatesRet::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_NEUTRALIZINGGASENTERS
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_ActivateAsOne::
 	call BattleScript_AbilityPopUp
-	printfromtable gSwitchInAbilityStringIds
+	printstring STRINGID_ASONEENTERS
 	waitmessage B_WAIT_TIME_LONG
 	@ show unnerve
-	sethword sABILITY_OVERWRITE, ABILITY_UNNERVE
-	setbyte cMULTISTRING_CHOOSER, B_MSG_SWITCHIN_UNNERVE
+	pushtraitstack BS_ABILITY_BATTLER ABILITY_UNNERVE
 	call BattleScript_AbilityPopUp
-	printfromtable gSwitchInAbilityStringIds
+	printstring STRINGID_UNNERVEENTERS
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
@@ -7393,6 +7550,90 @@ BattleScript_ImposterActivates::
 	waitmessage B_WAIT_TIME_LONG
 	restoreattacker
 	restoretarget
+	end3
+
+BattleScript_MoldBreakerActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_MOLDBREAKERENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_TeravoltActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_TERAVOLTENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_TurboblazeActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_TURBOBLAZEENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_SlowStartActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_SLOWSTARTENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_UnnerveActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_UNNERVEENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_ForewarnActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_FOREWARNACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_PressureActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PRESSUREENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_DarkAuraActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_DARKAURAENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_FairyAuraActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_FAIRYAURAENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_AuraBreakActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_AURABREAKENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_ComatoseActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_COMATOSEENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_ScreenCleanerActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_SCREENCLEANERENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_CuriousMedicineActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_CURIOUSMEDICINEENTERS
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_PasteVeilActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PASTELVEILENTERS
+	waitmessage B_WAIT_TIME_LONG
 	end3
 
 BattleScript_HurtAttacker:
@@ -8291,6 +8532,7 @@ BattleScript_RedCardIngrainContinue:
 	restoreattacker
 	return
 BattleScript_RedCardSuctionCups:
+	sethword gDisplayAbility, ABILITY_SUCTION_CUPS
     printstring STRINGID_PKMNANCHORSITSELFWITH
     goto BattleScript_RedCardIngrainContinue
 BattleScript_RedCardDynamaxed:
@@ -8380,7 +8622,7 @@ BattleScript_PastelVeilCurePoison:
 	call BattleScript_AbilityPopUp
 	setbyte gBattleCommunication + 1, 1
 BattleScript_PastelVeilCurePoisonNoPopUp: @ Only show Pastel Veil pop up once if it cures two mons
-	printfromtable gSwitchInAbilityStringIds
+	printstring STRINGID_PASTELVEILENTERS
 	waitmessage B_WAIT_TIME_LONG
 	curestatus BS_TARGET
 	updatestatusicon BS_TARGET
@@ -8425,13 +8667,80 @@ BattleScript_SymbiosisActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_TargetAbilityStatRaiseRet::
+BattleScript_TargetAbilityStatRaiseRetJustified::
 	saveattacker
 	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_SPATK, 1, FALSE
 	call BattleScript_AbilityPopUp
-	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRet_End
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetJustified_End
 	call BattleScript_StatUp
-BattleScript_TargetAbilityStatRaiseRet_End:
+BattleScript_TargetAbilityStatRaiseRetJustified_End:
+	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetRattled::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_SPEED, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetRattled_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetRattled_End:
+	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetWaterCompaction::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_DEF, 2, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetWaterCompaction_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetWaterCompaction_End:
+	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetStamina::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_DEF, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetStamina_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetStamina_End:
+	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetBerserk::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_SPATK, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetBerserk_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetBerserk_End:
+	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetSteam::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_SPEED, 6, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetSteam_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetSteam_End:
+	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetThermal::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_ATK, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetThermal_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetThermal_End:
 	restoreattacker
 	return
 

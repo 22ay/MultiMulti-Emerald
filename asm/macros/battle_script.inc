@@ -882,12 +882,20 @@
 	.byte 0x9e
 	.endm
 
-	.macro unused_0x9f
+	.macro statbuffchange2 battler:req, flags:req, failInstr:req, stats=0
 	.byte 0x9f
+	.byte \battler
+	.2byte \flags
+	.4byte \failInstr
+	.byte \stats
 	.endm
 
-	.macro unused_0xA0
+	.macro statbuffchange3 battler:req, flags:req, failInstr:req, stats=0
 	.byte 0xa0
+	.byte \battler
+	.2byte \flags
+	.4byte \failInstr
+	.byte \stats
 	.endm
 
 	.macro counterdamagecalculator failInstr:req
@@ -1804,6 +1812,14 @@
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
 	.endm
 
+	.macro setstatchanger2 stat:req, stages:req, down:req
+	setbyte sSTATCHANGER2, \stat | \stages << 3 | \down << 7
+	.endm
+
+	.macro setstatchanger3 stat:req, stages:req, down:req
+	setbyte sSTATCHANGER3, \stat | \stages << 3 | \down << 7
+	.endm
+
 	.macro setmoveeffect effect:req
 	sethword sMOVE_EFFECT, \effect
 	.endm
@@ -2468,4 +2484,10 @@
 	@ Absorbs Toxic Spikes when a grounded Poison-type faints to entry hazards.
 	.macro tryabsorbtoxicspikesonfaint
 	callnative BS_TryAbsorbToxicSpikesOnFaint
+	.endm
+	
+	.macro pushtraitstack battler:req, ability:req
+	callnative BS_PushTraitStack
+	.byte \battler
+	.2byte \ability
 	.endm
