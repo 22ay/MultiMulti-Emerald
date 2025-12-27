@@ -5777,10 +5777,6 @@ if (SearchTraits(battlerTraits, ABILITY_MOXIE))
             stat = STAT_SPATK;
             numMonsFainted = NumFaintedBattlersByAttacker(battlerAtk);
 
-            if (GetBattlerPartyState(battlerAtk)->battleBondBoost)
-                break;
-
-            if (GetConfig(CONFIG_BATTLE_BOND) < GEN_9 && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_BATTLE_BOND)
             if (numMonsFainted && CompareStat(battlerAtk, stat, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
 
@@ -5825,7 +5821,7 @@ if (SearchTraits(battlerTraits, ABILITY_MOXIE))
 
             if (!GetBattlerPartyState(battlerAtk)->battleBondBoost)
             {
-                if (GetGenConfig(GEN_CONFIG_BATTLE_BOND) < GEN_9 && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_BATTLE_BOND)
+                if (GetConfig(CONFIG_BATTLE_BOND) < GEN_9 && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_BATTLE_BOND)
                 {
                     // TODO: Convert this to a proper FORM_CHANGE type.
                     gLastUsedAbility = ABILITY_BATTLE_BOND;
@@ -11574,6 +11570,13 @@ static void Cmd_setcalledmove(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static void CalcReflectBackDamage(u32 baseDamage, u32 percentMult)
+{
+    s32 damage = (baseDamage - 1) * percentMult / 100;
+    damage = max(damage, 1);
+    gBattleStruct->moveDamage[gBattlerTarget] = damage;
+}
+
 static void Cmd_counterdamagecalculator(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -11585,6 +11588,7 @@ static void Cmd_counterdamagecalculator(void)
         && sideAttacker != sideTarget
         && gBattleMons[gProtectStructs[gBattlerAttacker].physicalBattlerId].hp)
     {
+
         if (IsAffectedByFollowMe(gBattlerAttacker, sideTarget, gCurrentMove))
             gBattlerTarget = gSideTimers[sideTarget].followmeTarget;
         else
@@ -18300,7 +18304,7 @@ void BS_TryAbsorbToxicSpikesOnFaint(void)
         return;
     }
 
-    if (IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler))
+    if (IsBattlerGrounded(battler, GetBattlerHoldEffect(battler))
      && IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
     {
         gSideTimers[side].toxicSpikesAmount = 0;

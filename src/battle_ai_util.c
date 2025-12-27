@@ -1470,7 +1470,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 
     if (!DoesBattlerIgnoreAbilityChecks(battler, gAiLogicData->abilities[battler], move))
     {
-        if (GetConfig(CONFIG_STURDY) >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY && AI_BATTLER_HAS_TRAIT(battlerTarget, ABILITY_STURDY))
+        if (GetConfig(CONFIG_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battlerTarget, ABILITY_STURDY))
             return TRUE;
         if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
@@ -1826,8 +1826,8 @@ u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon)
         return B_WEATHER_SANDSTORM;
     if (ability == ABILITY_SNOW_WARNING || SpeciesHasInnate(battleMon.species, ABILITY_SNOW_WARNING))
         return GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
-    default:
-        return gBattleWeather;   
+
+    return gBattleWeather;
 }
 
 enum WeatherState IsWeatherActive(u32 flags)

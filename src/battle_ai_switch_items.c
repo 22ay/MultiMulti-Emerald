@@ -298,7 +298,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
     // Check if mon gets one shot
     if (maxDamageTaken > gBattleMons[battler].hp
-        && !(gItemsInfo[gBattleMons[battler].item].holdEffect == HOLD_EFFECT_FOCUS_SASH || (!IsMoldBreakerTypeAbility(opposingBattler, gAiLogicData->abilities[opposingBattler]) && GetConfig(CONFIG_STURDY) >= GEN_5 && aiAbility == ABILITY_STURDY && AI_BATTLER_HAS_TRAIT(battler, ABILITY_STURDY))))
+        && !(gItemsInfo[gBattleMons[battler].item].holdEffect == HOLD_EFFECT_FOCUS_SASH || (!IsMoldBreakerTypeAbility(opposingBattler, gAiLogicData->abilities[opposingBattler]) && GetConfig(CONFIG_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battler, ABILITY_STURDY))))
     {
         getsOneShot = TRUE;
     }
@@ -715,14 +715,10 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
             AI_STORE_BATTLER_TRAITS(opposingBattler);
 
             if (gBattleMons[battler].statStages[STAT_EVASION] > (DEFAULT_STAT_STAGE + 3)
-                && gAiLogicData->abilities[opposingBattler] != ABILITY_UNAWARE
-                && gAiLogicData->abilities[opposingBattler] != ABILITY_KEEN_EYE
-                && gAiLogicData->abilities[opposingBattler] != ABILITY_MINDS_EYE
                 && !AISearchTraits(AIBattlerTraits, ABILITY_UNAWARE)
                 && !AISearchTraits(AIBattlerTraits, ABILITY_KEEN_EYE)
                 && !AISearchTraits(AIBattlerTraits, ABILITY_MINDS_EYE)
-                && !AISearchTraits(AIBattlerTraits, ABILITY_ILLUMINATE)
-                && (GetConfig(CONFIG_ILLUMINATE_EFFECT) >= GEN_9 && gAiLogicData->abilities[opposingBattler] != ABILITY_ILLUMINATE)
+                && !AISearchTraits(AIBattlerTraits, ABILITY_ILLUMINATE) && (GetConfig(CONFIG_ILLUMINATE_EFFECT) >= GEN_9)
                 && !gBattleMons[battler].volatiles.foresight
                 && !gBattleMons[battler].volatiles.miracleEye)
                 switchMon = FALSE;
@@ -1572,7 +1568,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
         if (IsHazardOnSide(side, HAZARDS_STEELSURGE) && heldItemEffect != HOLD_EFFECT_HEAVY_DUTY_BOOTS)
             hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, defType1, defType2, battleMon->maxHP);
         // Spikes
-        if (IsHazardOnSide(side, HAZARDS_SPIKES) && IsMonGrounded(heldItemEffect, ability, defType1, defType2))
+        if (IsHazardOnSide(side, HAZARDS_SPIKES) && IsMonGrounded(heldItemEffect, ability, defType1, defType2, species))
         {
             spikesDamage = maxHP / ((5 - gSideTimers[GetBattlerSide(battler)].spikesAmount) * 2);
             if (spikesDamage == 0)
@@ -1857,7 +1853,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
         currentHP = currentHP - damageTaken;
 
         // One shot prevention effects
-        if (damageTaken >= maxHP && startingHP == maxHP && (heldItemEffect == HOLD_EFFECT_FOCUS_SASH || (!opponentCanBreakMold && GetConfig(CONFIG_STURDY) >= GEN_5 && ability == ABILITY_STURDY || SpeciesHasInnate(gAiLogicData->switchinCandidate.battleMon.species, ABILITY_STURDY))) && hitsToKO < 1)
+        if (damageTaken >= maxHP && startingHP == maxHP && (heldItemEffect == HOLD_EFFECT_FOCUS_SASH || (!opponentCanBreakMold && GetConfig(CONFIG_STURDY) >= GEN_5 && (ability == ABILITY_STURDY || SpeciesHasInnate(gAiLogicData->switchinCandidate.battleMon.species, ABILITY_STURDY)))) && hitsToKO < 1)
             currentHP = 1;
 
         // If mon is still alive, apply weather impact first, as it might KO the mon before it can heal with its item (order is weather -> item -> status)
