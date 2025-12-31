@@ -214,13 +214,13 @@ static bool32 HandleEndTurnAffection(u32 battler)
      || !IsOnPlayerSide(battler))
         return effect;
 
-    u16 ability = GetBattlerAbility(battler); 
-    if (ability == ABILITY_GUTS 
-    || ability == ABILITY_QUICK_FEET
-    || ability == ABILITY_POISON_HEAL 
-    || ability == ABILITY_MARVEL_SCALE 
-    || ability == ABILITY_TOXIC_BOOST 
-    || ability == ABILITY_FLARE_BOOST) 
+    u16 battlerTraits[MAX_MON_TRAITS];
+    if (SearchTraits(battlerTraits, ABILITY_GUTS)
+    || SearchTraits(battlerTraits, ABILITY_QUICK_FEET)
+    || SearchTraits(battlerTraits, ABILITY_POISON_HEAL)
+    || SearchTraits(battlerTraits, ABILITY_MARVEL_SCALE)
+    || SearchTraits(battlerTraits, ABILITY_TOXIC_BOOST)
+    || SearchTraits(battlerTraits, ABILITY_FLARE_BOOST))
         return effect;
 
     if (GetBattlerAffectionHearts(gBattlerAttacker) >= AFFECTION_FOUR_HEARTS && (Random() % 100 < 20))

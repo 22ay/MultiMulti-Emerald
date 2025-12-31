@@ -11148,6 +11148,7 @@ static void Cmd_tryKO(void)
     u32 rand = Random() % 100;
     u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
     u32 endured = NOT_ENDURED;
+    u16 battlerTraits[MAX_MON_TRAITS];
 
     // Dynamaxed Pokemon cannot be hit by OHKO moves.
     if ((GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
@@ -11179,7 +11180,7 @@ static void Cmd_tryKO(void)
         } 
         // Block if Endure, Sturdy, Focus Sash, or Focus Band already apply 
         else if (gSpecialStatuses[gBattlerTarget].enduredDamage == TRUE 
-            || GetBattlerAbility(gBattlerTarget) == ABILITY_STURDY 
+            || SearchTraits(battlerTraits, ABILITY_STURDY) 
             || holdEffect == HOLD_EFFECT_FOCUS_SASH 
             || holdEffect == HOLD_EFFECT_FOCUS_BAND) 
         { 
