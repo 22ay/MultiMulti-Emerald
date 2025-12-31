@@ -8017,7 +8017,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             }
         }
     if (SearchTraits(battlerTraits, ABILITY_ORICHALCUM_PULSE)
-     && (ctx->weather & B_WEATHER_SUN) && HasWeatherEffect() && IsBattleMovePhysical(move))
+     && (ctx->weather & B_WEATHER_SUN) && HasWeatherEffect() && IsBattleMovePhysical(move) && ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3333));
     if (SearchTraits(battlerTraits, ABILITY_HADRON_ENGINE)
      && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN && IsBattleMoveSpecial(move)))
