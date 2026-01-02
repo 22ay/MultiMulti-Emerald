@@ -7282,6 +7282,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
 
     u32 i;
     u32 basePower = GetMovePower(move);
+    basePower = GetSignatureBasePower(battlerAtk, move, basePower);
     u32 moveEffect = GetMoveEffect(move);
     u32 weight, hpFraction, speed;
 

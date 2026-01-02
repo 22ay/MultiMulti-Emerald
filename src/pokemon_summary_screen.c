@@ -348,6 +348,12 @@ u32 GetAdjustedIvData(struct Pokemon *mon, u32 stat);
 static void PrintTraits(void);
 static void Task_PrintTraits(u8);
 
+static const u8 sMoveNameTextColors[][3] =
+{
+    {0, 3, 4}, // normal
+    {0, 7, 8},  // signature move
+};
+
 
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -4274,7 +4280,21 @@ static void PrintMoveNameAndPP(u8 moveIndex)
     if (move != 0)
     {
         pp = CalculatePPWithBonus(move, summary->ppBonuses, moveIndex);
-        PrintTextOnWindowToFit(moveNameWindowId, GetMoveName(move), 0, moveIndex * 16 + 1, 0, 1);
+
+        u8 colorId = 0; // default color
+
+        if (IsSignatureMove(summary->species, move))
+            colorId = 1;
+
+        AddTextPrinterParameterized3(
+            moveNameWindowId,
+            FONT_NORMAL,
+            0,
+            moveIndex * 16 + 1,
+            sMoveNameTextColors[colorId],
+            0,
+            GetMoveName(move)
+        );
         ConvertIntToDecimalStringN(gStringVar1, summary->pp[moveIndex], STR_CONV_MODE_RIGHT_ALIGN, 2);
         ConvertIntToDecimalStringN(gStringVar2, pp, STR_CONV_MODE_RIGHT_ALIGN, 2);
         DynamicPlaceholderTextUtil_Reset();

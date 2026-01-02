@@ -4898,7 +4898,8 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
         move = GetUsableZMove(battler, move);
 
     priority = GetMovePriority(move);
-
+    // Signature move priority override
+    priority += GetSignaturePriority(battler, move);
     // Max Guard check
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return GetMovePriority(MOVE_MAX_GUARD);
