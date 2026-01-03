@@ -480,9 +480,9 @@
 #define P_FAMILY_ZERAORA                 P_GEN_7_POKEMON
 #define P_FAMILY_MELTAN                  P_GEN_7_POKEMON
 
-#define P_FAMILY_GROOKEY                 P_GEN_8_POKEMON
-#define P_FAMILY_SCORBUNNY               P_GEN_8_POKEMON
-#define P_FAMILY_SOBBLE                  P_GEN_8_POKEMON
+#define P_FAMILY_GROOKEY                 FALSE
+#define P_FAMILY_SCORBUNNY               FALSE
+#define P_FAMILY_SOBBLE                  FALSE
 #define P_FAMILY_SKWOVET                 FALSE
 #define P_FAMILY_ROOKIDEE                P_GEN_8_POKEMON
 #define P_FAMILY_BLIPBUG                 P_GEN_8_POKEMON
@@ -499,7 +499,7 @@
 #define P_FAMILY_TOXEL                   P_GEN_8_POKEMON
 #define P_FAMILY_SIZZLIPEDE              P_GEN_8_POKEMON
 #define P_FAMILY_CLOBBOPUS               FALSE
-#define P_FAMILY_SINISTEA                FALSE
+#define P_FAMILY_SINISTEA                P_GEN_8_POKEMON
 #define P_FAMILY_HATENNA                 P_GEN_8_POKEMON
 #define P_FAMILY_IMPIDIMP                P_GEN_8_POKEMON
 #define P_FAMILY_MILCERY                 FALSE
@@ -521,7 +521,7 @@
 #define P_FAMILY_ZAMAZENTA               FALSE
 #define P_FAMILY_ETERNATUS               FALSE
 #define P_FAMILY_KUBFU                   P_GEN_8_POKEMON
-#define P_FAMILY_ZARUDE                  FALSE
+#define P_FAMILY_ZARUDE                  P_GEN_8_POKEMON
 #define P_FAMILY_REGIELEKI               P_GEN_8_POKEMON
 #define P_FAMILY_REGIDRAGO               P_GEN_8_POKEMON
 #define P_FAMILY_GLASTRIER               FALSE
@@ -590,8 +590,8 @@
 #define P_FAMILY_MIRAIDON                FALSE
 #define P_FAMILY_WALKING_WAKE            P_GEN_9_POKEMON
 #define P_FAMILY_IRON_LEAVES             P_GEN_9_POKEMON
-#define P_FAMILY_POLTCHAGEIST            FALSE
-#define P_FAMILY_SINISTCHA               FALSE
+#define P_FAMILY_POLTCHAGEIST            P_GEN_9_POKEMON
+#define P_FAMILY_SINISTCHA               P_GEN_9_POKEMON
 #define P_FAMILY_OKIDOGI                 FALSE
 #define P_FAMILY_MUNKIDORI               FALSE
 #define P_FAMILY_FEZANDIPITI             FALSE

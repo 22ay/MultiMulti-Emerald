@@ -112,7 +112,7 @@ static EWRAM_DATA struct {
 
 static EWRAM_DATA void *sTilemapBuffer = NULL;
 static EWRAM_DATA struct ListMenuItem * sListMenuItemsBuffer = NULL;
-static EWRAM_DATA u8 (* sListMenuStringsBuffer)[29] = NULL;
+static EWRAM_DATA u8 (* sListMenuStringsBuffer)[64] = NULL;
 static EWRAM_DATA u16 * sTMSpritePaletteBuffer = NULL;
 static EWRAM_DATA u8 sIsInTMCase = FALSE;
 
@@ -687,7 +687,7 @@ static bool8 HandleLoadTMCaseGraphicsAndPalettes(void)
 static void CreateTMCaseListMenuBuffers(void)
 {
     sListMenuItemsBuffer = Alloc((BAG_TMHM_COUNT + 1) * sizeof(struct ListMenuItem));
-    sListMenuStringsBuffer = Alloc(sTMCaseDynamicResources->numTMs * 31);
+    sListMenuStringsBuffer = Alloc(sTMCaseDynamicResources->numTMs * 64);
 }
 
 static void InitTMCaseListMenuItems(void)
@@ -732,13 +732,13 @@ static void GetTMNumberAndMoveString(u8 * dest, u16 itemId)
     {
         StringAppend(gStringVar4, sText_ClearTo18);
         StringAppend(gStringVar4, gText_NumberClear01);
-        ConvertIntToDecimalStringN(gStringVar1, tmIdx - NUM_TECHNICAL_MACHINES, STR_CONV_MODE_LEADING_ZEROS, 1);
+        ConvertIntToDecimalStringN(gStringVar1, tmIdx - NUM_TECHNICAL_MACHINES, STR_CONV_MODE_LEADING_ZEROS, 2);
         StringAppend(gStringVar4, gStringVar1);
     }
     else
     {
         StringAppend(gStringVar4, gText_NumberClear01);
-        ConvertIntToDecimalStringN(gStringVar1, tmIdx, STR_CONV_MODE_LEADING_ZEROS, 2);
+        ConvertIntToDecimalStringN(gStringVar1, tmIdx, STR_CONV_MODE_LEADING_ZEROS, 3);
         StringAppend(gStringVar4, gStringVar1);
     }
     StringAppend(gStringVar4, sText_SingleSpace);
