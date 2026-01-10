@@ -80,12 +80,12 @@ struct GFRomHeader
     u32 gcnLinkFlagsOffset;
     u32 gameClearFlag;
     u32 ribbonFlag;
-    u8 bagCountItems;
-    u8 bagCountKeyItems;
-    u8 bagCountPokeballs;
-    u8 bagCountTMHMs;
-    u8 bagCountBerries;
-    u8 pcItemsCount;
+    u16 bagCountItems;
+    u16 bagCountKeyItems;
+    u16 bagCountPokeballs;
+    u16 bagCountTMHMs;
+    u16 bagCountBerries;
+    u16 pcItemsCount;
     u32 pcItemsOffset;
     u32 giftRibbonsOffset;
 #if FREE_ENIGMA_BERRY == FALSE
