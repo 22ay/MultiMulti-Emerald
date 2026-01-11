@@ -1131,16 +1131,36 @@
 #define ITEM_ZYGARDITE 963
 #define ITEM_DRAMPANITE 964
 #define ITEM_FALINKSITE 965
-#define ITEM_CUT_TOOL 966 // field items start
-#define ITEM_FLY_TOOL 967
-#define ITEM_SURF_TOOL 968
-#define ITEM_STRENGTH_TOOL 969
-#define ITEM_FLASH_TOOL 970
-#define ITEM_ROCK_SMASH_TOOL 971
-#define ITEM_WATERFALL_TOOL 972
-#define ITEM_DIVE_TOOL 973 // field items end
+// Legends Z-A: Mega Dimension DLC Mega Stones
+#define ITEM_HEATRANITE 966
+#define ITEM_DARKRANITE 967
+#define ITEM_ZERAORITE 968
+#define ITEM_RAICHUNITE_X 969
+#define ITEM_RAICHUNITE_Y 970
+#define ITEM_CHIMECHITE 971
+#define ITEM_ABSOLITE_Z 972
+#define ITEM_STARAPTITE 973
+#define ITEM_GARCHOMPITE_Z 974
+#define ITEM_LUCARIONITE_Z 975
+#define ITEM_GOLURKITE 976
+#define ITEM_MEOWSTICITE 977
+#define ITEM_CRABOMINITE 978
+#define ITEM_GOLISOPITE 979
+#define ITEM_MAGEARNITE 980
+#define ITEM_SCOVILLAINITE 981
+#define ITEM_BAXCALIBRITE 982
+#define ITEM_TATSUGIRINITE 983
+#define ITEM_GLIMMORANITE 984
+#define ITEM_CUT_TOOL 985 // field items start
+#define ITEM_FLY_TOOL 986
+#define ITEM_SURF_TOOL 987
+#define ITEM_STRENGTH_TOOL 988
+#define ITEM_FLASH_TOOL 989
+#define ITEM_ROCK_SMASH_TOOL 990
+#define ITEM_WATERFALL_TOOL 991
+#define ITEM_DIVE_TOOL 992 // field items end
 
-#define ITEMS_COUNT 974
+#define ITEMS_COUNT 993
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
