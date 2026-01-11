@@ -200,12 +200,9 @@ static void Task_QuestMenuTurnOff1(u8 taskId);
 static void Task_QuestMenuTurnOff2(u8 taskId);
 
 // Tiles, palettes and tilemaps for the Quest Menu
-static const u32 sQuestMenuTiles[] =
-        INCBIN_U32("graphics/quest_menu/menu.4bpp.lz");
-static const u32 sQuestMenuBgPals[] =
-        INCBIN_U32("graphics/quest_menu/menu.gbapal.lz");
-static const u32 sQuestMenuTilemap[] =
-        INCBIN_U32("graphics/quest_menu/menu.bin.lz");
+static const u32 sQuestMenuTiles[] = INCBIN_U32("graphics/quest_menu/menu.4bpp.lz");
+static const u32 sQuestMenuBgPals[] = INCBIN_U32("graphics/quest_menu/menu.gbapal");
+static const u32 sQuestMenuTilemap[] = INCBIN_U32("graphics/quest_menu/menu.bin.lz");
 
 //Strings used for the Quest Menu
 static const u8 sText_Empty[] = _("");
@@ -1159,12 +1156,12 @@ static bool8 LoadGraphics(void)
 		case 1:
 			if (FreeTempTileDataBuffersIfPossible() != TRUE)
 			{
-				LZDecompressWram(sQuestMenuTilemap, sBg1TilemapBuffer);
+				FastLZ77UnCompWram(sQuestMenuTilemap, sBg1TilemapBuffer);
 				sStateDataPtr->data[0]++;
 			}
 			break;
 		case 2:
-			LoadCompressedPalette(sQuestMenuBgPals, 0x00, 0x60);
+			LoadPalette(sQuestMenuBgPals, 0x00, 0x60);
 			sStateDataPtr->data[0]++;
 			break;
 		case 3:
@@ -2169,46 +2166,46 @@ void DetermineSpriteType(s32 questId)
 	QuestMenu_DestroySprite(sStateDataPtr->spriteIconSlot ^ 1);
 	sStateDataPtr->spriteIconSlot ^= 1;
 }
+
 static void QuestMenu_CreateSprite(u16 itemId, u8 idx, u8 spriteType)
 {
-	u8 *ptr = &sItemMenuIconSpriteIds[10];
-	u8 spriteId = 0xFF;
+    u8 *ptr = &sItemMenuIconSpriteIds[10];
+    u8 spriteId = 0xFF;
 
-	if (ptr[idx] == 0xFF)
-	{
-		FreeSpriteTilesByTag(102 + idx);
-		FreeSpritePaletteByTag(102 + idx);
+    if (ptr[idx] == 0xFF)
+    {
+        FreeSpriteTilesByTag(102 + idx);
+        FreeSpritePaletteByTag(102 + idx);
 
-		switch (spriteType)
-		{
-			case OBJECT:
-				spriteId = CreateObjectGraphicsSprite(itemId, SpriteCallbackDummy, 20,
-				                                      132, 0);
-				break;
-			case ITEM:
-				spriteId = AddItemIconSprite(102 + idx, 102 + idx, itemId);
-				break;
-			case PKMN:
-				LoadMonIconPalettes();
-				spriteId = CreateMonIcon(itemId, SpriteCallbackDummy, 20, 132, 0, 1, 1);
-				break;
-			default:
-				break;
-		}
+        switch (spriteType)
+        {
+            case OBJECT:
+                spriteId = CreateObjectGraphicsSprite(itemId, SpriteCallbackDummy, 20, 132, 0);
+                break;
 
-		gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+            case ITEM:
+                spriteId = AddItemIconSprite(102 + idx, 102 + idx, itemId);
+                break;
 
-		if (spriteId != MAX_SPRITES)
-		{
-			ptr[idx] = spriteId;
+            case PKMN:
+                LoadMonIconPalettes();
+                spriteId = CreateMonIcon(itemId, SpriteCallbackDummy, 20, 132, 0, 1);
+                break;
+        }
 
-			if (spriteType == ITEM)
-			{
-				gSprites[spriteId].x2 = 24;
-				gSprites[spriteId].y2 = 140;
-			}
-		}
-	}
+        // *** ALL gSprites[] access MUST be inside this check ***
+        if (spriteId != 0xFF)
+        {
+            gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+            ptr[idx] = spriteId;
+
+            if (spriteType == ITEM)
+            {
+                gSprites[spriteId].x2 = 24;
+                gSprites[spriteId].y2 = 140;
+            }
+        }
+    }
 }
 
 void ResetSpriteState(void)
