@@ -1,6 +1,6 @@
 # Multi-Items (Full Release)
 
-This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.13.1.
+This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.14.2.
 
 - Battle Behavior:
 	- Item activations happen once per opportunity.  For example if you have two healing berries and your hp drops below half, only one berry will be eaten.  Likewise, eating a berry means nothing else will activate during that opportunity.
