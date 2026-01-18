@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Fling fails if the item changes the Pokémon's form")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == ITEM_GRISEOUS_CORE);
+        EXPECT(player->items[0] == ITEM_GRISEOUS_CORE);
     }
 }
 
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Fling works if the item changes a Pokémon's form but not th
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -156,7 +156,7 @@ SINGLE_BATTLE_TEST("Fling - Item is lost even when there is no target")
         MESSAGE("Wobbuffet used Fling!");
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
         MESSAGE("Wobbuffet used Fling!");
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -246,7 +246,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/
         }
 
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
