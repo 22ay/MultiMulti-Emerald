@@ -1614,7 +1614,7 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
         critChance  = (gBattleMons[battlerAtk].volatiles.focusEnergy != 0 ? 2 : 0)
                     + (gBattleMons[battlerAtk].volatiles.dragonCheer != 0 ? 1 : 0)
                     + GetMoveCriticalHitStage(move)
-                    + GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk)
+                    + GetHoldEffectCritChanceIncrease(battlerAtk)
                     + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 1 : 0)
                     + (abilityAtk == ABILITY_SUPER_LUCK ? 1 : 0)
                     + gBattleMons[battlerAtk].volatiles.bonusCritStages;
@@ -11140,8 +11140,8 @@ static void Cmd_tryKO(void)
         // Block if Endure, Sturdy, Focus Sash, or Focus Band already apply 
         else if (gSpecialStatuses[gBattlerTarget].enduredDamage == TRUE 
             || GetBattlerAbility(gBattlerTarget) == ABILITY_STURDY 
-            || holdEffect == HOLD_EFFECT_FOCUS_SASH 
-            || holdEffect == HOLD_EFFECT_FOCUS_BAND) 
+            || BattlerHasHeldItemEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE) 
+            || BattlerHasHeldItemEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE)) 
         { 
             // Do nothing — skip affection endurance 
         } 

@@ -1965,6 +1965,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             CreateMon(&party[i], scaledSpecies, scaledLevel, 0, TRUE, personalityValue, otIdType, fixedOtId);
             #else
             CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, 0, TRUE, personalityValue, otIdType, fixedOtId);
+            #endif
             for (j = 0; j < MAX_MON_ITEMS; j++)
                 SetMonData(&party[i], MON_DATA_HELD_ITEM + j, &partyData[monIndex].heldItem[j]);
 
