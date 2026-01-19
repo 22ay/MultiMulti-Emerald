@@ -445,7 +445,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsSemiInvulnerable(u32 battler, enum SemiInvulnerableExclusion excludeCommander);
 bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move);
 bool32 HasPartnerTrainer(u32 battler);
-bool32 IsAffectedByPowderMove(u32 battler, u32 ability, bool32 hasGoggles);
+bool32 IsAffectedByPowderMove(u32 battler, bool32 hasGoggles);
 u32 GetNaturePowerMove(u32 battler);
 u32 GetNaturePowerMove(u32 battler);
 void RemoveAbilityFlags(u32 battler);

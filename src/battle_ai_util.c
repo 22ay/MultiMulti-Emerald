@@ -55,7 +55,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
 
 bool32 AI_IsBattlerGrounded(u32 battler)
 {
-    return IsBattlerGrounded(battler)
+    return IsBattlerGrounded(battler);
 }
 
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
@@ -863,9 +863,9 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
 
     // Get crit chance
     if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
-        critChanceIndex = CalcCritChanceStageGen1(battlerAtk, battlerDef, move, FALSE)
+        critChanceIndex = CalcCritChanceStageGen1(battlerAtk, battlerDef, move, FALSE);
     else
-        critChanceIndex = CalcCritChanceStage(battlerAtk, battlerDef, move, FALSE)
+        critChanceIndex = CalcCritChanceStage(battlerAtk, battlerDef, move, FALSE);
 
     if (critChanceIndex == CRITICAL_HIT_ALWAYS)
         return TRUE;

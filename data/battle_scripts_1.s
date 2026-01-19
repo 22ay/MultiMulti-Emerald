@@ -8501,7 +8501,7 @@ BattleScript_JabocaRowapBerryActivate_Anim:
 	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
 	waitanimation
 BattleScript_JabocaRowapBerryActivate_Dmg:
-	call BattleScript_HurtAttacker
+	call BattleScript_HurtAttackerItem
 	removeitemwitheffect BS_TARGET, HOLD_EFFECT_NONE
 	return
 

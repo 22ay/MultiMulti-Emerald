@@ -1122,7 +1122,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, Activat
             effect = TryBerserkGene(itemBattler, timing);
             break;
         case HOLD_EFFECT_BOOSTER_ENERGY:
-            effect = TryBoosterEnergy(itemBattler, GetBattlerAbility(itemBattler), timing);
+            effect = TryBoosterEnergy(itemBattler, timing);
             break;
         case HOLD_EFFECT_WHITE_HERB:
             effect = RestoreWhiteHerbStats(itemBattler, timing);

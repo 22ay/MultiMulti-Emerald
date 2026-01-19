@@ -300,7 +300,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
     // Check if mon gets one shot
     if (maxDamageTaken > gBattleMons[battler].hp
-        && !(BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FOCUS_SASH, TRUE) || (!HasMoldBreakerTypeAbility(opposingBattler) && GetConfig(CONFIG_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battler, ABILITY_STURDY)))
+        && !(BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FOCUS_SASH, TRUE) || (!HasMoldBreakerTypeAbility(opposingBattler) && GetConfig(CONFIG_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battler, ABILITY_STURDY))))
     {
         getsOneShot = TRUE;
     }
@@ -1556,7 +1556,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
 
     // Check ways mon might avoid all hazards
     if ((ability != ABILITY_MAGIC_GUARD && !SpeciesHasInnate(species, ABILITY_MAGIC_GUARD)) || (heavyDutyBootsAffected &&
-        !((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || (ability == ABILITY_LEVITATE || SpeciesHasInnate(species, ABILITY_LEVITATE))))
+        !((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || (ability == ABILITY_LEVITATE || SpeciesHasInnate(species, ABILITY_LEVITATE)))))
     {
         // Stealth Rock
         if (IsHazardOnSide(side, HAZARDS_STEALTH_ROCK) && !heavyDutyBootsAffected)
@@ -1565,7 +1565,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
         if (IsHazardOnSide(side, HAZARDS_STEELSURGE) && !heavyDutyBootsAffected)
             hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, defType1, defType2, battleMon->maxHP);
         // Spikes
-        if (IsHazardOnSide(side, HAZARDS_SPIKES) && IsMonGrounded(battler, defType1, defType2, species))
+        if (IsHazardOnSide(side, HAZARDS_SPIKES) && IsMonGrounded(battler, ability, defType1, defType2, species))
         {
             spikesDamage = maxHP / ((5 - gSideTimers[GetBattlerSide(battler)].spikesAmount) * 2);
             if (spikesDamage == 0)
@@ -1583,7 +1583,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
             && !IsAbilityStatusProtected(battler)
             && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CURE_PSN, TRUE)
             && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CURE_STATUS, TRUE)
-            && IsMonGrounded(battler, defType1, defType2, species)))
+            && IsMonGrounded(battler, ability, defType1, defType2, species)))
         {
             tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
             if (tSpikesLayers == 1)

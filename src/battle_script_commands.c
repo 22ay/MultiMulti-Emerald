@@ -1460,8 +1460,8 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 
     if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT
         || (gSpecialStatuses[gBattlerAttacker].multiHitOn
-        && (BattlerHasTrait(gBattlerAttacker, ABILITY_SKILL_LINK)) || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_LOADED_DICE, TRUE)
-        || !(effect == EFFECT_TRIPLE_KICK || effect == EFFECT_POPULATION_BOMB))))
+        && (BattlerHasTrait(gBattlerAttacker, ABILITY_SKILL_LINK) || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_LOADED_DICE, TRUE)))
+        || !(effect == EFFECT_TRIPLE_KICK || effect == EFFECT_POPULATION_BOMB))
     {
         // No acc checks for second hit of Parental Bond or multi hit moves, except Triple Kick/Triple Axel/Population Bomb
         gBattlescriptCurrInstr = nextInstr;
@@ -1757,9 +1757,9 @@ static void Cmd_critcalc(void)
             continue;
 
         if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
-            gBattleStruct->critChance[battlerDef] = CalcCritChanceStageGen1(gBattlerAttacker, battlerDef, gCurrentMove)
+            gBattleStruct->critChance[battlerDef] = CalcCritChanceStageGen1(gBattlerAttacker, battlerDef, gCurrentMove, TRUE);
         else
-            gBattleStruct->critChance[battlerDef] = CalcCritChanceStage(gBattlerAttacker, battlerDef, gCurrentMove)
+            gBattleStruct->critChance[battlerDef] = CalcCritChanceStage(gBattlerAttacker, battlerDef, gCurrentMove, TRUE);
 
         if (gBattleTypeFlags & (BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_FIRST_BATTLE))
             gSpecialStatuses[battlerDef].criticalHit = FALSE;
@@ -5681,14 +5681,19 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battlerAtk);
 
-    switch (abilityAtk)
+    // -------------------------
+    //  MAGICIAN
+    // -------------------------
+    if (SearchTraits(battlerTraits, ABILITY_MAGICIAN))
     {
-    case ABILITY_MAGICIAN:
-        u8 slot, i, targetableSlots[MAX_MON_ITEMS];
+        u8 slot, i;
+        u8 targetableSlots[MAX_MON_ITEMS];
         u8 index = 0;
-        targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
 
-        for (i = 0; i < MAX_MON_ITEMS; i++) //Gather all stealable item slots
+        targetableSlots[0] = MAX_MON_ITEMS; // invalid marker
+
+        // Gather all stealable item slots
+        for (i = 0; i < MAX_MON_ITEMS; i++)
         {
             if (CanStealItem(battlerAtk, battlerDef, gBattleMons[battlerDef].items[i])
                 && gBattleMons[battlerAtk].items[i] == ITEM_NONE
@@ -5696,31 +5701,35 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
+
                 targetableSlots[index] = i;
             }
         }
 
+        // If no valid slots, skip Magician
         if (targetableSlots[0] != MAX_MON_ITEMS)
         {
             slot = gLastItemSlot = GetSlot(targetableSlots, index);
 
             if (SearchTraits(battlerTraits, ABILITY_MAGICIAN)
-            && GetMoveEffect(move) != EFFECT_FLING
-            && GetMoveEffect(move) != EFFECT_NATURAL_GIFT
-            && IsBattlerAlive(battlerAtk)
-            && IsBattlerTurnDamaged(battlerDef)
-            && !gSpecialStatuses[battlerAtk].gemBoost)   // In base game, gems are consumed after magician would activate.
+                && GetMoveEffect(move) != EFFECT_FLING
+                && GetMoveEffect(move) != EFFECT_NATURAL_GIFT
+                && IsBattlerAlive(battlerAtk)
+                && IsBattlerTurnDamaged(battlerDef)
+                && !gSpecialStatuses[battlerAtk].gemBoost)
             {
                 u32 numMagicianTargets = 0;
                 u32 magicianTargets = 0;
 
+                // Find all valid targets
                 for (i = 0; i < gBattlersCount; i++)
                 {
                     if (i != battlerAtk
-                    && IsBattlerTurnDamaged(i)
-                    && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(i)] & (1u << gBattlerPartyIndexes[i]))
-                    && !DoesSubstituteBlockMove(battlerAtk, i, move)
-                    && (!BattlerHasTrait(i, ABILITY_STICKY_HOLD) || !IsBattlerAlive(i)))
+                        && IsBattlerTurnDamaged(i)
+                        && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(i)] 
+                             & (1u << gBattlerPartyIndexes[i]))
+                        && !DoesSubstituteBlockMove(battlerAtk, i, move)
+                        && (!BattlerHasTrait(i, ABILITY_STICKY_HOLD) || !IsBattlerAlive(i)))
                     {
                         magicianTargets |= 1u << i;
                         numMagicianTargets++;
@@ -5728,20 +5737,19 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 }
 
                 if (numMagicianTargets == 0)
-                {
-                    effect = FALSE;
-                    break;
-                }
+                    return effect; // nothing to do
 
                 u8 battlers[4] = {0, 1, 2, 3};
+
                 if (numMagicianTargets > 1)
                     SortBattlersBySpeed(battlers, FALSE);
 
-                for (u32 i = 0; i < gBattlersCount; i++)
+                // Attempt to steal from the fastest valid target
+                for (u32 j = 0; j < gBattlersCount; j++)
                 {
-                    u32 battler = battlers[i];
+                    u32 battler = battlers[j];
 
-                    if (!(magicianTargets & 1u << battler))
+                    if (!(magicianTargets & (1u << battler)))
                         continue;
 
                     gLastUsedAbility = ABILITY_MAGICIAN;
@@ -5750,13 +5758,14 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                     gEffectBattler = battler;
                     PushTraitStack(battlerAtk, ABILITY_MAGICIAN);
                     BattleScriptCall(BattleScript_MagicianActivates);
+
                     effect = TRUE;
-                    break; // found target to steal from
+                    break;
                 }
             }
         }
     }
-}
+
 
 if (SearchTraits(battlerTraits, ABILITY_MOXIE))
     {
@@ -7142,7 +7151,7 @@ static void Cmd_moveend(void)
         case MOVEEND_PICKPOCKET:
             if (IsBattlerAlive(gBattlerAttacker)
               && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker]))   // But not knocked off
-              && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget)    // Pickpocket requires contact
+              && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, gCurrentMove)    // Pickpocket requires contact
               && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))           // Obviously attack needs to have worked
             {
                 u8 battlers[4] = {0, 1, 2, 3};
@@ -7180,7 +7189,7 @@ static void Cmd_moveend(void)
                             gBattlerTarget = gBattlerAbility = battler;
                             // Battle scripting is super brittle so we shall do the item exchange now (if possible)
                             if (!BattlerHasTrait(gBattlerAttacker, ABILITY_STICKY_HOLD))
-                            StealTargetItem(gBattlerTarget, gBattlerAttacker); // Target takes attacker's item
+                            StealTargetItem(gBattlerTarget, gBattlerAttacker, slot); // Target takes attacker's item
 
                         gEffectBattler = gBattlerAttacker;
                         PushTraitStack(battler, ABILITY_PICKPOCKET);
@@ -10549,7 +10558,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
         {
             return STAT_CHANGE_DIDNT_WORK;
         }
-        else if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CLEAR_AMULET, TRUE) || CanAbilityPreventStatLoss(battler))
+        else if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CLEAR_AMULET, TRUE) || CanBattlerPreventStatLoss(battler))
               && (flags.statDropPrevention || gBattlerAttacker != gBattlerTarget || flags.mirrorArmored) && !flags.certain && gCurrentMove != MOVE_CURSE)
         {
             if (flags.allowPtr)
@@ -15930,8 +15939,8 @@ void BS_TryIntimidateEjectPack(void)
 
     if (ejectPackBattler && ejectPackPartnerBattler)
     {
-        u32 battlerSpeed = GetBattlerTotalSpeedStat(battler, GetBattlerAbility(battler));
-        u32 partnerbattlerSpeed = GetBattlerTotalSpeedStat(partnerBattler, GetBattlerAbility(partnerBattler));
+        u32 battlerSpeed = GetBattlerTotalSpeedStat(battler);
+        u32 partnerbattlerSpeed = GetBattlerTotalSpeedStat(partnerBattler);
 
         if (battlerSpeed >= partnerbattlerSpeed)
             affectedBattler = battler;
