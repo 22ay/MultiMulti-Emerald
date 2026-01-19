@@ -116,6 +116,9 @@
 #define MAX_MON_MOVES 4
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
 #define MAX_MON_ITEMS 2 // Number of items that can be held by a pokemon
+#define MAX_MON_INNATES 3 // The max number of Innates that are enabled in gameplay
+#define MAX_MON_INNATES_INTERNAL 3 // The max number of Innates that a pokemon can have in the species definition lists.
+#define MAX_MON_TRAITS (MAX_MON_INNATES + 1) // The max number of Innates with Abilities included
 
 #define CONTESTANT_COUNT 4
 #define CONTEST_CATEGORY_COOL      0

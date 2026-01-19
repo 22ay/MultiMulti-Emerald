@@ -2487,3 +2487,9 @@
 	.macro tryabsorbtoxicspikesonfaint
 	callnative BS_TryAbsorbToxicSpikesOnFaint
 	.endm
+
+	.macro pushtraitstack battler:req, ability:req
+	callnative BS_PushTraitStack
+	.byte \battler
+	.2byte \ability
+	.endm

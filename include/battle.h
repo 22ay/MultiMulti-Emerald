@@ -178,6 +178,8 @@ struct ProtectStruct
     u16 specialDmg;
     u8 physicalBattlerId:4;
     u8 specialBattlerId:4;
+    u8 contraryDefiant; // 1 - Contrary + Defiant triggered (do not repeat). 0 - abilities not triggered together yet
+    u8 contraryCompetitive; // 1 - Contrary + Competitive triggered (do not repeat). 0 - abilities not triggered together yet
 };
 
 // Cleared at the start of HandleAction_ActionFinished
@@ -217,6 +219,8 @@ struct SpecialStatus
     // End of byte
     u8 berryReducedType; // Catch for multiple berries and hidden power(multi)
     // End of byte
+    bool8 switchInTraitDone[MAX_MON_TRAITS];
+    bool8 endTurnTraitDone[MAX_MON_TRAITS];
 };
 
 struct SideTimer
@@ -317,6 +321,7 @@ struct SimulatedDamage
 struct AiLogicData
 {
     enum Ability abilities[MAX_BATTLERS_COUNT];
+    enum Ability innates[MAX_BATTLERS_COUNT][MAX_MON_INNATES];
     u16 items[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u16 holdEffects[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u8 holdEffectParams[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
@@ -874,7 +879,8 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 #define SET_STAT_BUFF_VALUE(n) ((((n) << 3) & 0xF8))
 
 #define SET_STATCHANGER(statId, stage, goesDown) (gBattleScripting.statChanger = (statId) + ((stage) << 3) + (goesDown << 7))
-#define SET_STATCHANGER2(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7))
+#define SET_STATCHANGER2(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7)) // Moody
+#define SET_STATCHANGER3(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7)) // Speed Boost
 
 // NOTE: The members of this struct have hard-coded offsets
 //       in include/constants/battle_script_commands.h
@@ -1060,10 +1066,15 @@ extern s32 gBideDmg[MAX_BATTLERS_COUNT];
 extern u16 gLastUsedItem;
 extern u8 gLastItemSlot; //For random item slot selection that should match another random selection (Multi)
 extern enum Ability gLastUsedAbility;
+extern enum Ability gDisplayAbility;
+extern enum Ability gDisplayAbility2;
+extern u8 gDisplayBattler;
+extern enum Ability gTraitStack[MAX_BATTLERS_COUNT * MAX_MON_TRAITS][2];
 extern u8 gBattlerAttacker;
 extern u8 gBattlerTarget;
 extern u8 gBattlerFainted;
 extern u8 gEffectBattler;
+extern u8 gEffectBattler2;
 extern u8 gPotentialItemEffectBattler;
 extern u8 gAbsentBattlerFlags;
 extern u8 gMultiHitCounter;
