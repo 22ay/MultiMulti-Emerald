@@ -555,3 +555,15 @@ DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suct
         HP_BAR(opponentLeft);
     }
 }
+
+TO_DO_BATTLE_TEST("Dancer-called damaging moves are considered for Counter/Mirror Coat/Metal Burst (Multi)")
+TO_DO_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an additional Z-Power effect (Multi)")
+TO_DO_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a move if it's confused (Multi)")
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rampage move (Multi)") // Test with Petal Dance, Thrash
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rollout (Multi)")
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Choice items (Multi)")
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Encore (Multi)")
+TO_DO_BATTLE_TEST("Dancer tries to copy a status move but fails if it's under Taunt's effect (Multi)")
+TO_DO_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest (Multi)")
+TO_DO_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out (Multi)")
+TO_DO_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat (Multi)")

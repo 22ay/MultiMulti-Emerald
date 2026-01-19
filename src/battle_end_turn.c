@@ -96,9 +96,8 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
     u32 currBattleWeather = GetCurrentBattleWeather();
-    u16 battlerTraits[MAX_MON_TRAITS];
+    enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
 
     if (currBattleWeather == 0xFF)
@@ -125,7 +124,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_RAIN_DOWNPOUR:
         if (SearchTraits(battlerTraits, ABILITY_DRY_SKIN) || SearchTraits(battlerTraits, ABILITY_RAIN_DISH))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         break;
@@ -133,7 +132,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_SUN_PRIMAL:
         if (SearchTraits(battlerTraits, ABILITY_DRY_SKIN) || SearchTraits(battlerTraits, ABILITY_SOLAR_POWER))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         break;
@@ -145,7 +144,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
+         && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
          && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -158,7 +157,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_SNOW:
         if (SearchTraits(battlerTraits, ABILITY_ICE_BODY))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         else if (currBattleWeather == BATTLE_WEATHER_HAIL)
@@ -168,7 +167,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-             && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
+             && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
              && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD))
             {
                 SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -372,7 +371,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
          && !IsBattlerAtMaxHp(battler)
          && !gBattleMons[battler].volatiles.healBlock
          && !IsSemiInvulnerable(battler, CHECK_ALL)
-         && IsBattlerGrounded(battler, GetBattlerHoldEffect(battler)))
+         && IsBattlerGrounded(battler))
         {
             SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             BattleScriptExecute(BattleScript_GrassyTerrainHeals);
@@ -382,21 +381,26 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
-        enum Ability ability = GetBattlerAbility(battler);
         if (BattlerHasTrait(battler, ABILITY_HEALER)
          || BattlerHasTrait(battler, ABILITY_HYDRATION)
          || BattlerHasTrait(battler, ABILITY_SHED_SKIN))
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_STATUS_CURE, battler, 0, MOVE_NONE))
                 effect = TRUE;
-        gBattleStruct->eventState.endTurnBlock++;
+
+        if (effect == FALSE) //Loop End Turn abilities until none activate anymore (Multi)
+            gBattleStruct->eventState.endTurnBlock++;
         break;
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsLeftoversActivation))
-            effect = TRUE;
+    {
+        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
+            if (ItemBattleEffects(battler, 0, IsLeftoversActivation))
+                effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
+    }
     }
 
     return effect;
@@ -627,7 +631,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
+            if (BattlerHasHeldItemEffect(gBattleMons[battler].volatiles.wrappedBy, HOLD_EFFECT_BINDING_BAND, TRUE))
                 bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
             else
                 bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
@@ -868,8 +872,6 @@ static bool32 HandleEndTurnYawn(u32 battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
-
     gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.yawn > 0)
@@ -880,16 +882,15 @@ static bool32 HandleEndTurnYawn(u32 battler)
          && !BattlerHasTrait(battler, ABILITY_VITAL_SPIRIT)
          && !BattlerHasTrait(battler, ABILITY_INSOMNIA)
          && !UproarWakeUpCheck(battler)
-         && !IsLeafGuardProtected(battler, ability))
+         && !IsLeafGuardProtected(battler))
         {
             gEffectBattler = gBattlerTarget = battler;
-            enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-            if (IsBattlerTerrainAffected(battler, holdEffect, STATUS_FIELD_ELECTRIC_TERRAIN))
+            if (IsBattlerTerrainAffected(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
             }
-            else if (IsBattlerTerrainAffected(battler, holdEffect, STATUS_FIELD_MISTY_TERRAIN))
+            else if (IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_MISTY;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
@@ -1271,7 +1272,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
     {
-        u16 battlerTraits[MAX_MON_TRAITS];
+        enum Ability battlerTraits[MAX_MON_TRAITS];
         STORE_BATTLER_TRAITS(battler);
 
         if (SearchTraits(battlerTraits, ABILITY_TRUANT) // Not fully accurate but it has to be handled somehow. TODO: Find a better way.
@@ -1283,31 +1284,37 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
          || SearchTraits(battlerTraits, ABILITY_MOODY)
          || SearchTraits(battlerTraits, ABILITY_PICKUP)
          || SearchTraits(battlerTraits, ABILITY_SPEED_BOOST))
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ABILITY_NONE, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
 
-        gBattleStruct->eventState.endTurnBlock++;
+        if (effect == FALSE) //Loop End Turn abilities until none activate anymore (Multi)
+            gBattleStruct->eventState.endTurnBlock++;
+
+        if (SearchTraits(battlerTraits, ABILITY_TRUANT)
+         || SearchTraits(battlerTraits, ABILITY_CUD_CHEW)
+         || SearchTraits(battlerTraits, ABILITY_SLOW_START)
+         || SearchTraits(battlerTraits, ABILITY_BAD_DREAMS)
+         || SearchTraits(battlerTraits, ABILITY_BALL_FETCH)
+         || SearchTraits(battlerTraits, ABILITY_HARVEST)
+         || SearchTraits(battlerTraits, ABILITY_MOODY)
+         || SearchTraits(battlerTraits, ABILITY_PICKUP)
+         || SearchTraits(battlerTraits, ABILITY_SPEED_BOOST))
+            effect = TRUE; // Set effect again outside above loop
         break;
     }
     case THIRD_EVENT_BLOCK_ITEMS:
     {
-        // TODO: simplify
-        enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-        switch (holdEffect)
-        {
-        case HOLD_EFFECT_FLAME_ORB:
-        case HOLD_EFFECT_STICKY_BARB:
-        case HOLD_EFFECT_TOXIC_ORB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsOrbsActivation))
+
+        if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
+         && ItemBattleEffects(battler, 0, IsOrbsActivation))
                 effect = TRUE;
-            break;
-        case HOLD_EFFECT_WHITE_HERB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsWhiteHerbEndTurnActivation))
+
+        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE)
+         && ItemBattleEffects(battler, 0, IsWhiteHerbEndTurnActivation))
                 effect = TRUE;
-            break;
-        default:
-            break;
-        }
+
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
@@ -1323,7 +1330,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    u16 battlerTraits[MAX_MON_TRAITS];
+    enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
     
     if (SearchTraits(battlerTraits, ABILITY_POWER_CONSTRUCT)
@@ -1331,7 +1338,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
      || SearchTraits(battlerTraits, ABILITY_SHIELDS_DOWN)
      || SearchTraits(battlerTraits, ABILITY_ZEN_MODE)
      || SearchTraits(battlerTraits, ABILITY_HUNGER_SWITCH))
-        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ABILITY_NONE, 0, MOVE_NONE))
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_FORM_CHANGE, battler, 0, MOVE_NONE))
             effect = TRUE;
 
     return effect;

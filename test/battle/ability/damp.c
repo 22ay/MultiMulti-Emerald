@@ -73,6 +73,8 @@ SINGLE_BATTLE_TEST("Damp prevents damage from Aftermath")
     }
 }
 
+//TO_DO_BATTLE_TEST("Damp affects non-adjacent Pokémon (triples)")
+
 SINGLE_BATTLE_TEST("Damp prevents explosion-like moves from enemies (Multi)")
 {
     u32 move;

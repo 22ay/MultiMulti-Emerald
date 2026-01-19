@@ -94,6 +94,7 @@ MULTI_BATTLE_TEST("Multi Battle Tests register partner's status1")
         STATUS_ICON(playerRight, STATUS1_BURN);
     }
 }
+
 SINGLE_BATTLE_TEST("Forced abilities activate on switch-in (Multi)")
 {
     GIVEN {

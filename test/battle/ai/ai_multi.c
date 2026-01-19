@@ -250,6 +250,7 @@ AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENE
         }
     }
 }
+
 AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out 2 (Multi)")
 {
     GIVEN {

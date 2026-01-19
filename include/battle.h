@@ -119,7 +119,7 @@ struct DisableStruct
     u8 truantSwitchInHack:1;
     u8 tarShot:1;
     u8 octolock:1;
-    u8 cudChew:1;
+    u8 cudChew[MAX_MON_ITEMS];
     u8 weatherAbilityDone:1;
     u8 terrainAbilityDone:1;
     u8 syrupBombIsShiny:1;
@@ -198,7 +198,6 @@ struct SpecialStatus
     u8 padding1:1;
     // End of byte
     u8 switchInAbilityDone:1;
-    bool8 switchInTraitDone[MAX_MON_TRAITS];
     u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
@@ -218,6 +217,10 @@ struct SpecialStatus
     u8 dancerOriginalTarget:3;
     u8 padding3:5;
     // End of byte
+    u8 berryReducedType; // Catch for multiple berries and hidden power(multi)
+    // End of byte
+    bool8 switchInTraitDone[MAX_MON_TRAITS];
+    bool8 endTurnTraitDone[MAX_MON_TRAITS];
 };
 
 struct SideTimer
@@ -273,7 +276,7 @@ struct AI_SavedBattleMon
 {
     enum Ability ability;
     u16 moves[MAX_MON_MOVES];
-    u16 heldItem;
+    u16 heldItem[MAX_MON_ITEMS];
     u16 species:15;
     u16 saved:1;
     enum Type types[3];
@@ -282,8 +285,8 @@ struct AI_SavedBattleMon
 struct AiPartyMon
 {
     u16 species;
-    u16 item;
-    u16 heldEffect;
+    u16 items[MAX_MON_ITEMS];
+    u16 heldEffects[MAX_MON_ITEMS];
     enum Ability ability;
     u16 level;
     u16 moves[MAX_MON_MOVES];
@@ -319,9 +322,9 @@ struct AiLogicData
 {
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum Ability innates[MAX_BATTLERS_COUNT][MAX_MON_INNATES];
-    u16 items[MAX_BATTLERS_COUNT];
-    u16 holdEffects[MAX_BATTLERS_COUNT];
-    u8 holdEffectParams[MAX_BATTLERS_COUNT];
+    u16 items[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
+    u16 holdEffects[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
+    u8 holdEffectParams[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u16 lastUsedMove[MAX_BATTLERS_COUNT];
     u8 hpPercents[MAX_BATTLERS_COUNT];
     u16 partnerMove;
@@ -363,13 +366,13 @@ struct AiThinkingStruct
 struct BattleHistory
 {
     enum Ability abilities[MAX_BATTLERS_COUNT];
-    u8 itemEffects[MAX_BATTLERS_COUNT];
+    u8 itemEffects[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u16 usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
     u16 moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
     u8 moveHistoryIndex[MAX_BATTLERS_COUNT];
     u16 trainerItems[MAX_BATTLERS_COUNT];
     u8 itemsNo;
-    u16 heldItems[MAX_BATTLERS_COUNT];
+    u16 heldItem[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
 };
 
 struct BattleScriptsStack
@@ -609,7 +612,7 @@ struct PartyState
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
     u32 sentOut:1;
     u32 padding:9;
-    u16 usedHeldItem;
+    u16 usedHeldItems[MAX_MON_ITEMS];
 };
 
 struct EventStates
@@ -688,7 +691,7 @@ struct BattleStruct
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
-    u16 changedItems[MAX_BATTLERS_COUNT];
+    u16 changedItems[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {
@@ -731,7 +734,7 @@ struct BattleStruct
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 metronomeItemCounter[MAX_BATTLERS_COUNT]; // For Metronome, number of times the same moves has been SUCCESFULLY used.
     u8 quickClawBattlerId;
-    struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
+    struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE][MAX_MON_ITEMS];  // Pokemon that had items consumed or stolen (two bytes per party member per side per item slot)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
     u8 bouncedMoveIsUsed:1;
@@ -876,9 +879,8 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 #define SET_STAT_BUFF_VALUE(n) ((((n) << 3) & 0xF8))
 
 #define SET_STATCHANGER(statId, stage, goesDown) (gBattleScripting.statChanger = (statId) + ((stage) << 3) + (goesDown << 7))
-#define SET_STATCHANGER_SECOND(statId, stage, goesDown) (gBattleScripting.statChanger2 = (statId) + ((stage) << 3) + (goesDown << 7))
-#define SET_STATCHANGER_THIRD(statId, stage, goesDown) (gBattleScripting.statChanger3 = (statId) + ((stage) << 3) + (goesDown << 7))
 #define SET_STATCHANGER2(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7)) // Moody
+#define SET_STATCHANGER3(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7)) // Speed Boost
 
 // NOTE: The members of this struct have hard-coded offsets
 //       in include/constants/battle_script_commands.h
@@ -888,7 +890,7 @@ struct BattleScripting
     s32 bideDmg;
     u8 multihitString[6];
     bool8 expOnCatch;
-    u8 statChanger2;
+    u8 unused2;
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;
@@ -913,7 +915,7 @@ struct BattleScripting
     u8 specialTrainerBattleType;
     bool8 monCaught;
     s32 savedDmg;
-    u16 statChanger3;
+    u16 unused_0x2c;
     u16 moveEffect;
     u16 unused_0x30;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.
@@ -1062,6 +1064,7 @@ extern u16 gChosenMove;
 extern u16 gCalledMove;
 extern s32 gBideDmg[MAX_BATTLERS_COUNT];
 extern u16 gLastUsedItem;
+extern u8 gLastItemSlot; //For random item slot selection that should match another random selection (Multi)
 extern enum Ability gLastUsedAbility;
 extern enum Ability gDisplayAbility;
 extern enum Ability gDisplayAbility2;
@@ -1071,6 +1074,7 @@ extern u8 gBattlerAttacker;
 extern u8 gBattlerTarget;
 extern u8 gBattlerFainted;
 extern u8 gEffectBattler;
+extern u8 gEffectBattler2;
 extern u8 gPotentialItemEffectBattler;
 extern u8 gAbsentBattlerFlags;
 extern u8 gMultiHitCounter;

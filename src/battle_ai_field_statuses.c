@@ -129,7 +129,7 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
 
 static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather)
 {
-    u16 AIBattlerTraits[MAX_MON_TRAITS];
+    enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
     if (AISearchTraits(AIBattlerTraits, ABILITY_FORECAST))
@@ -166,7 +166,7 @@ static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather)
 
 static bool32 DoesBattlerBenefitFromFieldStatus(u32 battler, u32 fieldStatus)
 {
-    u16 AIBattlerTraits[MAX_MON_TRAITS];
+    enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
     if (AISearchTraits(AIBattlerTraits, ABILITY_MIMICRY))
@@ -220,7 +220,7 @@ static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
     enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
-    if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
+    if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, gAiLogicData))
     {
         if (AISearchTraits(AIBattlerTraits, ABILITY_ORICHALCUM_PULSE) || AISearchTraits(AIBattlerTraits, ABILITY_PROTOSYNTHESIS))
             return FIELD_EFFECT_POSITIVE;
@@ -247,10 +247,10 @@ static enum FieldEffectOutcome BenefitsFromSandstorm(u32 battler)
      || IS_BATTLER_OF_TYPE(battler, TYPE_ROCK))
         return FIELD_EFFECT_POSITIVE;
 
-    if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
+    if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData) || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
     {
         if (!(IS_BATTLER_ANY_TYPE(LEFT_FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
-         || gAiLogicData->holdEffects[LEFT_FOE(battler)] == HOLD_EFFECT_SAFETY_GOGGLES
+         || Ai_BattlerHasHoldEffect(LEFT_FOE(battler), HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData)
          || DoesBattlerBenefitFromWeather(LEFT_FOE(battler), B_WEATHER_SANDSTORM))
             return FIELD_EFFECT_POSITIVE;
         else
@@ -269,7 +269,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
      || HasBattlerSideMoveWithEffect(battler, EFFECT_AURORA_VEIL))
         return FIELD_EFFECT_POSITIVE;
 
-    if ((weather & B_WEATHER_DAMAGING_ANY) && gAiLogicData->holdEffects[battler] != HOLD_EFFECT_SAFETY_GOGGLES)
+    if ((weather & B_WEATHER_DAMAGING_ANY) && !Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData))
         return FIELD_EFFECT_NEGATIVE;
 
     if (HasLightSensitiveMove(battler))
@@ -284,7 +284,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
 // Rain
 static enum FieldEffectOutcome BenefitsFromRain(u32 battler)
 {
-    if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
+    if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, gAiLogicData))
         return FIELD_EFFECT_NEUTRAL;
 
     if (DoesBattlerBenefitFromWeather(battler, B_WEATHER_RAIN)
@@ -479,7 +479,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
         for (int i = 0; i < MAX_MON_MOVES; i++)
         {
             u16 move = aiMoves[i];
-            if (GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > 0 && !(GetMovePriority(move) > 0 && IsBattleMoveStatus(move)))
+            if (GetBattleMovePriority(battler, move) > 0 && !(GetMovePriority(move) > 0 && IsBattleMoveStatus(move)))
             {
                 return FIELD_EFFECT_POSITIVE;
             }

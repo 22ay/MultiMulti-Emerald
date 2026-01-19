@@ -5141,7 +5141,6 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
             {
                 u32 personality = 0;
                 u32 targetSpecies = 0;
-                enum Ability targetAbility = 0;
                 uq4_12_t typeMultiplier = 0;
                 do
                 {
@@ -5150,12 +5149,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 
                 targetSpecies = gFacilityTrainerMons[DOME_MONS[loserTournamentId][k]].species;
 
-                if (personality & 1)
-                    targetAbility = GetSpeciesAbility(targetSpecies, 1);
-                else
-                    targetAbility = GetSpeciesAbility(targetSpecies, 0);
-
-                typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility, 0);
+                typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, 0);
                 if (typeMultiplier == UQ_4_12(0))
                     moveScores[i * MAX_MON_MOVES + j] += 0;
                 else if (typeMultiplier >= UQ_4_12(2.0))
@@ -5695,13 +5689,16 @@ static void ResetSketchedMoves(void)
 
 static void RestoreDomePlayerPartyHeldItems(void)
 {
-    int i;
+    int i, j;
 
     for (i = 0; i < DOME_BATTLE_PARTY_SIZE; i++)
     {
         int playerMonId = gSaveBlock2Ptr->frontier.selectedPartyMons[gSelectedOrderFromParty[i] - 1] - 1;
-        u16 item = GetMonData(GetSavedPlayerPartyMon(playerMonId), MON_DATA_HELD_ITEM, NULL);
-        SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
+        for(j = 0; j < MAX_MON_ITEMS; j++)
+        {
+            u16 item = GetMonData(GetSavedPlayerPartyMon(playerMonId), MON_DATA_HELD_ITEM + j, NULL);
+            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j, &item);
+        }
     }
 }
 

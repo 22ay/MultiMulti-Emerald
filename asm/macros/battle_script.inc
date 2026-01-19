@@ -625,9 +625,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro removeitem battler:req
+	.macro removeitemwitheffect battler:req, effect:req
 	.byte 0x6a
 	.byte \battler
+	.4byte \effect
 	.endm
 
 	.macro atknameinbuff1
@@ -679,7 +680,7 @@
 	.byte 0x75
 	.endm
 
-	.macro unused_0x78
+	.macro unused_0x76
 	.byte 0x76
 	.endm
 
@@ -882,20 +883,12 @@
 	.byte 0x9e
 	.endm
 
-	.macro statbuffchange2 battler:req, flags:req, failInstr:req, stats=0
+	.macro unused_0x9f
 	.byte 0x9f
-	.byte \battler
-	.2byte \flags
-	.4byte \failInstr
-	.byte \stats
 	.endm
 
-	.macro statbuffchange3 battler:req, flags:req, failInstr:req, stats=0
+	.macro unused_0xA0
 	.byte 0xa0
-	.byte \battler
-	.2byte \flags
-	.4byte \failInstr
-	.byte \stats
 	.endm
 
 	.macro counterdamagecalculator failInstr:req
@@ -1260,8 +1253,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryrecycleitem failInstr:req
+	.macro tryrecycleitem type:req, failInstr:req
 	.byte 0xea
+	.byte \type
 	.4byte \failInstr
 	.endm
 
@@ -1384,6 +1378,10 @@
 	.macro metalburstdamagecalculator failInstr:req
 	callnative BS_CalcMetalBurstDmg
 	.4byte \failInstr
+	.endm
+
+	.macro tryintimidateejectpack
+	callnative BS_TryIntimidateEjectPack
 	.endm
 
 	.macro allyswitchswapbattlers
@@ -1812,14 +1810,6 @@
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
 	.endm
 
-	.macro setstatchanger2 stat:req, stages:req, down:req
-	setbyte sSTATCHANGER2, \stat | \stages << 3 | \down << 7
-	.endm
-
-	.macro setstatchanger3 stat:req, stages:req, down:req
-	setbyte sSTATCHANGER3, \stat | \stages << 3 | \down << 7
-	.endm
-
 	.macro setmoveeffect effect:req
 	sethword sMOVE_EFFECT, \effect
 	.endm
@@ -1936,7 +1926,7 @@
 	jumpifholdeffect \battler, \holdEffect, \jumpInstr, FALSE
 	.endm
 
-	.macro jumpifholdeffect battler:req, holdEffect:req, jumpInstr:req, equal:req
+	.macro jumpifholdeffect battler:req, holdEffect:req, jumpInstr:req, equal=TRUE
 	callnative BS_JumpIfHoldEffect
 	.byte \battler
 	.byte \holdEffect
@@ -1950,9 +1940,16 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro setlastuseditem battler:req
+	.macro setlastuseditem battler:req, holdEffect:req
 	callnative BS_SetLastUsedItem
 	.byte \battler
+	.4byte \holdEffect
+	.endm
+
+	.macro setlastuseditemcorrosivefling battler:req, type:req
+	callnative BS_SetLastUsedItemCorrosiveFling
+	.byte \battler
+	.byte \type
 	.endm
 
 	.macro trysetfairylock failInstr:req
@@ -2403,6 +2400,11 @@
 
 	.macro battleritemtolastuseditem
 	callnative BS_BattlerItemToLastUsedItem
+	.endm
+
+	.macro lastuseditemtobattlerberry battler:req
+	callnative BS_LastUsedItemToBattlerBerry
+	.byte \battler
 	.endm
 
 	.macro setallytonexttarget jumpInstr:req

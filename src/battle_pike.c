@@ -813,7 +813,7 @@ static void HealMon(struct Pokemon *mon)
 static bool8 DoesAbilityPreventStatus(struct Pokemon *mon, u32 status)
 {
     bool8 ret = FALSE;
-    u16 battlerTraits[MAX_MON_TRAITS];
+    enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(gBattlerTarget);
 
     if (SearchTraits(battlerTraits, ABILITY_COMATOSE))
@@ -1585,25 +1585,31 @@ static void IsPartyFullHealed(void)
 
 static void SaveMonHeldItems(void)
 {
-    u8 i;
+    u8 i, j;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        int heldItem = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1),
-                                  MON_DATA_HELD_ITEM);
-        gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i] = heldItem;
+        for(j = 0; j < MAX_MON_ITEMS; j++)
+        {
+            int heldItem = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1),
+                                      MON_DATA_HELD_ITEM + j);
+            gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i][j] = heldItem;
+        }
     }
 }
 
 static void RestoreMonHeldItems(void)
 {
-    u8 i;
+    u8 i, j;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        SetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
-                   MON_DATA_HELD_ITEM,
-                   &gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i]);
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+        {
+            SetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
+                       MON_DATA_HELD_ITEM + j,
+                       &gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i][j]);
+        }
     }
 }
 
