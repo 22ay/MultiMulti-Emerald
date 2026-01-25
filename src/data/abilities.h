@@ -2412,4 +2412,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
     },
+
+    [ABILITY_IMPASSABLE] =
+    {
+    .name = _("Impassable"),
+    .description = COMPOUND_STRING("Only direct attacks damage it."),
+    .aiRating = 8,
+    },
+
 };
