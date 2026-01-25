@@ -3,19 +3,11 @@
 #include "constants/species.h"
 #include "constants/moves.h"
 
-struct SignatureMoveEntry
-{
-    u16 species;
-    u16 move;
-    u16 basePower;   // 0 = no override
-    s8 priority;     // 0 = normal, +1 = boosted, etc.
-    bool8 useReversalFormula;
-};
-
 static const struct SignatureMoveEntry sSignatureMoves[] =
 {
-    { SPECIES_SCIZOR, MOVE_BULLET_PUNCH, 60,  0, FALSE },
-    { SPECIES_TYPHLOSION, MOVE_ERUPTION, 0, +1, TRUE  },
+    { SPECIES_SCIZOR, MOVE_BULLET_PUNCH, 60,  0, FALSE, FALSE },
+    { SPECIES_TYPHLOSION, MOVE_ERUPTION, 0, +1, TRUE, FALSE  },
+    { SPECIES_VENUSAUR, MOVE_CHLOROBLAST, 0, 0, FALSE, TRUE },
 };
 
 u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
@@ -71,6 +63,17 @@ s8 GetSignaturePriority(u16 species, u16 move)
     }
 
     return 0; // default priority
+}
+
+const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move)
+{
+    for (int i = 0; i < ARRAY_COUNT(sSignatureMoves); i++)
+    {
+        if (sSignatureMoves[i].species == species
+         && sSignatureMoves[i].move == move)
+            return &sSignatureMoves[i];
+    }
+    return NULL;
 }
 
 bool8 IsSignatureMove(u16 species, u16 move)

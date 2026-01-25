@@ -8058,6 +8058,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     STORE_BATTLER_TRAITS(battlerAtk);
 
     atkBaseSpeciesId = GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species);
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(atkBaseSpeciesId, move); 
 
     if (moveEffect == EFFECT_FOUL_PLAY)
     {
@@ -8091,6 +8092,27 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     }
     else
     {
+    // Signature move override: use highest offensive stat
+        if (entry != NULL && entry->useHighestOffensiveStat)
+        {
+            u16 atk   = gBattleMons[battlerAtk].attack;
+            u16 spatk = gBattleMons[battlerAtk].spAttack;
+
+            if (atk > spatk)
+            {
+            atkStat = atk;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+            }
+            else
+            {
+            atkStat = spatk;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+            }
+
+            return atkStat;
+        }
+
+    // Normal behavior
         if (IsBattleMovePhysical(move))
         {
             atkStat = gBattleMons[battlerAtk].attack;
@@ -8098,8 +8120,8 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         }
         else
         {
-            atkStat = gBattleMons[battlerAtk].spAttack;
-            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+        atkStat = gBattleMons[battlerAtk].spAttack;
+        atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
         }
     }
 
