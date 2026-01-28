@@ -5,9 +5,9 @@
 
 static const struct SignatureMoveEntry sSignatureMoves[] =
 {
-    { SPECIES_SCIZOR, MOVE_BULLET_PUNCH, 60,  0, FALSE, FALSE },
-    { SPECIES_TYPHLOSION, MOVE_ERUPTION, 0, +1, TRUE, FALSE  },
-    { SPECIES_VENUSAUR, MOVE_CHLOROBLAST, 0, 0, FALSE, TRUE },
+    { SPECIES_SCIZOR, MOVE_BULLET_PUNCH, 60,  0, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, SIG_ENV_NONE },
+    { SPECIES_TYPHLOSION, MOVE_ERUPTION, 0, +1, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, SIG_ENV_NONE },
+    { SPECIES_VENUSAUR, MOVE_CHLOROBLAST, 0, 0, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, SIG_ENV_SUN },
 };
 
 u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
@@ -40,6 +40,16 @@ u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
                     return 40;
                 else
                     return 20;
+            }
+            // Water Spout-style scaling
+            if (sSignatureMoves[i].useWaterSpoutFormula)
+            {
+                // Formula: BP = basePower * currentHP / maxHP
+                // Minimum 1
+                u32 scaled = (150 * hp) / maxHp;
+                if (scaled < 1)
+                    scaled = 1;
+                return scaled;
             }
 
             // Otherwise use static override

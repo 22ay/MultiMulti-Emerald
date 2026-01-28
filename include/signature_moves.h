@@ -3,6 +3,19 @@
 
 #include "global.h"
 
+enum SignatureEnvironmentEffect
+{
+    SIG_ENV_NONE,
+    SIG_ENV_SUN,
+    SIG_ENV_RAIN,
+    SIG_ENV_SAND,
+    SIG_ENV_SNOW,
+    SIG_ENV_ELECTRIC_TERRAIN,
+    SIG_ENV_GRASSY_TERRAIN,
+    SIG_ENV_PSYCHIC_TERRAIN,
+    SIG_ENV_MISTY_TERRAIN,
+};
+
 struct SignatureMoveEntry
 {
     u16 species;
@@ -10,7 +23,12 @@ struct SignatureMoveEntry
     u16 basePower;
     s8 priority;
     bool8 useReversalFormula;
-    bool8 useHighestOffensiveStat;   // NEW FLAG
+    bool8 useHighestOffensiveStat;
+    bool8 ignoreTypeImmunity; 
+    bool8 alwaysCrit; 
+    bool8 useDefensiveStatInstead; 
+    bool8 useWaterSpoutFormula;
+    enum SignatureEnvironmentEffect environmentEffect;
 };
 
 // Existing public APIs

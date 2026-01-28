@@ -1621,24 +1621,35 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
     {
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    else if (gBattleMons[battlerAtk].volatiles.laserFocus
-          || MoveAlwaysCrits(move)
-          || ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_MERCILESS) : BattlerHasTrait(battlerAtk, ABILITY_MERCILESS))
-           && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY))
-    {
-        critChance = CRITICAL_HIT_ALWAYS;
-    }
     else
     {
-        critChance  = (gBattleMons[battlerAtk].volatiles.focusEnergy != 0 ? 2 : 0)
-                    + (gBattleMons[battlerAtk].volatiles.dragonCheer != 0 ? 1 : 0)
-                    + GetMoveCriticalHitStage(move)
-                    + GetHoldEffectCritChanceIncrease(battlerAtk)
-                    + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
-                    + ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_SUPER_LUCK) : BattlerHasTrait(battlerAtk, ABILITY_SUPER_LUCK)) ? 1 : 0)
-                    + gBattleMons[battlerAtk].volatiles.bonusCritStages;
-        if (critChance >= ARRAY_COUNT(sCriticalHitOdds))
-            critChance = ARRAY_COUNT(sCriticalHitOdds) - 1;
+        // Signature move: always crit (but still blocked by crit-blocking abilities)
+        const struct SignatureMoveEntry *entry =
+            GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species), move);
+
+        if (entry && entry->alwaysCrit)
+        {
+            critChance = CRITICAL_HIT_ALWAYS;
+        }
+        else if (gBattleMons[battlerAtk].volatiles.laserFocus
+            || MoveAlwaysCrits(move)
+            || ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_MERCILESS) : BattlerHasTrait(battlerAtk, ABILITY_MERCILESS))
+            && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY))
+        {
+            critChance = CRITICAL_HIT_ALWAYS;
+        }
+        else
+        {
+            critChance  = (gBattleMons[battlerAtk].volatiles.focusEnergy != 0 ? 2 : 0)
+                        + (gBattleMons[battlerAtk].volatiles.dragonCheer != 0 ? 1 : 0)
+                        + GetMoveCriticalHitStage(move)
+                        + GetHoldEffectCritChanceIncrease(battlerAtk)
+                        + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
+                        + ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_SUPER_LUCK) : BattlerHasTrait(battlerAtk, ABILITY_SUPER_LUCK)) ? 1 : 0)
+                        + gBattleMons[battlerAtk].volatiles.bonusCritStages;
+            if (critChance >= ARRAY_COUNT(sCriticalHitOdds))
+                critChance = ARRAY_COUNT(sCriticalHitOdds) - 1;
+        }
     }
 
     if (gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_BATTLE_ARMOR) : BattlerHasTrait(battlerDef, ABILITY_BATTLE_ARMOR))
@@ -4236,6 +4247,67 @@ static void Cmd_setadditionaleffects(void)
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
     {
+        // Signature move: environment effect (weather / terrain)
+        {
+            const struct SignatureMoveEntry *entry =
+                GetSignatureMoveEntry(
+                    GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
+                    gCurrentMove
+                );
+
+            if (entry && entry->environmentEffect != SIG_ENV_NONE)
+            {
+                u8 moveEffect = 0;
+
+                switch (entry->environmentEffect)
+                {
+                case SIG_ENV_SUN:
+                    moveEffect = MOVE_EFFECT_SUN;
+                    break;
+                case SIG_ENV_RAIN:
+                    moveEffect = MOVE_EFFECT_RAIN;
+                    break;
+                case SIG_ENV_SAND:
+                    moveEffect = MOVE_EFFECT_SANDSTORM;
+                    break;
+                case SIG_ENV_SNOW:
+                    moveEffect = MOVE_EFFECT_HAIL; // engine handles snow vs hail
+                    break;
+                case SIG_ENV_ELECTRIC_TERRAIN:
+                    moveEffect = MOVE_EFFECT_ELECTRIC_TERRAIN;
+                    break;
+                case SIG_ENV_GRASSY_TERRAIN:
+                    moveEffect = MOVE_EFFECT_GRASSY_TERRAIN;
+                    break;
+                case SIG_ENV_PSYCHIC_TERRAIN:
+                    moveEffect = MOVE_EFFECT_PSYCHIC_TERRAIN;
+                    break;
+                case SIG_ENV_MISTY_TERRAIN:
+                    moveEffect = MOVE_EFFECT_MISTY_TERRAIN;
+                    break;
+                default:
+                    break;
+                }
+
+                if (moveEffect != 0)
+                {
+                    enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
+
+                    SetMoveEffect(
+                        gBattlerAttacker,
+                        gBattlerAttacker,   // weather/terrain are “self” effects
+                        moveEffect,
+                        cmd->nextInstr,
+                        flags
+                    );
+
+                    // Let the battle script jump if SetMoveEffect changed gBattlescriptCurrInstr.
+                    // We *don’t* early-return here; additional effects can still run later.
+                }
+            }
+        }
+
+
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
         SetToxicChainPriority();
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)

@@ -8092,8 +8092,8 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     }
     else
     {
-    // Signature move override: use highest offensive stat
-        if (entry != NULL && entry->useHighestOffensiveStat)
+        // Signature move override: use highest offensive stat
+        if (entry && entry->useHighestOffensiveStat)
         {
             u16 atk   = gBattleMons[battlerAtk].attack;
             u16 spatk = gBattleMons[battlerAtk].spAttack;
@@ -8109,7 +8109,22 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
             }
 
-            return atkStat;
+        }
+
+        // Signature move: use defensive stat instead of offensive stat
+        if (entry && entry->useDefensiveStatInstead)
+        {
+            if (IsBattleMovePhysical(move))
+            {
+                atkStat = gBattleMons[battlerAtk].defense;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_DEF];
+            }
+            else // special move
+            {
+                atkStat = gBattleMons[battlerAtk].spDefense;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
+            }
+
         }
 
     // Normal behavior
@@ -8120,8 +8135,8 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         }
         else
         {
-        atkStat = gBattleMons[battlerAtk].spAttack;
-        atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+            atkStat = gBattleMons[battlerAtk].spAttack;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
         }
     }
 
@@ -9250,6 +9265,19 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
 
     if (ctx->updateFlags)
         TryInitializeFirstSTABMoveTrainerSlide(ctx->battlerDef, ctx->battlerAtk, ctx->moveType);
+
+    {
+        const struct SignatureMoveEntry *entry =
+            GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[ctx->battlerAtk].species),
+                              ctx->move);
+
+        if (entry && entry->ignoreTypeImmunity)
+        {
+        // If the move would normally deal 0× damage, override it to 1×
+        if (modifier == UQ_4_12(0.0))
+            modifier = UQ_4_12(1.0);
+        }
+    }
 
     return modifier;
 }
