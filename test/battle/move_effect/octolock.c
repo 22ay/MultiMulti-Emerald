@@ -180,7 +180,8 @@ SINGLE_BATTLE_TEST("Octolock ends after user that set the lock switches out")
     }
 }
 
-SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke and Full Metal Body (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke and Full Metal Body (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -230,7 +231,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke a
     }
 }
 
-SINGLE_BATTLE_TEST("Octolock Defense reduction is prevented by Big Pecks (Multi)")
+SINGLE_BATTLE_TEST("Octolock Defense reduction is prevented by Big Pecks (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -248,7 +249,7 @@ SINGLE_BATTLE_TEST("Octolock Defense reduction is prevented by Big Pecks (Multi)
     }
 }
 
-SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions (Multi)")
+SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -271,3 +272,26 @@ SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions (Multi)")
     }
 }
 
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Amulet (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CLEAR_AMULET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_OCTOLOCK); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
+        MESSAGE("The opposing Wobbuffet can no longer escape because of Octolock!");
+        MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            MESSAGE("The opposing Wobbuffet's Defense fell!");
+            MESSAGE("The opposing Wobbuffet's Sp. Def fell!");
+        }
+    }
+}
+#endif

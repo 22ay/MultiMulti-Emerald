@@ -1460,8 +1460,8 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 
     if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT
         || (gSpecialStatuses[gBattlerAttacker].multiHitOn
-        && (BattlerHasTrait(gBattlerAttacker, ABILITY_SKILL_LINK) || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_LOADED_DICE, TRUE)))
-        || !(effect == EFFECT_TRIPLE_KICK || effect == EFFECT_POPULATION_BOMB))
+        && (BattlerHasTrait(gBattlerAttacker, ABILITY_SKILL_LINK) || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_LOADED_DICE, TRUE)
+        || !(effect == EFFECT_TRIPLE_KICK || effect == EFFECT_POPULATION_BOMB))))
     {
         // No acc checks for second hit of Parental Bond or multi hit moves, except Triple Kick/Triple Axel/Population Bomb
         gBattlescriptCurrInstr = nextInstr;
@@ -5616,7 +5616,7 @@ static void Cmd_unused_0x48(void)
 
 static inline bool32 TryTriggerSymbiosis(u32 battler, u32 ally)
 {
-        return BattlerHasTrait(ally, ABILITY_SYMBIOSIS)
+        return BattlerHasTrait(ally, ABILITY_SYMBIOSIS)    
         && IsBattlerAlive(battler)
         && IsBattlerAlive(ally);
 }
@@ -5681,19 +5681,12 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battlerAtk);
 
-    // -------------------------
-    //  MAGICIAN
-    // -------------------------
     if (SearchTraits(battlerTraits, ABILITY_MAGICIAN))
     {
-        u8 slot, i;
-        u8 targetableSlots[MAX_MON_ITEMS];
+        u8 slot, i, targetableSlots[MAX_MON_ITEMS];
         u8 index = 0;
 
-        targetableSlots[0] = MAX_MON_ITEMS; // invalid marker
-
-        // Gather all stealable item slots
-        for (i = 0; i < MAX_MON_ITEMS; i++)
+        for (i = 0; i < MAX_MON_ITEMS; i++) //Gather all stealable item slots
         {
             if (CanStealItem(battlerAtk, battlerDef, gBattleMons[battlerDef].items[i])
                 && gBattleMons[battlerAtk].items[i] == ITEM_NONE
@@ -5725,48 +5718,42 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 for (i = 0; i < gBattlersCount; i++)
                 {
                     if (i != battlerAtk
-                        && IsBattlerTurnDamaged(i)
-                        && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(i)] 
-                             & (1u << gBattlerPartyIndexes[i]))
-                        && !DoesSubstituteBlockMove(battlerAtk, i, move)
-                        && (!BattlerHasTrait(i, ABILITY_STICKY_HOLD) || !IsBattlerAlive(i)))
+                    && IsBattlerTurnDamaged(i)
+                    && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(i)] & (1u << gBattlerPartyIndexes[i]))
+                    && !DoesSubstituteBlockMove(battlerAtk, i, move)
+                    && (!BattlerHasTrait(i, ABILITY_STICKY_HOLD) || !IsBattlerAlive(i)))
                     {
                         magicianTargets |= 1u << i;
                         numMagicianTargets++;
                     }
                 }
 
-                if (numMagicianTargets == 0)
-                    return effect; // nothing to do
-
-                u8 battlers[4] = {0, 1, 2, 3};
-
-                if (numMagicianTargets > 1)
-                    SortBattlersBySpeed(battlers, FALSE);
-
-                // Attempt to steal from the fastest valid target
-                for (u32 j = 0; j < gBattlersCount; j++)
+                if (numMagicianTargets != 0)
                 {
-                    u32 battler = battlers[j];
+                    u8 battlers[4] = {0, 1, 2, 3};
+                    if (numMagicianTargets > 1)
+                        SortBattlersBySpeed(battlers, FALSE);
 
-                    if (!(magicianTargets & (1u << battler)))
-                        continue;
+                    for (u32 i = 0; i < gBattlersCount; i++)
+                    {
+                        u32 battler = battlers[i];
 
-                    gLastUsedAbility = ABILITY_MAGICIAN;
-                    StealTargetItem(battlerAtk, battler, slot);
-                    gBattlerAbility = battlerAtk;
-                    gEffectBattler = battler;
-                    PushTraitStack(battlerAtk, ABILITY_MAGICIAN);
-                    BattleScriptCall(BattleScript_MagicianActivates);
+                        if (!(magicianTargets & 1u << battler))
+                            continue;
 
-                    effect = TRUE;
-                    break;
+                            gLastUsedAbility = ABILITY_MAGICIAN;
+                            StealTargetItem(battlerAtk, battler, slot);
+                            gBattlerAbility = battlerAtk;
+                            gEffectBattler = battler;
+                            PushTraitStack(battlerAtk, ABILITY_MAGICIAN);
+                            BattleScriptCall(BattleScript_MagicianActivates);
+                            effect = TRUE;
+                            break; // found target to steal from
+                    }
                 }
             }
         }
     }
-
-
 if (SearchTraits(battlerTraits, ABILITY_MOXIE))
     {
         if (IsBattlerAlive(battlerAtk) && !NoAliveMonsForEitherParty())
@@ -7189,7 +7176,7 @@ static void Cmd_moveend(void)
                             gBattlerTarget = gBattlerAbility = battler;
                             // Battle scripting is super brittle so we shall do the item exchange now (if possible)
                             if (!BattlerHasTrait(gBattlerAttacker, ABILITY_STICKY_HOLD))
-                            StealTargetItem(gBattlerTarget, gBattlerAttacker, slot); // Target takes attacker's item
+                                StealTargetItem(gBattlerTarget, gBattlerAttacker, slot); // Target takes attacker's item
 
                         gEffectBattler = gBattlerAttacker;
                         PushTraitStack(battler, ABILITY_PICKPOCKET);
@@ -9107,6 +9094,7 @@ static void Cmd_removeitemwitheffect(void)
     if (holdEffect != HOLD_EFFECT_AIR_BALLOON
      && GetMoveEffect(gCurrentMove) != EFFECT_CORROSIVE_GAS)
         GetBattlerPartyState(battler)->usedHeldItems[slot] = itemId; // Remember if switched out
+
 
     // // Clear vanilla slot as a redundancy
     // if (slot == 0)
@@ -13081,10 +13069,6 @@ static void Cmd_tryswapitems(void)
             BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(oldItemAtk), &oldItemAtk); // set target item
             MarkBattlerForControllerExec(gBattlerTarget);
 
-            if (!BattlerHasHoldEffectChoice(gBattlerTarget))
-                gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
-            if (!BattlerHasHoldEffectChoice(gBattlerAttacker))
-                gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
             if (!BattlerHasTrait(gBattlerTarget, ABILITY_GORILLA_TACTICS))
                 gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
             if (!BattlerHasTrait(gBattlerAttacker, ABILITY_GORILLA_TACTICS))
@@ -13568,7 +13552,7 @@ static void Cmd_pickup(void)
                 if (isInPyramid)
                 {
                     giveItem = GetBattlePyramidPickupItemId();
-                    slot = GetNextMonEmptySlot(&gPlayerParty[i], giveItem);
+                    slot = GetMonNextEmptySlot(&gPlayerParty[i], giveItem);
                     if (slot != MAX_MON_ITEMS)
                     {
                         SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
@@ -13585,7 +13569,7 @@ static void Cmd_pickup(void)
                         if (rand > percentTotal)
                         {
                             storeItem = sPickupTable[j].itemId;
-                            slot = GetNextMonEmptySlot(&gPlayerParty[i], storeItem);
+                            slot = GetMonNextEmptySlot(&gPlayerParty[i], storeItem);
                             if (slot != MAX_MON_ITEMS)
                             {
                                 giveItem = storeItem; // Gives the rarest chosen item that fits slot categorization
@@ -13605,7 +13589,7 @@ static void Cmd_pickup(void)
                 if ((lvlDivBy10 + 1 ) * 5 > Random() % 100)
                 {
                     giveItem = ITEM_HONEY;
-                    slot = GetNextMonEmptySlot(&gPlayerParty[i], giveItem);
+                    slot = GetMonNextEmptySlot(&gPlayerParty[i], giveItem);
                     if (slot != MAX_MON_ITEMS)
                     {
                         SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
@@ -13751,7 +13735,8 @@ static void Cmd_tryrecycleitem(void)
     {
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i] != ITEM_NONE)
+            if (GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i] != ITEM_NONE
+             && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE)
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
@@ -13763,7 +13748,8 @@ static void Cmd_tryrecycleitem(void)
     {
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetBattlerPartyState(gBattlerTarget)->usedHeldItems[i] != ITEM_NONE)
+            if (GetBattlerPartyState(gBattlerTarget)->usedHeldItems[i] != ITEM_NONE
+             && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE)
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
@@ -13775,7 +13761,8 @@ static void Cmd_tryrecycleitem(void)
     {
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetItemPocket(GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i]) == POCKET_BERRIES)
+            if (GetItemPocket(GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i]) == POCKET_BERRIES
+             && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE)
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
@@ -13788,7 +13775,7 @@ static void Cmd_tryrecycleitem(void)
 
     if (slot != MAX_MON_ITEMS)
     {
-        if (gCurrentMove == MOVE_NONE && BattlerHasTrait(gBattlerAttacker, ABILITY_PICKUP))
+        if (gCurrentMove == MOVE_NONE && cmd->type == RECYCLE_ITEM_PICKUP)
             usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItems[slot];
         else
             usedHeldItem = &GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[slot];
@@ -15173,7 +15160,7 @@ void BS_TrySymbiosis(void)
         {
             slot = gLastItemSlot = GetSlot(targetableSlots, index);
             BestowItem(partner, battler, slot);
-            gLastUsedAbility = gBattleMons[partner].ability;
+            gLastUsedAbility = ABILITY_SYMBIOSIS;
             gBattleScripting.battler = gBattlerAbility = partner;
             gEffectBattler = battler;
             PushTraitStack(partner, ABILITY_SYMBIOSIS);
@@ -16019,8 +16006,8 @@ static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 
                                 if (GetMonData(monDef, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
                                 && GetMonData(monDef, MON_DATA_HELD_ITEM + k) == evolutions[i].params[j].arg2)
                                     SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);
-                                break;
                             }
+                            break;
                     }
                     return;
                 }
@@ -17308,7 +17295,6 @@ void BS_TryFriskMessage(void)
             {
                 gLastUsedItem = friskedItem;
                 RecordItemEffectBattle(gBattlerTarget, GetItemHoldEffect(gLastUsedItem)); //GetItemHoldEffect ignores negation so negation doesn't need to be added
-                BattleScriptPushCursor();
 
                 if (friskcount == 1) // If Frisk identifies two mons' items, show the pop-up only once.
                 {
@@ -17805,7 +17791,7 @@ void BS_TryActivateReceiver(void)
     }
 
     if (IsBattlerAlive(gBattlerAbility)
-        && (partnerAbility == ABILITY_RECEIVER || partnerAbility == ABILITY_POWER_OF_ALCHEMY)
+        && (partnerAbility == ABILITY_RECEIVER || partnerAbility == ABILITY_POWER_OF_ALCHEMY) // Should not be Innates (Multi)
         && !BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE)
         && !gAbilitiesInfo[gBattleMons[battler].ability].cantBeCopied)
     {
@@ -18824,6 +18810,14 @@ void BS_TryAbsorbToxicSpikesOnFaint(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_PushTraitStack(void)
+{
+    NATIVE_ARGS(u8 battler, u16 ability);
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+    PushTraitStack(battler, cmd->ability);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_LastUsedItemToBattlerBerry(void) //For Stuff Cheeks
 {
     NATIVE_ARGS(u8 battler);
@@ -18852,12 +18846,3 @@ void BS_LastUsedItemToBattlerBerry(void) //For Stuff Cheeks
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
-
-void BS_PushTraitStack(void)
-{
-    NATIVE_ARGS(u8 battler, u16 ability);
-    u32 battler = GetBattlerForBattleScript(cmd->battler);
-    PushTraitStack(battler, cmd->ability);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-

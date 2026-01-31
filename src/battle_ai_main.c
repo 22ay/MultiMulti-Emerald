@@ -1192,7 +1192,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
      && aiData->effectiveness[battlerAtk][BATTLE_PARTNER(battlerDef)][gAiThinkingStruct->movesetIndex] != UQ_4_12(0.0))
         ADJUST_SCORE(-5);
 
-
     // check non-user target
     if (!(moveTarget & MOVE_TARGET_USER))
     {
@@ -1265,9 +1264,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             && IsShieldsDownProtected(battlerAtk) && IsNonVolatileStatusMove(move))
                 RETURN_SCORE_MINUS(10);
             if (AISearchTraits(AIBattlerTraits, ABILITY_LEAF_GUARD)
-              && ((AI_GetWeather() & B_WEATHER_SUN)
-              && !Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_UTILITY_UMBRELLA, aiData)
-              && IsNonVolatileStatusMove(move)))
+            && ((AI_GetWeather() & B_WEATHER_SUN)
+            && !Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_UTILITY_UMBRELLA, aiData)
+            && IsNonVolatileStatusMove(move)))
                 RETURN_SCORE_MINUS(10);
             
             // def ability checks
@@ -4523,7 +4522,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
               || HasMoveWithEffect(EFFECT_SNORE, battlerAtk)
               || AISearchTraits(AIBattlerTraits, ABILITY_SHED_SKIN)
               || AISearchTraits(AIBattlerTraits, ABILITY_EARLY_BIRD)
-              || (AI_GetWeather() & B_WEATHER_RAIN && gWishFutureKnock.weatherDuration != 1 && AISearchTraits(AIBattlerTraits, ABILITY_HYDRATION) && !Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_UTILITY_UMBRELLA, aiData)))
+              || (AI_GetWeather() & B_WEATHER_RAIN && gWishFutureKnock.weatherDuration != 1 && AISearchTraits(AIBattlerTraits, ABILITY_HYDRATION) && !Ai_BattlerHasHoldEffect(battlerAtk, HOLD_EFFECT_UTILITY_UMBRELLA, aiData)))
                 ADJUST_SCORE(GOOD_EFFECT);
         }
         break;
@@ -5763,7 +5762,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     bool32 hasBerry = BattlerHasBerry(battlerDef);
 
     if (IsSheerForceAffected(move, battlerAtk))
-        return score;
+    return score;
 
     // check move additional effects that are likely to happen
     for (i = 0; i < additionalEffectCount; i++)

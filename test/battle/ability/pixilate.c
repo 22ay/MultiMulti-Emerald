@@ -148,7 +148,8 @@ TO_DO_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale");
 
-SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_DRAGONITE);
@@ -161,7 +162,7 @@ SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move (Mu
     }
 }
 
-SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6) (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6) (Traits)", s16 damage)
 {
     enum Ability ability;
     u32 genConfig;
@@ -186,7 +187,7 @@ SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30
     }
 }
 
-SINGLE_BATTLE_TEST("Pixilate doesn't affect Weather Ball's type (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Pixilate doesn't affect Weather Ball's type (Traits)", s16 damage)
 {
     u16 move;
     enum Ability ability;
@@ -215,7 +216,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Weather Ball's type (Multi)", s16 da
     }
 }
 
-SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type (Multi)")
+SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type (Traits)")
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
@@ -234,7 +235,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Pixilate doesn't affect Judgment / Techno Blast / Multi-Attack's type (Multi)")
+SINGLE_BATTLE_TEST("Pixilate doesn't affect Judgment / Techno Blast / Multi-Attack's type (Traits)")
 {
     u16 move, item;
     PARAMETRIZE { move = MOVE_JUDGMENT; item = ITEM_ZAP_PLATE; }
@@ -261,7 +262,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Judgment / Techno Blast / Multi-Atta
     }
 }
 
-SINGLE_BATTLE_TEST("Pixilate doesn't affect Hidden Power's type (Multi)")
+SINGLE_BATTLE_TEST("Pixilate doesn't affect Hidden Power's type (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HIDDEN_POWER) == EFFECT_HIDDEN_POWER);
@@ -277,13 +278,30 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Hidden Power's type (Multi)")
     }
 }
 
-TO_DO_BATTLE_TEST("Pixilate doesn't override Electrify (Gen7+) (Multi)");
-TO_DO_BATTLE_TEST("Pixilate doesn't override Ion Deluge (Gen7+) (Multi)"); // Ion Deluge doesn't exist in Gen 8+, but we probably could assume it behaves similar to under Electrify. TODO: Test by hacking SV.
-TO_DO_BATTLE_TEST("Pixilate overrides Electrify (Gen6) (Multi)")
-TO_DO_BATTLE_TEST("Pixilate overrides Ion Deluge (Gen6) (Multi)")
-TO_DO_BATTLE_TEST("Pixilate doesn't affect Tera Starstorm's type (Multi)");
-TO_DO_BATTLE_TEST("Pixilate doesn't affect Max Strike's type (Multi)");
-TO_DO_BATTLE_TEST("Pixilate doesn't affect Terrain Pulse's type (Multi)");
-TO_DO_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types (Multi)");
-TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie (Multi)");
-TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale (Multi)");
+TO_DO_BATTLE_TEST("Pixilate doesn't override Electrify (Gen7+) (Traits)");
+TO_DO_BATTLE_TEST("Pixilate doesn't override Ion Deluge (Gen7+) (Traits)"); // Ion Deluge doesn't exist in Gen 8+, but we probably could assume it behaves similar to under Electrify. TODO: Test by hacking SV.
+TO_DO_BATTLE_TEST("Pixilate overrides Electrify (Gen6) (Traits)")
+TO_DO_BATTLE_TEST("Pixilate overrides Ion Deluge (Gen6) (Traits)")
+TO_DO_BATTLE_TEST("Pixilate doesn't affect Tera Starstorm's type (Traits)");
+TO_DO_BATTLE_TEST("Pixilate doesn't affect Max Strike's type (Traits)");
+TO_DO_BATTLE_TEST("Pixilate doesn't affect Terrain Pulse's type (Traits)");
+TO_DO_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types (Traits)");
+TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie (Traits)");
+TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale (Traits)");
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DRAGONITE);
+        OPPONENT(SPECIES_ALTARIA) { Items(ITEM_PECHA_BERRY, ITEM_ALTARIANITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("It's super effective!");
+    }
+}
+#endif

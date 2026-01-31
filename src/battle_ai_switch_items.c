@@ -1534,7 +1534,7 @@ bool32 IsMonGrounded(u32 battler, enum Ability ability, enum Type type1, enum Ty
          || (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_AIR_BALLOON, TRUE) && !(ability == ABILITY_KLUTZ || SpeciesHasInnate(species, ABILITY_KLUTZ) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))))
     {
         // List that overrides being off the ground
-        if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_IRON_BALL, TRUE) && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))) || (gFieldStatuses & STATUS_FIELD_GRAVITY) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
+        if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_IRON_BALL, TRUE) && !(ability == ABILITY_KLUTZ || SpeciesHasInnate(species, ABILITY_KLUTZ) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))) || (gFieldStatuses & STATUS_FIELD_GRAVITY))
             return TRUE;
         else
             return FALSE;
@@ -2104,7 +2104,7 @@ static bool32 CanAbilityTrapOpponent(enum Ability ability, u32 opponent, u32 spe
         else
             return TRUE;
     }
-    else if (ability == ABILITY_ARENA_TRAP)
+    else if (ability == ABILITY_ARENA_TRAP && IsBattlerGrounded(opponent))
         return TRUE;
     else if ((ability == ABILITY_MAGNET_PULL || SpeciesHasInnate(species, ABILITY_MAGNET_PULL)) && IS_BATTLER_OF_TYPE(opponent, TYPE_STEEL))
         return TRUE;

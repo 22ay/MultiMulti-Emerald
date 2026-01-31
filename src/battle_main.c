@@ -3176,7 +3176,7 @@ static void BattleStartClearSetData(void)
 
 void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
 {
-    s32 i;
+    s32 i, j;
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
     struct DisableStruct disableStructCopy = gDisableStructs[battler];
 
@@ -3307,7 +3307,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gSpecialStatuses[battler].switchInAbilityDone = FALSE;
 
     // Restore struct member so replacement does not miss timing (Traits)
-    for(int j=0; j<=MAX_MON_INNATES; j++)
+    for(j=0; j<=MAX_MON_INNATES; j++)
     {
         gSpecialStatuses[battler].switchInTraitDone[j] = FALSE;
         gSpecialStatuses[battler].endTurnTraitDone[j] = FALSE;
@@ -4826,14 +4826,14 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     // weather abilities
     if (HasWeatherEffect())
     {
-        if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)       && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && gBattleWeather & B_WEATHER_RAIN)
-            speed *= 2;
-        else if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && gBattleWeather & B_WEATHER_SUN)
-            speed *= 2;
-        else if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH)   && gBattleWeather & B_WEATHER_SANDSTORM)
-            speed *= 2;
-        else if (SearchTraits(battlerTraits, ABILITY_SLUSH_RUSH)  && (gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
-            speed *= 2;
+        if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && gBattleWeather & B_WEATHER_RAIN)
+            speed += baseSpeed;
+        if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && gBattleWeather & B_WEATHER_SUN)
+            speed += baseSpeed;
+        if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH)   && gBattleWeather & B_WEATHER_SANDSTORM)
+            speed += baseSpeed;
+        if (SearchTraits(battlerTraits, ABILITY_SLUSH_RUSH)  && (gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
+            speed += baseSpeed;
     }
 
     // other abilities
@@ -4846,7 +4846,19 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE) && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
     if (SearchTraits(battlerTraits, ABILITY_UNBURDEN) && gDisableStructs[battler].unburdenActive)
-        speed *= 2;
+    {
+        u8 occupiedSlots = MAX_MON_ITEMS;
+        for (int i = 0; i < MAX_MON_ITEMS; i++)
+            if (gBattleMons[battler].items[i] == ITEM_NONE)
+                occupiedSlots--;
+
+        if (occupiedSlots == 0)
+            speed *= 2; // Normal boosted speed with no items at all
+        else if (occupiedSlots == 1 && MAX_MON_ITEMS > 1) // Only apply additional math if there are more than one item slot
+            speed = uq4_12_multiply(speed, UQ_4_12(1.33)); // If pokemon has 1 item, speed boost reduced to 33% since there's a major jump between having no items and having even 1
+        else if (MAX_MON_ITEMS > 1) // Further items then evenly reduce the remaining boost down to 1x effectiveness at full load
+            speed = uq4_12_multiply(speed, uq4_12_subtract(UQ_4_12(1.33),uq4_12_multiply(uq4_12_divide(UQ_4_12(0.33), UQ_4_12(MAX_MON_ITEMS - 1)), UQ_4_12(speed - 1)))); 
+    }
     if (SearchTraits(battlerTraits, ABILITY_SLOW_START)  && gDisableStructs[battler].slowStartTimer != 0)
         speed /= 2;
 
@@ -4925,7 +4937,7 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         gProtectStructs[battler].pranksterElevated = 1;
         priority++;
     }
-    else if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE && IsBattlerTerrainAffected(battler, STATUS_FIELD_GRASSY_TERRAIN) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
+    if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE && IsBattlerTerrainAffected(battler, STATUS_FIELD_GRASSY_TERRAIN) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
         priority++;
     }

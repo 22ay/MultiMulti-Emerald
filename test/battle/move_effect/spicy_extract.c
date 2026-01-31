@@ -207,7 +207,8 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does no
     }
 }
 
-SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attack stat is maxed out (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attack stat is maxed out (Traits)")
 {
     enum Ability ability;
 
@@ -244,7 +245,7 @@ SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attac
     }
 }
 
-SINGLE_BATTLE_TEST("Spicy Extract Defense loss is prevented by Big Pecks (Multi)")
+SINGLE_BATTLE_TEST("Spicy Extract Defense loss is prevented by Big Pecks (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -265,7 +266,7 @@ SINGLE_BATTLE_TEST("Spicy Extract Defense loss is prevented by Big Pecks (Multi)
     }
 }
 
-SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary (Multi)")
+SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -287,7 +288,7 @@ SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary (Mul
     }
 }
 
-SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defense only (Multi)")
+SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defense only (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -310,7 +311,7 @@ SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defen
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does not benefit partner (Multi)")
+AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does not benefit partner (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -330,3 +331,87 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does no
         }
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Spicy Extract bypasses accuracy checks (Multi)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_BRIGHTPOWDER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Spicy Extract!");
+        NOT MESSAGE("Wobbuffet's attack missed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Wobbuffet's Attack sharply rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Wobbuffet's Defense harshly fell!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Spicy Extract will fail if target is in a semi-invulnerability state (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_BRIGHTPOWDER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DIVE); MOVE(player, MOVE_SPICY_EXTRACT); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Dive!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, opponent);
+        MESSAGE("Wobbuffet used Spicy Extract!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
+        MESSAGE("Wobbuffet's attack missed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defense only (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); Items(ITEM_PECHA_BERRY, ITEM_CLEAR_AMULET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Spicy Extract!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            MESSAGE("The opposing Snivy's Attack harshly fell!");
+        }
+        MESSAGE("The effects of the Clear Amulet held by the opposing Snivy prevents its stats from being lowered!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Snivy's Defense sharply rose!");
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Spicy Extract user will use it if partner holds Clear Amulet and a physical move (Multi)")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_SWIFT;}
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Items(ITEM_PECHA_BERRY, ITEM_CLEAR_AMULET); Moves(move); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
+    } WHEN {
+        TURN {
+            if (move == MOVE_SCRATCH)
+                EXPECT_MOVE(opponentRight, MOVE_SPICY_EXTRACT);
+            else
+                EXPECT_MOVE(opponentRight, MOVE_SCRATCH);
+        }
+    }
+}
+#endif

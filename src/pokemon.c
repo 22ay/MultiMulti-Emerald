@@ -1607,7 +1607,7 @@ void CreateEnemyEventMon(void)
         heldItem[0] = itemId;
         heldItem[1] = itemId >> 8;
 
-        slot = GetNextMonEmptySlot(&gEnemyParty[0], itemId);
+        slot = GetMonNextEmptySlot(&gEnemyParty[0], itemId);
         
         if (slot != MAX_MON_ITEMS)
             SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM + slot, heldItem);  //leaving as one item to not mess with the specialVar (Multi)
@@ -6355,7 +6355,7 @@ void SetWildMonHeldItem(void)
                     // In active Altering Cave, use special item list
                     if (rnd < chanceNotRare)
                         continue;
-                    slot = GetNextMonEmptySlot(&gEnemyParty[i], sAlteringCaveWildMonHeldItems[alteringCaveId].item);
+                    slot = GetMonNextEmptySlot(&gEnemyParty[i], sAlteringCaveWildMonHeldItems[alteringCaveId].item);
                     if (slot != MAX_MON_ITEMS)
                         SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &sAlteringCaveWildMonHeldItems[alteringCaveId].item);
                 }
@@ -6366,13 +6366,13 @@ void SetWildMonHeldItem(void)
                         continue;
                     if (rnd < chanceNotRare)
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                     }
                     else
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
                     }
@@ -6383,7 +6383,7 @@ void SetWildMonHeldItem(void)
                 if (gSpeciesInfo[species].itemCommon == gSpeciesInfo[species].itemRare && gSpeciesInfo[species].itemCommon != ITEM_NONE)
                 {
                     // Both held items are the same, 100% chance to hold item
-                    slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                    slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
                     if (slot != MAX_MON_ITEMS)
                         SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                 }
@@ -6393,13 +6393,13 @@ void SetWildMonHeldItem(void)
                         continue;
                     if (rnd < chanceNotRare)
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                     }
                     else
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
                     }
@@ -7483,8 +7483,48 @@ bool32 IsSpeciesOfType(u32 species, enum Type type)
         return TRUE;
     return FALSE;
 }
+//Traits Block
 
-//Extra Held Item Stuff
+//Returns the slot the Innate is found in, assuming the Ability is already slot 1.  Returns 0 if not found.
+u8 SpeciesHasInnate(u16 species, u16 ability) {
+    u8 i;
+    u8 innateNum = 0;
+
+    for (i = 0; i < MAX_MON_INNATES; i++)
+    {
+        if (gSpeciesInfo[species].innates[i] == ability)
+            {
+                innateNum = i + 2;
+                //DebugPrintf("INNATE FOUND: %d", innateNum - 1);
+            }
+    }
+
+        return innateNum;
+}
+
+bool8 BoxMonHasInnate(struct BoxPokemon *boxmon, u16 ability)
+{
+    u16 species = GetBoxMonData(boxmon, MON_DATA_SPECIES, NULL);
+
+    return SpeciesHasInnate(species, ability);
+}
+
+bool8 MonHasTrait(struct Pokemon *mon, u16 ability)
+{
+    u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+
+    return (GetMonAbility(mon) == ability || SpeciesHasInnate(species, ability));
+} 
+
+enum Ability GetSpeciesInnate(u16 species, u8 traitNum)
+{
+    if (MAX_MON_INNATES > 0)
+            return gSpeciesInfo[species].innates[traitNum - 1];
+    else
+        return 0;
+}
+
+//Multi Item Block
 u8 MonHasItem(struct Pokemon *mon, u16 item)
 {
     u8 i;
@@ -7495,6 +7535,7 @@ u8 MonHasItem(struct Pokemon *mon, u16 item)
 
     return FALSE;
 }
+
 u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect)
 {
     u8 i;
@@ -7553,42 +7594,3 @@ u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u
     }
     return ITEM_NONE;
 }
-//Returns the slot the Innate is found in, assuming the Ability is already slot 1.  Returns 0 if not found.
-u8 SpeciesHasInnate(u16 species, u16 ability) {
-    u8 i;
-    u8 innateNum = 0;
-
-    for (i = 0; i < MAX_MON_INNATES; i++)
-    {
-        if (gSpeciesInfo[species].innates[i] == ability)
-            {
-                innateNum = i + 2;
-                //DebugPrintf("INNATE FOUND: %d", innateNum - 1);
-            }
-    }
-
-        return innateNum;
-}
-
-bool8 BoxMonHasInnate(struct BoxPokemon *boxmon, u16 ability)
-{
-    u16 species = GetBoxMonData(boxmon, MON_DATA_SPECIES, NULL);
-
-    return SpeciesHasInnate(species, ability);
-}
-
-bool8 MonHasTrait(struct Pokemon *mon, u16 ability)
-{
-    u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-
-    return (GetMonAbility(mon) == ability || SpeciesHasInnate(species, ability));
-} 
-
-enum Ability GetSpeciesInnate(u16 species, u8 traitNum)
-{
-    if (MAX_MON_INNATES > 0)
-            return gSpeciesInfo[species].innates[traitNum - 1];
-    else
-        return 0;
-}
-

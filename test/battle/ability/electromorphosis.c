@@ -54,7 +54,8 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
 }
 
 
-SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move (Traits)")
 {
     s16 dmgBefore, dmgAfter;
     u16 move;
@@ -107,3 +108,4 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move (Multi)
         EXPECT_MUL_EQ(dmgBefore, Q_4_12(2.0), dmgAfter);
     }
 }
+#endif

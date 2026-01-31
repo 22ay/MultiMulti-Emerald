@@ -81,7 +81,8 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
 
 // TODO: Test against interaction with multi hits
 
-SINGLE_BATTLE_TEST("Stench has a 10% chance to flinch (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Stench has a 10% chance to flinch (Traits)")
 {
     PASSES_RANDOMLY(1, 10, RNG_STENCH);
     GIVEN {
@@ -95,7 +96,7 @@ SINGLE_BATTLE_TEST("Stench has a 10% chance to flinch (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Multi)")
+SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Traits)")
 {
     PASSES_RANDOMLY(1, 10, RNG_STENCH);
     GIVEN {
@@ -111,7 +112,7 @@ SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Stench only triggers if target takes damage (Multi)")
+DOUBLE_BATTLE_TEST("Stench only triggers if target takes damage (Traits)")
 {
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
@@ -135,7 +136,7 @@ DOUBLE_BATTLE_TEST("Stench only triggers if target takes damage (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move (Multi)")
+DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move (Traits)")
 {
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
@@ -160,3 +161,22 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move (Multi)")
 }
 
 // TODO: Test against interaction with multi hits
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Multi)")
+{
+    PASSES_RANDOMLY(1, 10, RNG_STENCH);
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_KINGS_ROCK].holdEffect == HOLD_EFFECT_FLINCH);
+        ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
+
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); Items(ITEM_PECHA_BERRY, ITEM_KINGS_ROCK); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+    }
+}
+#endif

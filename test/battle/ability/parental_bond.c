@@ -394,7 +394,8 @@ Parental Bond does not affect Z-Moves or Max Moves.
 */
 // TONS OF TESTS NEEDED. FOR NOW, THIS SINGLE TEST IS MADE TO MAKE SURE AN ISSUE WAS FIXED.
 
-SINGLE_BATTLE_TEST("Parental Bond converts Scratch into a two-strike move (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Parental Bond converts Scratch into a two-strike move (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
@@ -412,7 +413,7 @@ SINGLE_BATTLE_TEST("Parental Bond converts Scratch into a two-strike move (Multi
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond does not convert a move with three or more strikes to a two-strike move (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond does not convert a move with three or more strikes to a two-strike move (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_TRIPLE_KICK) != DAMAGE_CATEGORY_STATUS);
@@ -430,7 +431,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not convert a move with three or more str
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond converts multi-target moves into a two-strike move in Single Battles (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond converts multi-target moves into a two-strike move in Single Battles (Traits)")
 {
     u16 move;
     PARAMETRIZE { move = MOVE_EARTHQUAKE; }
@@ -453,7 +454,7 @@ SINGLE_BATTLE_TEST("Parental Bond converts multi-target moves into a two-strike 
     }
 }
 
-DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two-strike move in Double Battles, even if it only damages one (Multi)")
+DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two-strike move in Double Battles, even if it only damages one (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveStrikeCount(MOVE_EARTHQUAKE) < 2);
@@ -476,7 +477,7 @@ DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond-converted moves only hit once on Lightning Rod/Storm Drain mons (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond-converted moves only hit once on Lightning Rod/Storm Drain mons (Traits)")
 {
     u16 move, species;
     enum Type type;
@@ -501,7 +502,7 @@ SINGLE_BATTLE_TEST("Parental Bond-converted moves only hit once on Lightning Rod
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit twice 37.5/35% of the time (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit twice 37.5/35% of the time (Traits)")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 3; trials = 8; }  // 37.5%
@@ -524,7 +525,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit thrice 37.5/35% of the time (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit thrice 37.5/35% of the time (Traits)")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 3; trials = 8; }  // 37.5%
@@ -548,7 +549,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit four times 12.5/15% of the time (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit four times 12.5/15% of the time (Traits)")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 1; trials = 8; }  // 12.5%
@@ -573,7 +574,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit five times 12.5/15% of the time (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit five times 12.5/15% of the time (Traits)")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 1; trials = 8; }  // 12.5%
@@ -600,7 +601,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond Smack Down effect triggers after 2nd hit (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond Smack Down effect triggers after 2nd hit (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_SMACK_DOWN);
@@ -619,7 +620,7 @@ SINGLE_BATTLE_TEST("Parental Bond Smack Down effect triggers after 2nd hit (Mult
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep (Traits)")
 {
     s16 damage[2];
     GIVEN {
@@ -642,7 +643,7 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond only triggers Dragon Tail's target switch out on the second hit (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond only triggers Dragon Tail's target switch out on the second hit (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
@@ -659,7 +660,7 @@ SINGLE_BATTLE_TEST("Parental Bond only triggers Dragon Tail's target switch out 
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond does not trigger on semi-invulnerable moves (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond does not trigger on semi-invulnerable moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_FLY) != DAMAGE_CATEGORY_STATUS);
@@ -676,7 +677,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on semi-invulnerable moves (M
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_RAZOR_WIND) != DAMAGE_CATEGORY_STATUS);
@@ -693,7 +694,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Punch (Multi)")
+SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Punch (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_KANGASKHAN) { Ability(ABILITY_EARLY_BIRD); Innates(ABILITY_PARENTAL_BOND); Item(ITEM_KANGASKHANITE); }
@@ -709,4 +710,30 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Pu
     }
 }
 
-TO_DO_BATTLE_TEST("Parental Bond tests (Multi)");
+TO_DO_BATTLE_TEST("Parental Bond tests (Traits)");
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Parental Bond converts Scratch into a two-strike move (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMoveStrikeCount(MOVE_SCRATCH) < 2);
+        ASSUME(GetMoveEffect(MOVE_SCRATCH) == EFFECT_HIT);
+        PLAYER(SPECIES_KANGASKHAN) { Items(ITEM_PECHA_BERRY, ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("Kangaskhan's Kangaskhanite is reacting to 1's Mega Ring!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
+        MESSAGE("Kangaskhan has Mega Evolved into Mega Kangaskhan!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_KANGASKHAN_MEGA);
+    }
+}
+#endif

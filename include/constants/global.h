@@ -115,10 +115,10 @@
 #define TRAINER_ID_LENGTH 4
 #define MAX_MON_MOVES 4
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
-#define MAX_MON_ITEMS 2 // Number of items that can be held by a pokemon
 #define MAX_MON_INNATES 3 // The max number of Innates that are enabled in gameplay
 #define MAX_MON_INNATES_INTERNAL 3 // The max number of Innates that a pokemon can have in the species definition lists.
 #define MAX_MON_TRAITS (MAX_MON_INNATES + 1) // The max number of Innates with Abilities included
+#define MAX_MON_ITEMS 2 // Number of items that can be held by a pokemon (Must be greater than 1 for this standalone branch)
 
 #define CONTESTANT_COUNT 4
 #define CONTEST_CATEGORY_COOL      0
@@ -211,6 +211,9 @@
 #define RECYCLE_ITEM_PICKUP     2
 #define RECYCLE_ITEM_HARVEST    3
 #define LAST_ITEM_CORROSIVE     1
-#define LAST_ITEM_FLING         2  
+#define LAST_ITEM_FLING         2
+#define TRIGGER_HARVEST         1
+#define TRIGGER_BALL_FETCH      2
+#define TRIGGER_PICKUP          3
 
 #endif // GUARD_CONSTANTS_GLOBAL_H

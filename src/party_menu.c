@@ -2044,7 +2044,7 @@ static void DisplaySwitchedHeldItemMessage(u16 item, u16 item2, bool8 keepOpen)
 static void GiveItemToMon(struct Pokemon *mon, u16 item)
 {
     u8 itemBytes[2];
-    u16 slot = GetNextMonEmptySlot(mon, item);
+    u16 slot = GetMonNextEmptySlot(mon, item);
 
     if (slot != MAX_MON_ITEMS)
     {
@@ -3517,7 +3517,7 @@ static void CB2_SelectBagItemToGive(void)
 
 static void CB2_GiveHoldItem(void)
 {
-    u16 slot = GetNextMonEmptySlot(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId);
+    u16 slot = GetMonNextEmptySlot(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId);
 
     if (gSpecialVar_ItemId == ITEM_NONE)
     {
@@ -7290,7 +7290,7 @@ void CB2_ChooseMonToGiveItem(void)
 
 static void TryGiveItemOrMailToSelectedMon(u8 taskId)
 {
-    u16 slot = GetNextMonEmptySlot(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.bagItem);
+    u16 slot = GetMonNextEmptySlot(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.bagItem);
 
     if (slot == MAX_MON_ITEMS) //Assign target slot when none are empty (Multi)
     {
@@ -7489,7 +7489,7 @@ static void TryGiveMailToSelectedMon(u8 taskId)
 
     gPartyMenuUseExitCallback = FALSE;
     mail = &gSaveBlock1Ptr->mail[gPlayerPCItemPageInfo.itemsAbove + PARTY_SIZE + gPlayerPCItemPageInfo.cursorPos];
-    if (MonHasMail(mon) || GetNextMonEmptySlot(mon, mail->itemId) == MAX_MON_ITEMS)
+    if (MonHasMail(mon) || GetMonNextEmptySlot(mon, mail->itemId) == MAX_MON_ITEMS)
     {
         DisplayPartyMenuMessage(gText_PkmnHoldingItemCantHoldMail, TRUE);
     }

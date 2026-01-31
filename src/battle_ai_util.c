@@ -3251,9 +3251,6 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
 
     if (BattlerHasTrait(currBattler, ABILITY_MAGIC_GUARD) || BattlerHasTrait(switchBattler, ABILITY_MAGIC_GUARD))
         return FALSE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM || BattlerHasTrait(currBattler, ABILITY_KLUTZ) || BattlerHasTrait(switchBattler, ABILITY_KLUTZ))
-        BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_NONE, TRUE);
-    else
     if (BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_HEAVY_DUTY_BOOTS, TRUE))
         return FALSE;
 
