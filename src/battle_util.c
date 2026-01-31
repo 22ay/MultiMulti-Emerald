@@ -4649,8 +4649,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             {
                 for (i = 0; i < MAX_MON_ITEMS; i++)
                 {
-                    if (!gDisableStructs[battler].cudChew[i]
-                        && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                    if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
+                     && gBattleMons[battler].items[i] == ITEM_NONE
+                     && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
+                     && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
                     {
                         itemTraitType = TRIGGER_HARVEST;
                         itemTraitSlot = i;
@@ -4751,7 +4753,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                         validToRaise |= 1u << i;
                 }
 
-                if (index > 0)
+                gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0; // for raising and lowering stat respectively
+                if (validToRaise) // Find stat to raise
                 {
                     i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
                     SET_STATCHANGER(i, 2, FALSE);
@@ -4784,90 +4787,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                     effect++;
                     break;
             }
-            break;
-        }
-
-        // -------------------------
-        // SPEED BOOST
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SPEED_BOOST))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-                 && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN)
-                 && gDisableStructs[battler].isFirstTurn != 2)
-        {
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            SaveBattlerAttacker(gBattlerAttacker);
-            SET_STATCHANGER(STAT_SPEED, 1, FALSE);
-            PushTraitStack(battler, ABILITY_SPEED_BOOST);
-            BattleScriptExecute(BattleScript_AttackerAbilityStatRaiseEnd2);
-            gBattleScripting.battler = battler;
-            effect++;
-            break;
-        }
-
-        // -------------------------
-        // MOODY
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MOODY))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-                 && gDisableStructs[battler].isFirstTurn != 2)
-        {
-            u32 validToRaise = 0, validToLower = 0;
-            u32 statsNum = GetConfig(CONFIG_MOODY_ACC_EVASION) >= GEN_8 ? NUM_STATS : NUM_BATTLE_STATS;
-
-            for (i = STAT_ATK; i < statsNum; i++)
-            {
-                if (CompareStat(battler, i, MIN_STAT_STAGE, CMP_GREATER_THAN))
-                    validToLower |= 1u << i;
-                if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN))
-                    validToRaise |= 1u << i;
-            }
-
-            gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0;
-
-            if (validToRaise)
-            {
-                i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
-                SET_STATCHANGER(i, 2, FALSE);
-                validToLower &= ~(1u << i);
-            }
-
-            if (validToLower)
-            {
-                i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
-            }
-
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            PushTraitStack(battler, ABILITY_MOODY);
-            BattleScriptExecute(BattleScript_MoodyActivates);
-            effect++;
-            break;
-        }
-
-        // -------------------------
-        // TRUANT
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_TRUANT))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-        {
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            gDisableStructs[gBattlerAttacker].truantCounter ^= 1;
-            break;
-        }
-
-        // -------------------------
-        // SLOW START
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SLOW_START))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-        {
-            if (gDisableStructs[battler].slowStartTimer > 0
-                && --gDisableStructs[battler].slowStartTimer == 0)
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BAD_DREAMS)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
             {
                 gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                PushTraitStack(battler, ABILITY_SLOW_START);
-                BattleScriptExecute(BattleScript_SlowStartEnds);
+                PushTraitStack(battler, ABILITY_BAD_DREAMS);
+                BattleScriptExecute(BattleScript_BadDreamsActivates);
                 effect++;
                 break;
             }
@@ -4895,21 +4819,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 }
             }
         }
-
-        // -------------------------
-        // BAD DREAMS
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BAD_DREAMS))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-        {
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            PushTraitStack(battler, ABILITY_BAD_DREAMS);
-            BattleScriptExecute(BattleScript_BadDreamsActivates);
-            effect++;
-            break;
-        }
-    }
-    break;
+        break;
     case ABILITYEFFECT_ENDTURN_WEATHER:  
         if (IsBattlerAlive(battler))
         {
