@@ -4,6 +4,7 @@
 #include "main.h"
 
 void Task_OpenBirchCase(u8 taskId);
+void Task_OpenBirchCaseGotoBattle(u8 taskId);
 void BirchCase_Init(MainCallback callback);
 
 
