@@ -237,7 +237,8 @@ SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive boosts the highest stat (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Quark Drive boosts the highest stat (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_QUARK_DRIVE); }
@@ -252,7 +253,7 @@ SINGLE_BATTLE_TEST("Quark Drive boosts the highest stat (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive boosts either Attack or Special Attack, not both (Multi)")
+SINGLE_BATTLE_TEST("Quark Drive boosts either Attack or Special Attack, not both (Traits)")
 {
     u16 species;
     u32 move;
@@ -284,7 +285,7 @@ SINGLE_BATTLE_TEST("Quark Drive boosts either Attack or Special Attack, not both
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive keeps its initial boosted stat after Speed is lowered (Multi)")
+SINGLE_BATTLE_TEST("Quark Drive keeps its initial boosted stat after Speed is lowered (Traits)")
 {
     s16 damage[2];
 
@@ -308,7 +309,7 @@ SINGLE_BATTLE_TEST("Quark Drive keeps its initial boosted stat after Speed is lo
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive ability pop up activates only once during the duration of electric terrain (Multi)")
+SINGLE_BATTLE_TEST("Quark Drive ability pop up activates only once during the duration of electric terrain (Traits)")
 {
     u16 turns;
 
@@ -339,7 +340,7 @@ SINGLE_BATTLE_TEST("Quark Drive ability pop up activates only once during the du
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive activates on switch-in (Multi)")
+SINGLE_BATTLE_TEST("Quark Drive activates on switch-in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -355,7 +356,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates on switch-in (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive activates on Electric Terrain even if not grounded (Multi)")
+SINGLE_BATTLE_TEST("Quark Drive activates on Electric Terrain even if not grounded (Traits)")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_IRON_JUGULIS, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_IRON_JUGULIS, 1) == TYPE_FLYING);
@@ -369,7 +370,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates on Electric Terrain even if not ground
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed (Multi)")
+SINGLE_BATTLE_TEST("Quark Drive prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed (Traits)")
 {
     u8 stats[] = {1, 1, 1, 1, 1};
 
@@ -402,7 +403,7 @@ SINGLE_BATTLE_TEST("Quark Drive prioritizes stats in the case of a tie in the fo
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Energy (Multi)")
+SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Energy (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -414,6 +415,45 @@ SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Ene
         ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Energy (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+    } THEN {
+        EXPECT_EQ(player->items[1], ITEM_BOOSTER_ENERGY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_TRANSFORM); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_QUARK_DRIVE);
+    } THEN {
+        EXPECT_EQ(player->items[1], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(opponent->items[1], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(opponent->ability, ABILITY_QUARK_DRIVE);
+    }
+}
+#endif

@@ -141,7 +141,8 @@ DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even whe
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side if hit by a physical attack (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side if hit by a physical attack (Traits)")
 {
     u32 move;
 
@@ -166,7 +167,7 @@ SINGLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side if hit b
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Debris does not activate if two layers of Toxic Spikes are already up (Multi)")
+SINGLE_BATTLE_TEST("Toxic Debris does not activate if two layers of Toxic Spikes are already up (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_CORROSION); Innates(ABILITY_TOXIC_DEBRIS); }
@@ -190,7 +191,7 @@ SINGLE_BATTLE_TEST("Toxic Debris does not activate if two layers of Toxic Spikes
     }
 }
 
-SINGLE_BATTLE_TEST("If a Substitute is hit, Toxic Debris does not set Toxic Spikes (Multi)")
+SINGLE_BATTLE_TEST("If a Substitute is hit, Toxic Debris does not set Toxic Spikes (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_CORROSION); Innates(ABILITY_TOXIC_DEBRIS); }
@@ -208,7 +209,7 @@ SINGLE_BATTLE_TEST("If a Substitute is hit, Toxic Debris does not set Toxic Spik
     }
 }
 
-SINGLE_BATTLE_TEST("Each hit of a Multi Hit move activates Toxic Debris (Multi)")
+SINGLE_BATTLE_TEST("Each hit of a Multi Hit move activates Toxic Debris (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_CORROSION); Innates(ABILITY_TOXIC_DEBRIS); }
@@ -225,7 +226,7 @@ SINGLE_BATTLE_TEST("Each hit of a Multi Hit move activates Toxic Debris (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Debris activates if user faints after physical hit (Multi)")
+SINGLE_BATTLE_TEST("Toxic Debris activates if user faints after physical hit (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { HP(1); Ability(ABILITY_CORROSION); Innates(ABILITY_TOXIC_DEBRIS); }
@@ -255,7 +256,7 @@ SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates")
     }
 }
 
-DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even when hit by an ally (Multi)")
+DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even when hit by an ally (Traits)")
 {
     struct BattlePokemon *user = NULL;
 
@@ -274,3 +275,21 @@ DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even whe
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
+        MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
+        MESSAGE("Glimmora's Air Balloon popped!");
+    }
+}
+#endif

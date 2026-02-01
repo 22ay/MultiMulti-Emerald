@@ -70,11 +70,6 @@ enum AbilityEffect
     ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES, // Only activates one ability (Multi)
 };
 
-#define STORE_BATTLER_ITEMS(battler) \
-({for (int itemLoop = 0; itemLoop < MAX_MON_ITEMS; itemLoop++)\
-{battlerItems[itemLoop] = GetSlotHeldItem(battler, itemLoop, TRUE);\
-}})
-// DebugPrintf("battlerTraits[%d] = %d, loop = %d", itemLoop, battlerItems[itemLoop], GetSlotHeldItem(battler, itemLoop, TRUE));
 #define STORE_BATTLER_TRAITS(battler) \
 ({for (int traitLoop = 0; traitLoop < MAX_MON_TRAITS; traitLoop++)\
 {battlerTraits[traitLoop] = GetBattlerTrait(battler, traitLoop, FALSE);\
@@ -85,6 +80,12 @@ enum AbilityEffect
 ({for (int traitLoop = 0; traitLoop < MAX_MON_TRAITS; traitLoop++)\
 {battlerTraits[traitLoop] = GetBattlerTrait(battler, traitLoop, TRUE);\
 }}) 
+
+#define STORE_BATTLER_ITEMS(battler) \
+({for (int itemLoop = 0; itemLoop < MAX_MON_ITEMS; itemLoop++)\
+{battlerItems[itemLoop] = GetSlotHeldItem(battler, itemLoop, TRUE);\
+}})
+// DebugPrintf("battlerTraits[%d] = %d, loop = %d", itemLoop, battlerItems[itemLoop], GetSlotHeldItem(battler, itemLoop, TRUE));
 
 enum ItemEffect
 {
@@ -305,6 +306,7 @@ u32 SetRandomTarget(u32 battler);
 u32 GetBattleMoveTarget(u16 move, u8 setTarget);
 u8 GetAttackerObedienceForAction();
 u32 GetBattlerItemHoldEffectParam(u32 battler, u32 item);
+u32 GetBattlerHoldEffectParam(u32 battler);
 bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsBattlerGrounded(u32 battler);
@@ -453,6 +455,15 @@ bool32 HasDazzlingAbility(u32 battler);
 bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
+//Traits
+enum Ability GetBattlerTrait(u8 battler, u8 traitNum, u32 ignoreMoldBreaker);
+u8 BattlerHasInnate(u8 battlerId, enum Ability ability);
+u8 BattlerHasTrait(u8 battlerId, enum Ability ability); //Returns the trait slot number of the given ability. Starts at 1 for the primary Ability and returns 0 if the ability is not found. 
+u8 BattlerHasTraitPlain(u8 battlerId, enum Ability ability); //BattlerHasTrait for functions already under GetBattlerAbility to avoid infinite loops.
+void PushTraitStack(u8 battlerId, enum Ability ability); //Pushes an ability to the trait stack
+u8 PullTraitStackBattler(void); //Pulls a battler from the trait stack
+enum Ability PullTraitStackAbility(void); //Pulls a battler from the trait stack
+void PopTraitStack(void); //Pops an ability from the trait stack and clears the slot
 //Multi Items
 bool32 BattlerHasHeldItemEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 bool32 BattlerHasHeldItemEffectIgnoreAbility(u32 battler, u32 holdEffect, bool32 checkNegating);
@@ -462,19 +473,10 @@ u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegati
 u8 GetBattlerHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating);
 u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating);
-u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item);
+u8 GetMonNextEmptySlot(struct Pokemon *mon, u16 item);
+u8 GetBattlerNextEmptySlot(u32 battler, u16 item);
 u8 GetSlot(u8 *availableSlots, u8 size);
 u32 GetBattlerItemHoldEffect(u32 battler, u32 item);
 bool8 BattlerHasBerry(u32 battler);
 bool32 GetBattlerBerrySlot(u32 battler);
-
-enum Ability GetBattlerTrait(u8 battler, u8 traitNum, u32 ignoreMoldBreaker);
-u8 BattlerHasInnate(u8 battlerId, enum Ability ability);
-u8 BattlerHasTrait(u8 battlerId, enum Ability ability); //Returns the trait slot number of the given ability. Starts at 1 for the primary Ability and returns 0 if the ability is not found. 
-u8 BattlerHasTraitPlain(u8 battlerId, enum Ability ability); //BattlerHasTrait for functions already under GetBattlerAbility to avoid infinite loops.
-void PushTraitStack(u8 battlerId, enum Ability ability); //Pushes an ability to the trait stack
-u8 PullTraitStackBattler(void); //Pulls a battler from the trait stack
-enum Ability PullTraitStackAbility(void); //Pulls a battler from the trait stack
-void PopTraitStack(void); //Pops an ability from the trait stack and clears the slot
-
 #endif // GUARD_BATTLE_UTIL_H

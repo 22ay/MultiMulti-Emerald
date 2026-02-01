@@ -130,7 +130,8 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated"
     }
 }
 
-SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens after it hits (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens after it hits (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA);
@@ -149,7 +150,7 @@ SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens aft
     }
 }
 
-SINGLE_BATTLE_TEST("Relic Song loses the form-changing effect with Sheer Force (Multi)")
+SINGLE_BATTLE_TEST("Relic Song loses the form-changing effect with Sheer Force (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA){ Ability(ABILITY_SERENE_GRACE); Innates(ABILITY_SHEER_FORCE); }
@@ -166,7 +167,7 @@ SINGLE_BATTLE_TEST("Relic Song loses the form-changing effect with Sheer Force (
     }
 }
 
-SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated (Multi)")
+SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA){ Ability(ABILITY_SERENE_GRACE); Innates(ABILITY_MAGICIAN); }
@@ -184,3 +185,25 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated 
         EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_MELOETTA_ARIA);
+        OPPONENT(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Items(ITEM_PECHA_BERRY, ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP); MOVE(player, MOVE_RELIC_SONG); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(player, ABILITY_MAGICIAN);
+        MESSAGE("Meloetta stole the opposing Delphox's Potion!");
+        MESSAGE("Meloetta transformed!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);
+    }
+}
+#endif

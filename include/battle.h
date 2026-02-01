@@ -217,10 +217,9 @@ struct SpecialStatus
     u8 dancerOriginalTarget:3;
     u8 padding3:5;
     // End of byte
-    u8 berryReducedType; // Catch for multiple berries and hidden power(multi)
-    // End of byte
     bool8 switchInTraitDone[MAX_MON_TRAITS];
     bool8 endTurnTraitDone[MAX_MON_TRAITS];
+    u8 berryReducedType; // Catch for multiple berries and hidden power(multi)
 };
 
 struct SideTimer

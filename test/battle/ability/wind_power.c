@@ -258,7 +258,8 @@ DOUBLE_BATTLE_TEST("Wind Power activates correctly when Tailwind is used")
 }
 
 
-SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move (Traits)")
 {
     s16 dmgBefore, dmgAfter;
     u16 move;
@@ -303,7 +304,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
     }
 }
 
-SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move (Multi)")
+SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move (Traits)")
 {
     s16 dmgBefore, dmgAfter;
     u16 move;
@@ -348,7 +349,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
     }
 }
 
-SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a wind move (Multi)")
+SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a wind move (Traits)")
 {
     s16 dmgCharged, dmgAfter;
     u16 move;
@@ -386,7 +387,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a 
     }
 }
 
-DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ability when hit by a 2/3 target move (Multi)")
+DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ability when hit by a 2/3 target move (Traits)")
 {
     enum Ability abilityLeft, abilityRight;
 
@@ -427,7 +428,7 @@ DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ab
     }
 }
 
-DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ability when hit by a 3 target move (Multi)")
+DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ability when hit by a 3 target move (Traits)")
 {
     enum Ability abilityLeft, abilityRight;
 
@@ -466,7 +467,7 @@ DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ab
     }
 }
 
-DOUBLE_BATTLE_TEST("Wind Power activates correctly when Tailwind is used (Multi)")
+DOUBLE_BATTLE_TEST("Wind Power activates correctly when Tailwind is used (Traits)")
 {
     bool8 opponentSide;
 
@@ -502,3 +503,4 @@ DOUBLE_BATTLE_TEST("Wind Power activates correctly when Tailwind is used (Multi)
         }
     }
 }
+#endif

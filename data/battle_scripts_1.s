@@ -5082,7 +5082,6 @@ BattleScript_WeaknessPolicyEnd:
 	return
 
 BattleScript_TargetItemStatRaise_Snowball::
-	setlastuseditem BS_TARGET, HOLD_EFFECT_SNOWBALL
 	copybyte sBATTLER, gBattlerTarget
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
@@ -5096,7 +5095,6 @@ BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball:
 	return
 
 BattleScript_TargetItemStatRaise_Luminous_Moss::
-	setlastuseditem BS_TARGET, HOLD_EFFECT_LUMINOUS_MOSS
 	copybyte sBATTLER, gBattlerTarget
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
@@ -5110,7 +5108,6 @@ BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss:
 	return
 
 BattleScript_TargetItemStatRaise_Cell_Battery::
-	setlastuseditem BS_TARGET, HOLD_EFFECT_CELL_BATTERY
 	copybyte sBATTLER, gBattlerTarget
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
@@ -5124,7 +5121,6 @@ BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery:
 	return
 
 BattleScript_TargetItemStatRaise_Absorb_Bulb::
-	setlastuseditem BS_TARGET, HOLD_EFFECT_ABSORB_BULB
 	copybyte sBATTLER, gBattlerTarget
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
@@ -5136,7 +5132,7 @@ BattleScript_TargetItemStatRaise_Absorb_Bulb::
 	removeitemwitheffect BS_TARGET, HOLD_EFFECT_ABSORB_BULB
 BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb:
 	return
-	
+
 BattleScript_AttackerItemStatRaise::
 	copybyte sBATTLER, gBattlerAttacker
 	statbuffchange BS_ATTACKER, STAT_CHANGE_ONLY_CHECKING, BattleScript_AttackerItemStatRaiseRet
@@ -7604,7 +7600,7 @@ BattleScript_ActivateAsOne::
 	end3
 
 BattleScript_FriskMsgWithPopup::
-	copybyte gBattlerAbility, gBattlerAttacker
+	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
 BattleScript_FriskMsg::
 	printstring STRINGID_FRISKACTIVATES
@@ -7612,7 +7608,7 @@ BattleScript_FriskMsg::
 	return
 
 BattleScript_FriskMsgWithPopup2::
-	copybyte gBattlerAbility, gBattlerAttacker
+	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
 BattleScript_FriskMsg2::
 	printstring STRINGID_FRISKACTIVATES
@@ -7622,7 +7618,7 @@ BattleScript_FriskMsg2::
 	return
 
 BattleScript_FriskMsgWithPopup3::
-	copybyte gBattlerAbility, gBattlerAttacker
+	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
 BattleScript_FriskMsg3::
 	printstring STRINGID_FRISKACTIVATES

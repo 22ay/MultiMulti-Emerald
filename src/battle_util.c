@@ -4108,13 +4108,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
     u32 i = 0, j = 0;
     u32 partner = BATTLE_PARTNER(battler);
     struct Pokemon *mon;
-    u8 index, slot, targetableSlots[MAX_MON_ITEMS];
-    
-    index = 0;
-    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
-    
+
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
+    u8 slot;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return 0;
@@ -4295,7 +4292,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                             ctx.moveType = moveType;
                             ctx.isAnticipation = TRUE;
                             modifier = CalcTypeEffectivenessMultiplier(&ctx);
-
                             if (modifier >= UQ_4_12(2.0)
                              || moveEffect == EFFECT_OHKO
                              || moveEffect == EFFECT_SHEER_COLD)
@@ -4638,254 +4634,193 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         }
         break;
     case ABILITYEFFECT_ENDTURN:
-    if (IsBattlerAlive(battler))
-    {
-        gBattlerAttacker = battler;
-
-        // -------------------------
-        // PICKUP
-        // -------------------------
-        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PICKUP))
-            && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+        if (IsBattlerAlive(battler))
         {
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+            u8 itemTraitType = 0;
+            u8 itemTraitSlot = MAX_MON_ITEMS;
+            gBattlerAttacker = battler;
 
-            for (i = 0; i < MAX_MON_ITEMS; i++)
+            // Item abilities have additional conitions which might conflict with following Else statements
+            // Harvest, Pickup, and Ball Fetch do their item availability checks first independantly
+            // then just their activations are included in the If Else statements of the rest of the abilities.
+            // If affecting the same slot at the same time, priority is Harvest, Pickup, Ball Fetch (Ball Fetch is last because it seeks an empty slot)
+
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HARVEST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && itemTraitType == 0)
             {
-                if (gBattleMons[battler].items[i] == ITEM_NONE
-                    && gBattleStruct->changedItems[battler][i] == ITEM_NONE
-                    && PickupHasValidTarget(battler))
+                for (i = 0; i < MAX_MON_ITEMS; i++)
                 {
-                    gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
-                    gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItems[i];
-                    PushTraitStack(battler, ABILITY_PICKUP);
-                    BattleScriptExecute(BattleScript_PickupActivates);
-                    effect++;
-                    break;
+                    if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
+                     && gBattleMons[battler].items[i] == ITEM_NONE
+                     && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
+                     && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                    {
+                        itemTraitType = TRIGGER_HARVEST;
+                        itemTraitSlot = i;
+                        break;
+                    }
+                }
+            }   
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PICKUP)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && itemTraitType == 0)
+            {
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (gBattleMons[battler].items[i] == ITEM_NONE
+                     && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
+                     && PickupHasValidTarget(battler))
+                    {
+                        itemTraitType = TRIGGER_PICKUP;
+                        itemTraitSlot = i;
+                        break;
+                    }
                 }
             }
-        }
-
-        // -------------------------
-        // HARVEST
-        // -------------------------
-        if (1)   // wrapper so the next else-if attaches correctly
-        {
-            for (i = 0; i < MAX_MON_ITEMS; i++)
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BALL_FETCH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && itemTraitType == 0)
             {
-                if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HARVEST))
-                    && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-                    && (IsBattlerWeatherAffected(battler, B_WEATHER_SUN)
-                        || RandomPercentage(RNG_HARVEST, 50))
-                    && gBattleMons[battler].items[i] == ITEM_NONE
-                    && gBattleStruct->changedItems[battler][i] == ITEM_NONE
-                    && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                slot = MAX_MON_ITEMS;
+
+                if (!(gBattleTypeFlags & BATTLE_TYPE_RAID))
+                    slot = GetBattlerNextEmptySlot(battler, gLastUsedBall);
+                
+                if (gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
+                 && !gHasFetchedBall
+                 && slot != MAX_MON_ITEMS)
                 {
-                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
+                    itemTraitType = TRIGGER_BALL_FETCH;
+                    itemTraitSlot = slot;
+                }
+            }
+            
+            if (itemTraitType != 0)
+            {
+                if (itemTraitType == TRIGGER_HARVEST)
+                {
+                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[itemTraitSlot];
                     PushTraitStack(battler, ABILITY_HARVEST);
                     BattleScriptExecute(BattleScript_HarvestActivates);
                     effect++;
                     break;
                 }
-            }
-        }
-        // -------------------------
-        // BALL FETCH
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BALL_FETCH))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-                 && slot == MAX_MON_ITEMS)
-        {
-            // Determine slot
-            if (!(gBattleTypeFlags & BATTLE_TYPE_RAID)
-                && B_HELD_ITEM_CATEGORIZATION
-                && gBattleMons[battler].items[gItemsInfo[gLastUsedBall].heldSlot] == ITEM_NONE)
-            {
-                slot = gItemsInfo[gLastUsedBall].heldSlot;
-            }
-            else
-            {
-                for (int i = 0; i < MAX_MON_ITEMS; i++)
+                else if (itemTraitType == TRIGGER_PICKUP)
                 {
-                    if (gBattleMons[battler].items[i] == ITEM_NONE)
-                    {
-                        slot = i;
-                        break;
-                    }
+                    gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_PICKUP) - 1] = TRUE;
+                    gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
+                    gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItems[itemTraitSlot];
+                    PushTraitStack(battler, ABILITY_PICKUP);
+                    BattleScriptExecute(BattleScript_PickupActivates);
+                    effect++;
+                    break;
                 }
-            }
-
-            if (gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
-                && !gHasFetchedBall
-                && slot != MAX_MON_ITEMS)
-            {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                gLastUsedItem = gLastUsedBall;
-                gBattleScripting.battler = battler;
-
-                gBattleMons[battler].items[slot] = gLastUsedItem;
-                BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER,
-                                             REQUEST_HELDITEM_BATTLE + slot,
-                                             0, 2, &gLastUsedItem);
-                MarkBattlerForControllerExec(battler);
-
-                gHasFetchedBall = TRUE;
-                PushTraitStack(battler, ABILITY_BALL_FETCH);
-                BattleScriptExecute(BattleScript_BallFetch);
-                effect++;
-            }
-            break;
-        }
-
-        // -------------------------
-        // CUD CHEW
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-        {
-            // Consume stored berry
-            for (slot = 0; slot < MAX_MON_ITEMS; slot++)
-            {
-                if (gDisableStructs[battler].cudChew[slot] == TRUE)
+                else if (itemTraitType == TRIGGER_BALL_FETCH)
                 {
-                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                    gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_BALL_FETCH) - 1] = TRUE;
+                    gLastUsedItem = gLastUsedBall;
                     gBattleScripting.battler = battler;
-
-                    gDisableStructs[battler].cudChew[slot] = FALSE;
-
-                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[slot];
-                    GetBattlerPartyState(battler)->usedHeldItems[slot] = ITEM_NONE;
-
-                    PushTraitStack(battler, ABILITY_CUD_CHEW);
-                    BattleScriptExecute(BattleScript_CudChewActivates);
+                    gBattleMons[battler].items[itemTraitSlot] = gLastUsedItem;
+                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + itemTraitSlot, 0, 2, &gLastUsedItem);
+                    MarkBattlerForControllerExec(battler);
+                    gHasFetchedBall = TRUE;
+                    PushTraitStack(battler, ABILITY_BALL_FETCH);
+                    BattleScriptExecute(BattleScript_BallFetch);
                     effect++;
                     break;
                 }
             }
-
-            // Mark berry for next turn
-            if (effect == 0)
-            {
-                index = 0;
-                for (i = 0; i < MAX_MON_ITEMS; i++)
-                {
-                    if (!gDisableStructs[battler].cudChew[i]
-                        && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
-                    {
-                        targetableSlots[index++] = i;
-                    }
-                }
-
-                if (index > 0)
-                {
-                    slot = gLastItemSlot = GetSlot(targetableSlots, index - 1);
-                    gDisableStructs[battler].cudChew[slot] = TRUE;
-                }
-            }
-            break;
-        }
-
-        // -------------------------
-        // SPEED BOOST
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SPEED_BOOST))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-                 && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN)
-                 && gDisableStructs[battler].isFirstTurn != 2)
-        {
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            SaveBattlerAttacker(gBattlerAttacker);
-            SET_STATCHANGER(STAT_SPEED, 1, FALSE);
-            PushTraitStack(battler, ABILITY_SPEED_BOOST);
-            BattleScriptExecute(BattleScript_AttackerAbilityStatRaiseEnd2);
-            gBattleScripting.battler = battler;
-            effect++;
-            break;
-        }
-
-        // -------------------------
-        // MOODY
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MOODY))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-                 && gDisableStructs[battler].isFirstTurn != 2)
-        {
-            u32 validToRaise = 0, validToLower = 0;
-            u32 statsNum = GetConfig(CONFIG_MOODY_ACC_EVASION) >= GEN_8 ? NUM_STATS : NUM_BATTLE_STATS;
-
-            for (i = STAT_ATK; i < statsNum; i++)
-            {
-                if (CompareStat(battler, i, MIN_STAT_STAGE, CMP_GREATER_THAN))
-                    validToLower |= 1u << i;
-                if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN))
-                    validToRaise |= 1u << i;
-            }
-
-            gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0;
-
-            if (validToRaise)
-            {
-                i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
-                SET_STATCHANGER(i, 2, FALSE);
-                validToLower &= ~(1u << i);
-            }
-
-            if (validToLower)
-            {
-                i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
-            }
-
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            PushTraitStack(battler, ABILITY_MOODY);
-            BattleScriptExecute(BattleScript_MoodyActivates);
-            effect++;
-            break;
-        }
-
-        // -------------------------
-        // TRUANT
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_TRUANT))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-        {
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            gDisableStructs[gBattlerAttacker].truantCounter ^= 1;
-            break;
-        }
-
-        // -------------------------
-        // SLOW START
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SLOW_START))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-        {
-            if (gDisableStructs[battler].slowStartTimer > 0
-                && --gDisableStructs[battler].slowStartTimer == 0)
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SPEED_BOOST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN) && gDisableStructs[battler].isFirstTurn != 2)
             {
                 gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                PushTraitStack(battler, ABILITY_SLOW_START);
-                BattleScriptExecute(BattleScript_SlowStartEnds);
+                SaveBattlerAttacker(gBattlerAttacker);
+                SET_STATCHANGER(STAT_SPEED, 1, FALSE);
+                PushTraitStack(battler, ABILITY_SPEED_BOOST);
+                BattleScriptExecute(BattleScript_AttackerAbilityStatRaiseEnd2);
+                gBattleScripting.battler = battler;
                 effect++;
                 break;
             }
-        }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MOODY)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && gDisableStructs[battler].isFirstTurn != 2)
+            {
+                u32 validToRaise = 0, validToLower = 0;
+                u32 statsNum = GetConfig(CONFIG_MOODY_ACC_EVASION) >= GEN_8 ? NUM_STATS : NUM_BATTLE_STATS;
 
-        // -------------------------
-        // BAD DREAMS
-        // -------------------------
-        else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BAD_DREAMS))
-                 && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-        {
-            gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-            PushTraitStack(battler, ABILITY_BAD_DREAMS);
-            BattleScriptExecute(BattleScript_BadDreamsActivates);
-            effect++;
-            break;
+                for (i = STAT_ATK; i < statsNum; i++)
+                {
+                    if (CompareStat(battler, i, MIN_STAT_STAGE, CMP_GREATER_THAN))
+                        validToLower |= 1u << i;
+                    if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN))
+                        validToRaise |= 1u << i;
+                }
+
+                gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0; // for raising and lowering stat respectively
+                if (validToRaise) // Find stat to raise
+                {
+                    i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
+                    SET_STATCHANGER(i, 2, FALSE);
+                    validToLower &= ~(1u << i); // Can't lower the same stat as raising.
+                }
+                if (validToLower) // Find stat to lower
+                {
+                    // MoodyCantLowerStat already checks that both stats are different
+                    i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
+                    SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
+                }
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_MOODY);
+                BattleScriptExecute(BattleScript_MoodyActivates);
+                effect++;
+                break;
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_TRUANT)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                gDisableStructs[gBattlerAttacker].truantCounter ^= 1;
+                break;
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SLOW_START)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+                && gDisableStructs[battler].slowStartTimer > 0 && --gDisableStructs[battler].slowStartTimer == 0)
+            {
+                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                    PushTraitStack(battler, ABILITY_SLOW_START);
+                    BattleScriptExecute(BattleScript_SlowStartEnds);
+                    effect++;
+                    break;
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BAD_DREAMS)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_BAD_DREAMS);
+                BattleScriptExecute(BattleScript_BadDreamsActivates);
+                effect++;
+                break;
+            }
+            // Cud Chew moved to the bottom because it has additional IF conditions so it could block the Else on abilities coming after (Multi)
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+			{
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (gDisableStructs[battler].cudChew[i])
+                    {
+                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                        gBattleScripting.battler = battler;
+                        gDisableStructs[battler].cudChew[i] = FALSE;
+                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
+                        GetBattlerPartyState(battler)->usedHeldItems[i] = ITEM_NONE;
+                        PushTraitStack(battler, ABILITY_CUD_CHEW);
+                        BattleScriptExecute(BattleScript_CudChewActivates);
+                        effect++;
+                        break;
+                    }
+                    else if (!gDisableStructs[battler].cudChew[i] && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                    {
+                        gDisableStructs[battler].cudChew[i] = TRUE;
+                    }
+                }
+            }
         }
-    }
-    break;
+        break;
     case ABILITYEFFECT_ENDTURN_WEATHER:  
         if (IsBattlerAlive(battler))
         {
@@ -5190,7 +5125,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
          && !BattlerHasTrait(gBattlerAttacker, ABILITY_LINGERING_AROMA)
          && !gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSuppressed)
         {
-            if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
+            if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD, FALSE))
             {
                 RecordItemEffectBattle(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD);
             }
@@ -5214,11 +5149,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
          && !BattlerHasTrait(gBattlerAttacker, ABILITY_LINGERING_AROMA)
          && !gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSuppressed)
         {
-            if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD, FALSE))
-                {
-                    RecordItemEffectBattle(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD);
-                    break;
-                }
+            if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
+            {
+                RecordItemEffectBattle(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD);
+                break;
+            }
             RemoveAbilityFlags(gBattlerAttacker);
             gLastUsedAbility = gBattleMons[gBattlerAttacker].ability;
             gBattleMons[gBattlerAttacker].ability = gDisableStructs[gBattlerAttacker].overwrittenAbility = ABILITY_LINGERING_AROMA;
@@ -5241,13 +5176,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 DebugPrintf("Wandering Spirit not set as main Ability");
             }
             if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD, FALSE))
-                {
-                    RecordItemEffectBattle(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD);
-                }
-                if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
-                {
-                    RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
-                }
+            {
+                RecordItemEffectBattle(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD);
+            }
+            if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
+            {
+                RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
+            }
 
             RemoveAbilityFlags(gBattlerAttacker);
             gLastUsedAbility = gBattleMons[gBattlerAttacker].ability;
@@ -6110,7 +6045,7 @@ u32 BattlerHasKlutz(u32 battler)
      && gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS)
         return FALSE;
 
-    return gBattleMons[battler].ability == ABILITY_KLUTZ;
+    return BattlerHasTrait(battler, ABILITY_KLUTZ);
 }
 
 u32 IsAbilityOnSide(u32 battler, enum Ability ability)
@@ -7013,7 +6948,7 @@ bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, u32 move)
         return FALSE;
     }
     else if ((BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_PUNCHING_GLOVE, TRUE) && IsPunchingMove(move))
-            || BattlerHasTrait(battlerAtk, ABILITY_LONG_REACH))
+           || BattlerHasTrait(battlerAtk, ABILITY_LONG_REACH))
     {
         RecordItemEffectBattle(battlerAtk, HOLD_EFFECT_PUNCHING_GLOVE);
         return FALSE;
@@ -7120,7 +7055,7 @@ enum IronBallCheck
 };
 
 // Only called directly when calculating damage type effectiveness, and Iron Ball's type effectiveness mechanics
-static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck checkInverse, bool32 isAnticipation, bool32 skipIronBall, bool32 hasLevitate)
+static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck checkInverse, bool32 isAnticipation, bool32 hasLevitate, bool32 skipIronBall)
 {
     if (skipIronBall == FALSE && BattlerHasHeldItemEffect(battler, HOLD_EFFECT_IRON_BALL, TRUE))
         return TRUE;
@@ -7149,7 +7084,7 @@ bool32 IsBattlerGrounded(u32 battler)
     // Regular ability check split out here as the AI switching logic uses battle context to figure out the Ability instead. (Multi)
     hasLevitate = gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battler, ABILITY_LEVITATE) : BattlerHasTrait(battler, ABILITY_LEVITATE);
 
-    return IsBattlerGroundedInverseCheck(battler, NOT_INVERSE_BATTLE, FALSE, FALSE, hasLevitate);
+    return IsBattlerGroundedInverseCheck(battler, NOT_INVERSE_BATTLE, FALSE, hasLevitate, FALSE);
 }
 
 u32 GetMoveSlot(u16 *moves, u32 move)
@@ -9204,11 +9139,9 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         if (B_GLARE_GHOST < GEN_4 && ctx->move == MOVE_GLARE && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_GHOST))
             modifier = UQ_4_12(0.0);
     }
-    else if (ctx->moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(ctx->battlerDef, INVERSE_BATTLE, ctx->isAnticipation, FALSE, SearchTraits(battlerTraits, ABILITY_LEVITATE)
+    else if (ctx->moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(ctx->battlerDef, INVERSE_BATTLE, ctx->isAnticipation, SearchTraits(battlerTraits, ABILITY_LEVITATE), FALSE)
      && !MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)
-     && !MoveIgnoresTargetAbility(ctx->move) && (BattlerHasHeldItemEffect(ctx->battlerDef, HOLD_EFFECT_ABILITY_SHIELD, TRUE) || !HasMoldBreakerTypeAbility(ctx->battlerAtk))))
-
-
+     && !MoveIgnoresTargetAbility(ctx->move) && (BattlerHasHeldItemEffect(ctx->battlerDef, HOLD_EFFECT_ABILITY_SHIELD, TRUE) || !HasMoldBreakerTypeAbility(ctx->battlerAtk)))
     {
         modifier = UQ_4_12(0.0);
         if (ctx->updateFlags && SearchTraits(battlerTraits, ABILITY_LEVITATE))
@@ -9239,7 +9172,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         && ctx->moveType == TYPE_GROUND
         && BattlerHasHeldItemEffect(ctx->battlerDef, HOLD_EFFECT_IRON_BALL, TRUE)
         && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING)
-        && !IsBattlerGroundedInverseCheck(ctx->battlerDef, NOT_INVERSE_BATTLE, FALSE, TRUE, SearchTraits(battlerTraits, ABILITY_LEVITATE)) // We want to ignore Iron Ball so skip item check
+        && !IsBattlerGroundedInverseCheck(ctx->battlerDef, NOT_INVERSE_BATTLE, FALSE, BattlerHasTrait(ctx->battlerDef, ABILITY_LEVITATE), TRUE) // We want to ignore Iron Ball so skip item check // We want to ignore Iron Ball so skip item check
         && !FlagGet(B_FLAG_INVERSE_BATTLE))
     {
         modifier = UQ_4_12(1.0);
@@ -11786,6 +11719,170 @@ bool32 IsMimikyuDisguised(u32 battler)
         || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
 }
 
+//Returns the Ability or Innate of the battler at the given trait number, used to build out trait arrays
+enum Ability GetBattlerTrait(u8 battlerId, u8 traitNum, u32 ignoreMoldBreaker)
+{
+    bool32 hasAbilityShield = BattlerHasHeldItemEffectIgnoreAbility(battlerId, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
+
+    enum Ability ability = ABILITIES_COUNT;
+
+    #if TESTING
+    if (gTestRunnerEnabled)
+    {
+        u32 array = (!IsPartnerMonFromSameTrainer(battlerId)) ? battlerId : GetBattlerSide(battlerId);
+        u32 partyIndex = gBattlerPartyIndexes[battlerId];
+ 
+        if (T_SHOULD_TEST_DEFAULT_INNATES) // If TRUE, tests will use a pokemon's default Innates whenever one is not specified in the test.
+        {
+           if (traitNum > 0 && TestRunner_Battle_GetForcedInnates(array, partyIndex, traitNum - 1) != ABILITY_NONE)
+                {
+            ability = TestRunner_Battle_GetForcedInnates(array, partyIndex, traitNum - 1);
+            } 
+        }
+        else if (traitNum > 0)
+        {
+            ability = TestRunner_Battle_GetForcedInnates(array, partyIndex, traitNum - 1);
+        }
+    }
+    #endif
+        
+    if (traitNum == 0){
+        {
+            //DebugPrintf("ABILITY: %S", gAbilitiesInfo[GetBattlerAbility(battlerId)].name);
+            if (!ignoreMoldBreaker)
+                return GetBattlerAbility(battlerId);
+            else
+                return GetBattlerAbilityIgnoreMoldBreaker(battlerId);
+        }
+    }
+    else
+    {
+        // Load natural Innate if not a Test
+        if (ability == ABILITIES_COUNT)
+            ability = GetSpeciesInnate(gBattleMons[battlerId].species, traitNum);
+        
+        //DebugPrintf("Trait %d: %S", traitNum, gAbilitiesInfo[ability].name);
+        
+        // Check if ability is nullified
+         if (battlerId != gBattlerAttacker
+          && !ignoreMoldBreaker
+          && CanBreakThroughAbility(gBattlerAttacker, battlerId, ability, hasAbilityShield, FALSE))
+                return ABILITY_NONE;
+        
+        return ability;
+    }
+}
+
+//Returns the slot the Innate is found in accouting for randomization and ability disabling. Assumes the Ability is already slot 1.  Returns 0 if not found.
+u8 BattlerHasInnate(u8 battlerId, enum Ability ability)
+{
+    /*if (BattlerIgnoresAbility(gBattlerAttacker, battlerId, ability) && B_MOLD_BREAKER_WORKS_ON_INNATES == TRUE)
+        return 0;
+    else if (BattlerAbilityWasRemoved(battlerId, ability) && B_NEUTRALIZING_GAS_WORKS_ON_INNATES == TRUE)
+        return 0;
+    else*/
+
+    //Check for Mold Breaker type negation
+    if (battlerId != gBattlerAttacker
+     && CanBreakThroughAbility(gBattlerAttacker, battlerId, ability, FALSE, FALSE))
+        return 0;
+
+    for (u8 i = 0; i < MAX_MON_INNATES; i++)
+    {
+        if (gBattleMons[battlerId].innates[i] == ability)
+            return i + 2;
+    }
+
+    return SpeciesHasInnate(gBattleMons[battlerId].species, ability); 
+}
+
+//Returns the trait slot number of the given ability. Starts at 1 for the primary Ability and returns 0 if the ability is not found. Use for individual checks.
+u8 BattlerHasTrait(u8 battlerId, enum Ability ability) 
+{
+    u8 traitNum = 0;
+
+    if (GetBattlerAbility(battlerId) == ability)
+        traitNum = 1;
+    else 
+        traitNum = BattlerHasInnate(battlerId, ability);
+
+    return traitNum;
+}
+
+//Used to search abilities for functions already under GetBattlerAbility to avoid infinite loops.
+u8 BattlerHasTraitPlain(u8 battlerId, enum Ability ability)
+{
+    if (gBattleMons[battlerId].ability == ability)
+        return 1;
+    else 
+        return BattlerHasInnate(battlerId, ability);
+}
+
+void PushTraitStack(u8 battlerId, enum Ability ability)
+{
+
+    for (int i = 0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
+    {
+        if (gTraitStack[i][1] == ABILITY_NONE)
+        {
+            gTraitStack[i][0] = battlerId;
+            gTraitStack[i][1] = ability;
+            //DebugPrintf("TRAIT STACK: Stack Slot: %d, Battler: %d, Ability: %S", i, gTraitStack[i][0], gAbilitiesInfo[gTraitStack[i][1]].name);
+            break;
+        }
+    }
+}
+
+u8 PullTraitStackBattler()
+{
+    u8 battlerId = MAX_BATTLERS_COUNT;
+
+    for (int i = 0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
+    {
+        if (gTraitStack[i][1] == ABILITY_NONE)
+        {
+            if (i == 0)
+                break; //Do nothing if first slot is already empty
+            battlerId = gTraitStack[i-1][0];
+            break;
+        }
+    }
+    return battlerId;
+}
+
+enum Ability PullTraitStackAbility()
+{
+    enum Ability ability = ABILITY_NONE;
+
+    for (int i = 0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
+    {
+        if (gTraitStack[i][1] == ABILITY_NONE)
+        {
+            if (i == 0)
+                break; //Do nothing if first slot is already empty
+            ability = gTraitStack[i-1][1]; //Return the ability in the slot before the most recent empty slot
+            break;
+        }
+        // else
+        //     DebugPrintf("TRAIT STACK: [%d] - %S", i, gAbilitiesInfo[gTraitStack[i][1]].name);
+    }
+    return ability;
+}
+// Clears the latest ability popup slot.  Searches from the bottom to the top since the stack should generally be small.
+void PopTraitStack()
+{
+    for (int i =0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
+    {
+        if (gTraitStack[i][1] == ABILITY_NONE)
+        {
+            if (i == 0)
+                break; //Do nothing if first slot is already empty
+            gTraitStack[i-1][0] = gTraitStack[i-1][1] = 0; //Clear the slot
+            break;
+        }
+    }
+}
+
 //Multiple Hold Items
 
 bool32 BattlerHasHeldItemEffect(u32 battler, u32 holdEffect, bool32 checkNegating)
@@ -11980,7 +12077,7 @@ u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating)
 }
 
 //Gets next valid slot to add an item to based categorization flag and item's heldSlot value
-u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
+u8 GetMonNextEmptySlot(struct Pokemon *mon, u16 item)
 {
     u8 i, slot = MAX_MON_ITEMS;
 
@@ -12027,6 +12124,33 @@ u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
     return slot;
 }
 
+u8 GetBattlerNextEmptySlot(u32 battler, u16 item)
+{
+    u8 i, slot = MAX_MON_ITEMS;
+
+    //If categorization flag is enabled, items can only be sent to their assigned slots based on their heldSlot value.
+    //Otherwise, items are first sent to empty available slots and if none are found, target the first item slot
+    if (B_HELD_ITEM_CATEGORIZATION)
+    {
+        i = gItemsInfo[item].heldSlot;
+        if (gBattleMons[battler].items[i] == ITEM_NONE)
+            slot = i;
+    }
+    else
+    {
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (gBattleMons[battler].items[i] == ITEM_NONE)
+            {
+                slot = i;
+                break;
+            }
+        }
+    }
+
+    return slot;
+}
+
 //Takes a list of valid item slots for an effect and returns a targeted slot based on preferences
 u8 GetSlot(u8 *availableSlots, u8 size)
 {
@@ -12051,167 +12175,4 @@ u8 GetSlot(u8 *availableSlots, u8 size)
         return gLastItemSlot = availableSlots[0];
     else if(B_MULTI_ITEM_ORDER == 2)
         return gLastItemSlot = availableSlots[Random() % size];
-}
-//Returns the Ability or Innate of the battler at the given trait number, used to build out trait arrays
-enum Ability GetBattlerTrait(u8 battlerId, u8 traitNum, u32 ignoreMoldBreaker)
-{
-    bool32 hasAbilityShield = BattlerHasHeldItemEffectIgnoreAbility(battlerId, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
-
-    enum Ability ability = ABILITIES_COUNT;
-
-    #if TESTING
-    if (gTestRunnerEnabled)
-    {
-        u32 array = (!IsPartnerMonFromSameTrainer(battlerId)) ? battlerId : GetBattlerSide(battlerId);
-        u32 partyIndex = gBattlerPartyIndexes[battlerId];
- 
-        if (T_SHOULD_TEST_DEFAULT_INNATES) // If TRUE, tests will use a pokemon's default Innates whenever one is not specified in the test.
-        {
-           if (traitNum > 0 && TestRunner_Battle_GetForcedInnates(array, partyIndex, traitNum - 1) != ABILITY_NONE)
-                {
-            ability = TestRunner_Battle_GetForcedInnates(array, partyIndex, traitNum - 1);
-            } 
-        }
-        else if (traitNum > 0)
-        {
-            ability = TestRunner_Battle_GetForcedInnates(array, partyIndex, traitNum - 1);
-        }
-    }
-    #endif
-        
-    if (traitNum == 0){
-        {
-            //DebugPrintf("ABILITY: %S", gAbilitiesInfo[GetBattlerAbility(battlerId)].name);
-            if (!ignoreMoldBreaker)
-                return GetBattlerAbility(battlerId);
-            else
-                return GetBattlerAbilityIgnoreMoldBreaker(battlerId);
-        }
-    }
-    else
-    {
-        // Load natural Innate if not a Test
-        if (ability == ABILITIES_COUNT)
-            ability = GetSpeciesInnate(gBattleMons[battlerId].species, traitNum);
-        
-        //DebugPrintf("Trait %d: %S", traitNum, gAbilitiesInfo[ability].name);
-        
-        // Check if ability is nullified
-         if (battlerId != gBattlerAttacker
-          && !ignoreMoldBreaker
-          && CanBreakThroughAbility(gBattlerAttacker, battlerId, ability, hasAbilityShield, FALSE))
-                return ABILITY_NONE;
-        
-        return ability;
-    }
-}
-
-//Returns the slot the Innate is found in accouting for randomization and ability disabling. Assumes the Ability is already slot 1.  Returns 0 if not found.
-u8 BattlerHasInnate(u8 battlerId, enum Ability ability)
-{
-    /*if (BattlerIgnoresAbility(gBattlerAttacker, battlerId, ability) && B_MOLD_BREAKER_WORKS_ON_INNATES == TRUE)
-        return 0;
-    else if (BattlerAbilityWasRemoved(battlerId, ability) && B_NEUTRALIZING_GAS_WORKS_ON_INNATES == TRUE)
-        return 0;
-    else*/
-
-    //Check for Mold Breaker type negation
-    if (battlerId != gBattlerAttacker
-     && CanBreakThroughAbility(gBattlerAttacker, battlerId, ability, FALSE, FALSE))
-        return 0;
-
-    for (u8 i = 0; i < MAX_MON_INNATES; i++)
-    {
-        if (gBattleMons[battlerId].innates[i] == ability)
-            return i + 2;
-    }
-
-    return SpeciesHasInnate(gBattleMons[battlerId].species, ability); 
-}
-
-//Returns the trait slot number of the given ability. Starts at 1 for the primary Ability and returns 0 if the ability is not found. Use for individual checks.
-u8 BattlerHasTrait(u8 battlerId, enum Ability ability) 
-{
-    u8 traitNum = 0;
-
-    if (GetBattlerAbility(battlerId) == ability)
-        traitNum = 1;
-    else 
-        traitNum = BattlerHasInnate(battlerId, ability);
-
-    return traitNum;
-}
-
-//Used to search abilities for functions already under GetBattlerAbility to avoid infinite loops.
-u8 BattlerHasTraitPlain(u8 battlerId, enum Ability ability)
-{
-    if (gBattleMons[battlerId].ability == ability)
-        return 1;
-    else 
-        return BattlerHasInnate(battlerId, ability);
-}
-
-void PushTraitStack(u8 battlerId, enum Ability ability)
-{
-
-    for (int i = 0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
-    {
-        if (gTraitStack[i][1] == ABILITY_NONE)
-        {
-            gTraitStack[i][0] = battlerId;
-            gTraitStack[i][1] = ability;
-            //DebugPrintf("TRAIT STACK: Stack Slot: %d, Battler: %d, Ability: %S", i, gTraitStack[i][0], gAbilitiesInfo[gTraitStack[i][1]].name);
-            break;
-        }
-    }
-}
-
-u8 PullTraitStackBattler()
-{
-    u8 battlerId = MAX_BATTLERS_COUNT;
-
-    for (int i = 0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
-    {
-        if (gTraitStack[i][1] == ABILITY_NONE)
-        {
-            if (i == 0)
-                break; //Do nothing if first slot is already empty
-            battlerId = gTraitStack[i-1][0];
-            break;
-        }
-    }
-    return battlerId;
-}
-
-enum Ability PullTraitStackAbility()
-{
-    enum Ability ability = ABILITY_NONE;
-
-    for (int i = 0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
-    {
-        if (gTraitStack[i][1] == ABILITY_NONE)
-        {
-            if (i == 0)
-                break; //Do nothing if first slot is already empty
-            ability = gTraitStack[i-1][1]; //Return the ability in the slot before the most recent empty slot
-            break;
-        }
-        // else
-        //     DebugPrintf("TRAIT STACK: [%d] - %S", i, gAbilitiesInfo[gTraitStack[i][1]].name);
-    }
-    return ability;
-}
-// Clears the latest ability popup slot.  Searches from the bottom to the top since the stack should generally be small.
-void PopTraitStack()
-{
-    for (int i =0; i < (MAX_BATTLERS_COUNT * MAX_MON_TRAITS); i++)
-    {
-        if (gTraitStack[i][1] == ABILITY_NONE)
-        {
-            if (i == 0)
-                break; //Do nothing if first slot is already empty
-            gTraitStack[i-1][0] = gTraitStack[i-1][1] = 0; //Clear the slot
-            break;
-        }
-    }
 }

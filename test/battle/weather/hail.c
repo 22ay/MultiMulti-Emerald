@@ -105,7 +105,8 @@ SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated")
     }
 }
 
-SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated (Traits)")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE);
@@ -118,3 +119,30 @@ SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated (Multi)")
         NOT HP_BAR(player);
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Hail fails if Desolate Land or Primordial Sea are active (Multi)")
+{
+    u32 species;
+    u32 item;
+
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
+    PARAMETRIZE { species = SPECIES_KYOGRE; item = ITEM_BLUE_ORB; }
+
+    GIVEN {
+        PLAYER(species) { Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HAIL); }
+    } SCENE {
+        if (item == ITEM_RED_ORB || item == ITEM_BLUE_ORB) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, player);
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
+        }
+    }
+}
+#endif

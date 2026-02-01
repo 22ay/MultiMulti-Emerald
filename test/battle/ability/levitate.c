@@ -113,7 +113,8 @@ AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI")
     }
 }
 
-SINGLE_BATTLE_TEST("Levitate activates when targeted by ground type moves (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Levitate activates when targeted by ground type moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
@@ -127,7 +128,7 @@ SINGLE_BATTLE_TEST("Levitate activates when targeted by ground type moves (Multi
     }
 }
 
-SINGLE_BATTLE_TEST("Levitate does not activate if protected (Multi)")
+SINGLE_BATTLE_TEST("Levitate does not activate if protected (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
@@ -143,7 +144,7 @@ SINGLE_BATTLE_TEST("Levitate does not activate if protected (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Levitate does not activate on status moves (Multi)")
+SINGLE_BATTLE_TEST("Levitate does not activate on status moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SAND_ATTACK) == TYPE_GROUND);
@@ -160,7 +161,7 @@ SINGLE_BATTLE_TEST("Levitate does not activate on status moves (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Levitate does not activate if attacked by an opponent with Mold Breaker (Multi)")
+SINGLE_BATTLE_TEST("Levitate does not activate if attacked by an opponent with Mold Breaker (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
@@ -176,7 +177,7 @@ SINGLE_BATTLE_TEST("Levitate does not activate if attacked by an opponent with M
     }
 }
 
-DOUBLE_BATTLE_TEST("Levitate does not cause single remaining target to take higher damage (Multi)")
+DOUBLE_BATTLE_TEST("Levitate does not cause single remaining target to take higher damage (Traits)")
 {
     s16 damage[3];
     GIVEN {
@@ -202,7 +203,7 @@ DOUBLE_BATTLE_TEST("Levitate does not cause single remaining target to take high
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI (Multi)")
+AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI (Traits)")
 {
     enum Ability ability = ABILITY_NONE, item = ITEM_NONE;
 
@@ -224,3 +225,29 @@ AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI (Multi)")
             TURN { MOVE(player, MOVE_MUD_SLAP); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI (Multi)")
+{
+    enum Ability ability = ABILITY_NONE, item = ITEM_NONE;
+
+    PARAMETRIZE { ability = ABILITY_OWN_TEMPO, item = ITEM_NONE ; }
+    PARAMETRIZE { ability = ABILITY_MOLD_BREAKER, item = ITEM_NONE ; }
+    PARAMETRIZE { ability = ABILITY_MOLD_BREAKER, item = ITEM_ABILITY_SHIELD ; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_TINKATON) { Ability(ability); Speed(3); }
+        OPPONENT(SPECIES_PONYTA) { Level(1); Items(ITEM_PECHA_BERRY, ITEM_EJECT_PACK); Moves(MOVE_OVERHEAT); Speed(4); } // Forces switchout
+        OPPONENT(SPECIES_VIKAVOLT) { HP(1); Speed(1); Ability(ABILITY_LEVITATE); Moves(MOVE_FLAMETHROWER); Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_HYPNO) { Speed(1); Moves(MOVE_IRON_HEAD); }
+    } WHEN {
+        if ((ability == ABILITY_MOLD_BREAKER) && (item != ITEM_ABILITY_SHIELD))
+            TURN { MOVE(player, MOVE_MUD_SLAP); EXPECT_SEND_OUT(opponent, 2); }
+        else
+            TURN { MOVE(player, MOVE_MUD_SLAP); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+#endif
