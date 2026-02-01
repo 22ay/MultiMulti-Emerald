@@ -2354,6 +2354,12 @@ BattleScript_GravityLoopEnd:
 	restoretarget
 	return
 
+BattleScript_InverseRoomActivates::
+    attackcanceler
+    printstring STRINGID_INVERSEROOMSTART
+    waitmessage B_WAIT_TIME_LONG
+    goto BattleScript_MoveEnd
+
 BattleScript_EffectRoost::
 	attackcanceler
 	tryhealhalfhealth BS_TARGET, BattleScript_AlreadyAtFullHp
@@ -4928,6 +4934,11 @@ BattleScript_GravityEnds::
 	printstring STRINGID_GRAVITYENDS
 	waitmessage B_WAIT_TIME_LONG
 	end2
+
+BattleScript_InverseRoomEnds::
+    printstring STRINGID_INVERSEROOMENDS
+    waitmessage B_WAIT_TIME_LONG
+    end2
 
 BattleScript_SafeguardProtected::
 	pause B_WAIT_TIME_SHORT

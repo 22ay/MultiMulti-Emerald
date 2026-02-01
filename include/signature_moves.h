@@ -14,6 +14,9 @@ enum SignatureEnvironmentEffect
     SIG_ENV_GRASSY_TERRAIN,
     SIG_ENV_PSYCHIC_TERRAIN,
     SIG_ENV_MISTY_TERRAIN,
+    SIG_ENV_GRAVITY,
+    SIG_ENV_TRICK_ROOM,
+    SIG_ENV_INVERSE_ROOM,
 };
 
 struct SignatureMoveEntry

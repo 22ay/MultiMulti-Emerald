@@ -1129,6 +1129,22 @@ static bool32 HandleEndTurnGravity(u32 battler)
     return effect;
 }
 
+static bool32 HandleEndTurnInverseRoom(u32 battler)
+{
+    bool32 effect = FALSE;
+
+    gBattleStruct->eventState.endTurn++;
+
+    if (gFieldTimers.inverseRoomTimer > 0 && --gFieldTimers.inverseRoomTimer == 0)
+    {
+        gFieldStatuses &= ~STATUS_FIELD_INVERSE_ROOM;
+        BattleScriptExecute(BattleScript_InverseRoomEnds);
+        effect = TRUE;
+    }
+
+    return effect;
+}
+
 static bool32 HandleEndTurnWaterSport(u32 battler)
 {
     bool32 effect = FALSE;
@@ -1429,6 +1445,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_SECOND_EVENT_BLOCK] = HandleEndTurnSecondEventBlock,
     [ENDTURN_TRICK_ROOM] = HandleEndTurnTrickRoom,
     [ENDTURN_GRAVITY] = HandleEndTurnGravity,
+    [ENDTURN_INVERSE_ROOM] = HandleEndTurnInverseRoom,
     [ENDTURN_WATER_SPORT] = HandleEndTurnWaterSport,
     [ENDTURN_MUD_SPORT] = HandleEndTurnMudSport,
     [ENDTURN_WONDER_ROOM] = HandleEndTurnWonderRoom,

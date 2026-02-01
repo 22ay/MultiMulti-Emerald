@@ -4247,7 +4247,7 @@ static void Cmd_setadditionaleffects(void)
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
     {
-        // Signature move: environment effect (weather / terrain)
+        // Signature move: environment effect (weather / terrain / rooms)
         {
             const struct SignatureMoveEntry *entry =
                 GetSignatureMoveEntry(
@@ -4284,6 +4284,20 @@ static void Cmd_setadditionaleffects(void)
                     break;
                 case SIG_ENV_MISTY_TERRAIN:
                     moveEffect = MOVE_EFFECT_MISTY_TERRAIN;
+                    break;
+                case SIG_ENV_GRAVITY:
+                    moveEffect = MOVE_EFFECT_GRAVITY;
+                    break;
+                case SIG_ENV_TRICK_ROOM:
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_EffectTrickRoom;
+                    break;
+                case SIG_ENV_INVERSE_ROOM:
+                    // No built-in MOVE_EFFECT, so we trigger it manually
+                    gFieldStatuses ^= STATUS_FIELD_INVERSE_ROOM; // toggle on/off
+                    gFieldTimers.inverseRoomTimer = 5;           // or 8 with an extender if you want
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_InverseRoomActivates;
                     break;
                 default:
                     break;

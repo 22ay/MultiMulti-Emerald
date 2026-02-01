@@ -9280,6 +9280,27 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         }
     }
 
+    // Inverse Room: reverse type effectiveness
+    if (gFieldStatuses & STATUS_FIELD_INVERSE_ROOM)
+    {
+    // 0× (immune) becomes 2× (super effective)
+        if (modifier == UQ_4_12(0.0))
+        {
+            modifier = UQ_4_12(2.0);
+        }
+    // 0.5× becomes 2×
+        else if (modifier == UQ_4_12(0.5))
+        {
+            modifier = UQ_4_12(2.0);
+        }
+    // 2× becomes 0.5×
+        else if (modifier == UQ_4_12(2.0))
+        {
+            modifier = UQ_4_12(0.5);
+        }
+    // 1× stays 1×
+    }
+
     return modifier;
 }
 
