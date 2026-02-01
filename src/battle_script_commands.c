@@ -4289,6 +4289,8 @@ static void Cmd_setadditionaleffects(void)
                     moveEffect = MOVE_EFFECT_GRAVITY;
                     break;
                 case SIG_ENV_TRICK_ROOM:
+                    gFieldStatuses ^= STATUS_FIELD_TRICK_ROOM;
+                    gFieldTimers.trickRoomTimer = 5;
                     BattleScriptPush(cmd->nextInstr);
                     gBattlescriptCurrInstr = BattleScript_EffectTrickRoom;
                     break;

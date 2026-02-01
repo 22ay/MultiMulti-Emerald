@@ -26,11 +26,11 @@ struct SignatureMoveEntry
     u16 basePower;
     s8 priority;
     bool8 useReversalFormula;
-    bool8 useHighestOffensiveStat;
+    bool8 useWaterSpoutFormula;
     bool8 ignoreTypeImmunity; 
     bool8 alwaysCrit; 
     bool8 useDefensiveStatInstead; 
-    bool8 useWaterSpoutFormula;
+    bool8 useHighestOffensiveStat;
     enum SignatureEnvironmentEffect environmentEffect;
 };
 

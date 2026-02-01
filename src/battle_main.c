@@ -4918,7 +4918,7 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
 
     priority = GetMovePriority(move);
     // Signature move priority override
-    priority += GetSignaturePriority(battler, move);
+    priority += GetSignaturePriority(GET_BASE_SPECIES_ID(gBattleMons[battler].species), move);
     // Max Guard check
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return GetMovePriority(MOVE_MAX_GUARD);
