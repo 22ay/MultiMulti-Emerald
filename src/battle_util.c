@@ -4441,6 +4441,28 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             if(TryChangeBattleTerrain(battler, STATUS_FIELD_PSYCHIC_TERRAIN))
                 effect += CommonSwitchInAbilities(battler, ABILITY_PSYCHIC_SURGE, traitCheck, BattleScript_PsychicSurgeActivates);
         }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_TWISTED_REALM)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            gFieldStatuses ^= STATUS_FIELD_TRICK_ROOM;
+            gFieldTimers.trickRoomTimer = 5;
+            gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+            effect += CommonSwitchInAbilities(battler, ABILITY_TWISTED_REALM, traitCheck, BattleScript_AbilityTrickRoom);
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_INVERSION)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            gFieldStatuses ^= STATUS_FIELD_INVERSE_ROOM;
+            gFieldTimers.inverseRoomTimer = 5;
+            effect += CommonSwitchInAbilities(battler, ABILITY_INVERSION, traitCheck, BattleScript_AbilityInverseRoom);
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_GRAVITATIONAL)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
+            {
+                gFieldStatuses |= STATUS_FIELD_GRAVITY;
+                gFieldTimers.gravityTimer = 5;
+                effect += CommonSwitchInAbilities(battler, ABILITY_GRAVITATIONAL, traitCheck, BattleScript_AbilityGravity);
+            }
+        }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CLOUD_NINE)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
             effect += CommonSwitchInAbilities(battler, ABILITY_CLOUD_NINE, traitCheck, BattleScript_AnnounceAirLockCloudNine);
 

@@ -2241,6 +2241,12 @@ BattleScript_EffectTrickRoom::
 	call BattleScript_TryRoomServiceLoop
 	goto BattleScript_MoveEnd
 
+BattleScript_AbilityTrickRoom::
+    call BattleScript_AbilityPopUp
+    printfromtable gRoomsStringIds
+    waitmessage B_WAIT_TIME_LONG
+    end3
+
 BattleScript_TryRoomServiceLoop:
 	savetarget
 	setbyte gBattlerTarget, 0
@@ -2354,11 +2360,44 @@ BattleScript_GravityLoopEnd:
 	restoretarget
 	return
 
+BattleScript_AbilityGravity::
+    call BattleScript_AbilityPopUp
+    printstring STRINGID_GRAVITYINTENSIFIED
+    waitmessage B_WAIT_TIME_LONG
+
+    @ Drop airborne Pokémon
+    savetarget
+    selectfirstvalidtarget
+
+BattleScript_AbilityGravity_Loop:
+    movevaluescleanup
+    jumpfifsemiinvulnerable BS_TARGET, STATE_ON_AIR, BattleScript_AbilityGravity_Drop
+    jumpifvolatile BS_TARGET, VOLATILE_MAGNET_RISE, BattleScript_AbilityGravity_Drop
+    jumpifvolatile BS_TARGET, VOLATILE_TELEKINESIS, BattleScript_AbilityGravity_Drop
+    goto BattleScript_AbilityGravity_LoopEnd
+
+BattleScript_AbilityGravity_Drop:
+    gravityonairbornemons
+    printstring STRINGID_GRAVITYGROUNDING
+    waitmessage B_WAIT_TIME_LONG
+
+BattleScript_AbilityGravity_LoopEnd:
+    moveendcase MOVEEND_TARGET_VISIBLE
+    jumpifnexttargetvalid BattleScript_AbilityGravity_Loop
+    restoretarget
+    end3
+
 BattleScript_InverseRoomActivates::
     attackcanceler
     printstring STRINGID_INVERSEROOMSTART
     waitmessage B_WAIT_TIME_LONG
     goto BattleScript_MoveEnd
+
+BattleScript_AbilityInverseRoom::
+    call BattleScript_AbilityPopUp
+    printstring STRINGID_INVERSEROOMSTART
+    waitmessage B_WAIT_TIME_LONG
+    end3
 
 BattleScript_EffectRoost::
 	attackcanceler

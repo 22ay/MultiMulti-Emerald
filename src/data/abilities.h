@@ -2415,9 +2415,30 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
 
     [ABILITY_IMPASSABLE] =
     {
-    .name = _("Impassable"),
-    .description = COMPOUND_STRING("Only direct attacks damage it."),
-    .aiRating = 8,
+        .name = _("Impassable"),
+        .description = COMPOUND_STRING("Only direct attacks damage it."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_TWISTED_REALM] =
+    {
+        .name = _("Twisted Realm"),
+        .description = COMPOUND_STRING("Summons Trick Room."),
+        .aiRating = 7,
+    },
+
+    [ABILITY_INVERSION] =
+    {
+        .name = _("Inversion"),
+        .description = COMPOUND_STRING("Summons Inverse Room."),
+        .aiRating = 7,
+    },
+
+    [ABILITY_GRAVITATIONAL] =
+    {
+        .name = _("Gravitational"),
+        .description = COMPOUND_STRING("Intensifies Gravity."),
+        .aiRating = 6,
     },
 
 };
