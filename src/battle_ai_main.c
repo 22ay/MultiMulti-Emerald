@@ -1295,8 +1295,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             } // def partner ability checks
 
         // gen7+ dark type mons immune to priority->elevated moves from prankster
-        if (GetConfig(CONFIG_PRANKSTER_DARK_TYPES) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DARK)
-          && AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_PRANKSTER) && IsBattleMoveStatus(move)
+        if (GetConfig(B_PRANKSTER_DARK_TYPES) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DARK)
+          && aiData->abilities[battlerAtk] == ABILITY_PRANKSTER && IsBattleMoveStatus(move)
           && !(moveTarget & (MOVE_TARGET_OPPONENTS_FIELD | MOVE_TARGET_USER)))
             RETURN_SCORE_MINUS(10);
 
@@ -1759,7 +1759,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_SHEER_COLD:
-            if (GetConfig(CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
+            if (GetConfig(B_SHEER_COLD_IMMUNITY) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
                 RETURN_SCORE_MINUS(20);
             // fallthrough
         case EFFECT_OHKO:
@@ -3499,7 +3499,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             {
                 if (moveType == TYPE_WATER)
                 {
-                    if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5 && BattlerHasTrait(battlerAtkPartner, ABILITY_STORM_DRAIN))
+                    if (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) < GEN_5 && BattlerHasTrait(battlerAtkPartner, ABILITY_STORM_DRAIN))
                     {
                         RETURN_SCORE_MINUS(10);
                     }
@@ -5460,7 +5460,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_ION_DELUGE:
         if ((AISearchTraits(AIBattlerTraits, ABILITY_VOLT_ABSORB)
           || AISearchTraits(AIBattlerTraits, ABILITY_MOTOR_DRIVE)
-          || (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_LIGHTNING_ROD)))
+          || (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_LIGHTNING_ROD)))
           && predictedType == TYPE_NORMAL)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
@@ -5520,7 +5520,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         if (predictedMove != MOVE_NONE
          && (AISearchTraits(AIBattlerTraits, ABILITY_VOLT_ABSORB)
           || AISearchTraits(AIBattlerTraits, ABILITY_MOTOR_DRIVE)
-          || (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_LIGHTNING_ROD))))
+          || (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_LIGHTNING_ROD))))
         {
             ADJUST_SCORE(DECENT_EFFECT);
         }
@@ -5565,9 +5565,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 tailwindScore += 1;
             if (speed <= foe2Speed && (speed * 2) > foe2Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe1Speed && (partnerSpeed * 2) > foe1Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe2Speed && (partnerSpeed * 2) > foe2Speed)
                 tailwindScore += 1;
 
             if (tailwindScore > 0)

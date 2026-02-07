@@ -807,7 +807,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
         median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
         break;
     case EFFECT_BEAT_UP:
-        if (GetConfig(CONFIG_BEAT_UP) >= GEN_5)
+        if (GetConfig(B_BEAT_UP) >= GEN_5)
         {
             u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
             u32 i;
@@ -871,11 +871,11 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_STAGE_THRESHOLD // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)
-        && GetConfig(CONFIG_CRIT_CHANCE) != GEN_1)
+        && GetConfig(B_CRIT_CHANCE) != GEN_1)
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_THRESHOLD_GEN_1 // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)
-        && GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
+        && GetConfig(B_CRIT_CHANCE) == GEN_1)
         return TRUE;
     return FALSE;
 }
@@ -1900,7 +1900,7 @@ bool32 IsHazardClearingMove(u32 move)
     case EFFECT_TIDY_UP:
         return TRUE;
     case EFFECT_DEFOG:
-        if (GetConfig(CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_6)
+        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
             return TRUE;
         break;
     default:
@@ -1931,11 +1931,21 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove)
     {
         return FALSE;
     }
-    else
-    {
-        enum ProtectMethod protectMethod = GetMoveProtectMethod(allyMove);
 
-        if (protectMethod == PROTECT_QUICK_GUARD)
+    enum ProtectMethod protectMethod = GetMoveProtectMethod(allyMove);
+
+    switch (protectMethod)
+    {
+    case PROTECT_CRAFTY_SHIELD:
+        if (!IsBattleMoveStatus(attackerMove))
+        {
+            return FALSE;
+        }
+        else if (GetMoveEffect(attackerMove) == EFFECT_HOLD_HANDS)
+        {
+            return TRUE;
+        }
+        else
         {
             u32 priority = GetBattleMovePriority(battlerAtk, attackerMove);
             return (priority > 0);
@@ -2896,7 +2906,7 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     switch (effect)
     {
     case EFFECT_TELEPORT:
-        if (GetConfig(CONFIG_TELEPORT_BEHAVIOR) >= GEN_8)
+        if (GetConfig(B_TELEPORT_BEHAVIOR) >= GEN_8)
             return TRUE;
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
@@ -3054,7 +3064,9 @@ static u32 GetLeechSeedDamage(u32 battler)
 static u32 GetNightmareDamage(u32 battlerId)
 {
     u32 damage = 0;
-    if (gBattleMons[battlerId].volatiles.nightmare && gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+    if (gBattleMons[battlerId].volatiles.nightmare
+     && ((gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+     || gAiLogicData->abilities[battlerId] == ABILITY_COMATOSE))
     {
         damage = GetNonDynamaxMaxHP(battlerId) / 4;
         if (damage == 0)
@@ -3790,11 +3802,19 @@ static u32 FindMoveUsedXTurnsAgo(u32 battlerId, u32 x)
 
 bool32 IsWakeupTurn(u32 battler)
 {
-    // Check if rest was used 2 turns ago
-    if ((gBattleMons[battler].status1 & STATUS1_SLEEP) == 1 && GetMoveEffect(FindMoveUsedXTurnsAgo(battler, 2)) == EFFECT_REST)
-        return TRUE;
-    else // no way to know
+    u32 sleepTurns = gBattleMons[battler].status1 & STATUS1_SLEEP;
+    u32 toSub;
+
+    if (sleepTurns == 0)
         return FALSE;
+
+    // Early Bird reduces the sleep timer twice as fast.
+    if (gAiLogicData->abilities[battler] == ABILITY_EARLY_BIRD)
+        toSub = 2;
+    else
+        toSub = 1;
+
+    return sleepTurns <= toSub;
 }
 
 bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
@@ -3836,7 +3856,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     {
         if (i == battlerOnField1 || i == battlerOnField2)
             continue;
-        if (GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) < GEN_5
+        if (GetConfig(B_HEAL_BELL_SOUNDPROOF) < GEN_5
          && checkSoundproof
          && MonHasTrait(&party[i], ABILITY_SOUNDPROOF))
             continue;
