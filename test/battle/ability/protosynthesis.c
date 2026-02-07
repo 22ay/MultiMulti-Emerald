@@ -313,6 +313,41 @@ SINGLE_BATTLE_TEST("Protosynthesis retains its boosted stat after Neutralizing G
     }
 }
 
+SINGLE_BATTLE_TEST("Protosynthesis damage calculation is correct")
+{
+    s16 dmg;
+    s16 expectedDamage;
+
+    PARAMETRIZE { expectedDamage = 127; }
+    PARAMETRIZE { expectedDamage = 126; }
+    PARAMETRIZE { expectedDamage = 124; }
+    PARAMETRIZE { expectedDamage = 123; }
+    PARAMETRIZE { expectedDamage = 121; }
+    PARAMETRIZE { expectedDamage = 120; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 117; }
+    PARAMETRIZE { expectedDamage = 115; }
+    PARAMETRIZE { expectedDamage = 114; }
+    PARAMETRIZE { expectedDamage = 112; }
+    PARAMETRIZE { expectedDamage = 111; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 108; }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_GOUGING_FIRE) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_URSHIFU_RAPID_STRIKE);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CLOSE_COMBAT, WITH_RNG(RNG_DAMAGE_MODIFIER, i)); }
+    } SCENE {
+        HP_BAR(player, captureDamage: &dmg);
+    } THEN {
+        EXPECT_EQ(expectedDamage, dmg);
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat (Traits)")
 {
@@ -567,6 +602,43 @@ SINGLE_BATTLE_TEST("Protosynthesis keeps its initial boosted stat after Speed is
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+
+
+SINGLE_BATTLE_TEST("Protosynthesis damage calculation is correct (Traits)")
+{
+    s16 dmg;
+    s16 expectedDamage;
+
+    PARAMETRIZE { expectedDamage = 127; }
+    PARAMETRIZE { expectedDamage = 126; }
+    PARAMETRIZE { expectedDamage = 124; }
+    PARAMETRIZE { expectedDamage = 123; }
+    PARAMETRIZE { expectedDamage = 121; }
+    PARAMETRIZE { expectedDamage = 120; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 117; }
+    PARAMETRIZE { expectedDamage = 115; }
+    PARAMETRIZE { expectedDamage = 114; }
+    PARAMETRIZE { expectedDamage = 112; }
+    PARAMETRIZE { expectedDamage = 111; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 108; }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_GOUGING_FIRE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_URSHIFU_RAPID_STRIKE);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CLOSE_COMBAT, WITH_RNG(RNG_DAMAGE_MODIFIER, i)); }
+    } SCENE {
+        HP_BAR(player, captureDamage: &dmg);
+    } THEN {
+        EXPECT_EQ(expectedDamage, dmg);
+    }
+}
+
 #endif
 
 #if MAX_MON_ITEMS > 1
@@ -618,4 +690,41 @@ SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an 
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     }
 }
+
+
+SINGLE_BATTLE_TEST("Protosynthesis damage calculation is correct (Multi)")
+{
+    s16 dmg;
+    s16 expectedDamage;
+
+    PARAMETRIZE { expectedDamage = 127; }
+    PARAMETRIZE { expectedDamage = 126; }
+    PARAMETRIZE { expectedDamage = 124; }
+    PARAMETRIZE { expectedDamage = 123; }
+    PARAMETRIZE { expectedDamage = 121; }
+    PARAMETRIZE { expectedDamage = 120; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 117; }
+    PARAMETRIZE { expectedDamage = 115; }
+    PARAMETRIZE { expectedDamage = 114; }
+    PARAMETRIZE { expectedDamage = 112; }
+    PARAMETRIZE { expectedDamage = 111; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 108; }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_GOUGING_FIRE) { Ability(ABILITY_PROTOSYNTHESIS); Items(ITEM_NUGGET, ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_URSHIFU_RAPID_STRIKE);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CLOSE_COMBAT, WITH_RNG(RNG_DAMAGE_MODIFIER, i)); }
+    } SCENE {
+        HP_BAR(player, captureDamage: &dmg);
+    } THEN {
+        EXPECT_EQ(expectedDamage, dmg);
+    }
+}
+
 #endif

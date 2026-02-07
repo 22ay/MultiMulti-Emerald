@@ -240,7 +240,22 @@ DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears 
     }
 }
 
-TO_DO_BATTLE_TEST("Flower Gift does not transform Cherrim back to normal when suppressed if Cherrim is Dynamaxed");
+SINGLE_BATTLE_TEST("Flower Gift does not transform Cherrim back to normal when suppressed if Cherrim is Dynamaxed")
+{
+    GIVEN {
+        ASSUME(B_WEATHER_FORMS >= GEN_5);
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+    } SCENE {
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_CHERRIM_SUNSHINE);
+    }
+}
 
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim in harsh sunlight (Traits)")
@@ -439,5 +454,4 @@ DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears 
     }
 }
 
-TO_DO_BATTLE_TEST("Flower Gift does not transform Cherrim back to normal when suppressed if Cherrim is Dynamaxed (Traits)");
 #endif

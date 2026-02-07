@@ -70,6 +70,49 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
     }
 }
 
+SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon fainting after terastallizing")
+{
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
+    GIVEN {
+        PLAYER(species) { HP(1); Item(item); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, species);
+    }
+}
+
+SINGLE_BATTLE_TEST("Terapagos reverts to the correct form upon fainting after terastallizing")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS_NORMAL) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_MEMENTO, gimmick: GIMMICK_TERA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_TERAPAGOS_TERASTAL); // Not Normal form due to Tera Shift
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should not cause a message (Traits)") // issue 7795
 {
@@ -91,6 +134,33 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
             MESSAGE("The opposing Cherrim fainted!");
             NOT MESSAGE("The opposing Cherrim transformed!");
         }
+    }
+}
+
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon fainting after terastallizing (Multi)")
+{
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
+    GIVEN {
+        PLAYER(species) { HP(1); Items(ITEM_NUGGET, item); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, species);
     }
 }
 #endif

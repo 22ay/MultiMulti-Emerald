@@ -333,6 +333,43 @@ DOUBLE_BATTLE_TEST("Primal Reversion and other switch-in effects trigger for all
     }
 }
 
+SINGLE_BATTLE_TEST("Primal Reversion is reverted upon battle end")
+{
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
+    PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; }
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
+    }
+}
+
+SINGLE_BATTLE_TEST("Primal Reversion is NOT reverted upon fainting")
+{
+    u32 species, item, targetSpecies;
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB;  targetSpecies = SPECIES_GROUDON_PRIMAL; }
+    PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; targetSpecies = SPECIES_KYOGRE_PRIMAL;  }
+    GIVEN {
+        PLAYER(species) { HP(1); Item(item); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, targetSpecies);
+    }
+}
+
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Primal reversion happens for Groudon only when holding Red Orb (Multi)")
 {
@@ -665,4 +702,42 @@ DOUBLE_BATTLE_TEST("Primal reversion and other switch-in effects trigger for all
         EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
+
+SINGLE_BATTLE_TEST("Primal Reversion is reverted upon battle end (Multi)")
+{
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
+    PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; }
+    GIVEN {
+        PLAYER(species) { Items(ITEM_ORAN_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
+    }
+}
+
+SINGLE_BATTLE_TEST("Primal Reversion is NOT reverted upon fainting (Multi)")
+{
+    u32 species, item, targetSpecies;
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB;  targetSpecies = SPECIES_GROUDON_PRIMAL; }
+    PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; targetSpecies = SPECIES_KYOGRE_PRIMAL;  }
+    GIVEN {
+        PLAYER(species) { HP(1); Items(ITEM_GREAT_BALL, item); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, targetSpecies);
+    }
+}
+
 #endif

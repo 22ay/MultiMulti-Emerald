@@ -471,7 +471,7 @@ bool32 AI_BattlerAtMaxHp(u32 battlerId)
 
 bool32 AI_CanBattlerEscape(u32 battler)
 {
-    if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
     if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SHED_SHELL, gAiLogicData))
         return TRUE;
@@ -1975,6 +1975,24 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove)
                 return TRUE;
             }
         }
+    case PROTECT_WIDE_GUARD:
+        return IsSpreadMove(GetBattlerMoveTargetType(battlerAtk, attackerMove));
+    case PROTECT_NORMAL:
+    case PROTECT_SPIKY_SHIELD:
+    case PROTECT_MAX_GUARD:
+    case PROTECT_BANEFUL_BUNKER:
+    case PROTECT_BURNING_BULWARK:
+        return TRUE;
+    case PROTECT_OBSTRUCT:
+    case PROTECT_SILK_TRAP:
+    case PROTECT_KINGS_SHIELD:
+        return !IsBattleMoveStatus(attackerMove);
+    case PROTECT_QUICK_GUARD:
+        return (GetChosenMovePriority(battlerAtk) > 0);
+    case PROTECT_MAT_BLOCK:
+        return !IsBattleMoveStatus(attackerMove);
+    default:
+        return FALSE;
     }
 }
 
