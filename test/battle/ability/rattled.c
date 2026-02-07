@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
 SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidate (Gen5-7) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
+        WITH_CONFIG(B_UPDATED_INTIMIDATE, GEN_7);
         PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_MOXIE); Innates(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_SUDOWOODO) { Ability(ABILITY_STURDY); Innates(ABILITY_RATTLED); }
     } WHEN {
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidat
 SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
+        WITH_CONFIG(B_UPDATED_INTIMIDATE, GEN_8);
         PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_MOXIE); Innates(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_SUDOWOODO) { Ability(ABILITY_STURDY); Innates(ABILITY_RATTLED); }
     } WHEN {

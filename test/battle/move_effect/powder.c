@@ -338,7 +338,7 @@ SINGLE_BATTLE_TEST("Powder doesn't damage target if it has Magic Guard (Traits)"
 SINGLE_BATTLE_TEST("Powder damages the target under heavy rain (Gen 6) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_POWDER_RAIN, GEN_6);
+        WITH_CONFIG(B_POWDER_RAIN, GEN_6);
         PLAYER(SPECIES_KYOGRE_PRIMAL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PRIMORDIAL_SEA); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -355,7 +355,7 @@ SINGLE_BATTLE_TEST("Powder damages the target under heavy rain (Gen 6) (Traits)"
 SINGLE_BATTLE_TEST("Powder doesn't damage target under heavy rain (Gen 7+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_POWDER_RAIN, GEN_7);
+        WITH_CONFIG(B_POWDER_RAIN, GEN_7);
         PLAYER(SPECIES_KYOGRE_PRIMAL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PRIMORDIAL_SEA); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -374,7 +374,7 @@ SINGLE_BATTLE_TEST("Powder doesn't damage target under heavy rain (Gen 7+) (Trai
 SINGLE_BATTLE_TEST("Powder fails if the target has Overcoat (Gen6+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_POWDER_OVERCOAT, GEN_6);
+        WITH_CONFIG(B_POWDER_OVERCOAT, GEN_6);
         PLAYER(SPECIES_FORRETRESS) { Ability(ABILITY_STURDY); Innates(ABILITY_OVERCOAT); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {

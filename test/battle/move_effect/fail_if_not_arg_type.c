@@ -138,7 +138,7 @@ SINGLE_BATTLE_TEST("Double Shock user loses its Electric-type if enemy faints")
 SINGLE_BATTLE_TEST("Burn Up fails if the user has Protean/Libero and is not a Fire-type (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
+        WITH_CONFIG(B_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTEAN); }
         OPPONENT(SPECIES_WOBBUFFET);

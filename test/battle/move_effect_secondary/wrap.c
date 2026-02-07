@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon 5 turns (Gen4) or 7 turns (G
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_BINDING_TURNS, config);
+        WITH_CONFIG(B_BINDING_TURNS, config);
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_GRIP_CLAW); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

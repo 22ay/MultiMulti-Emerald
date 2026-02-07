@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Confusion self hit does not consume Gems (Multi)")
     PARAMETRIZE { genConfig = GEN_7; pctChance = 33; }
     PASSES_RANDOMLY(pctChance, 100, RNG_CONFUSION);
     GIVEN {
-        WITH_CONFIG(CONFIG_CONFUSION_SELF_DMG_CHANCE, genConfig);
+        WITH_CONFIG(B_CONFUSION_SELF_DMG_CHANCE, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_NORMAL_GEM); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

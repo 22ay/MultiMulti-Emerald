@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Snow Warning sets up snow for 8 turns with Icy Rock (Gen9+)"
 SINGLE_BATTLE_TEST("Snow Warning summons hail (Gen4-8) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_SNOW_WARNING, GEN_8);
+        WITH_CONFIG(B_SNOW_WARNING, GEN_8);
         PLAYER(SPECIES_ABOMASNOW) { Ability(ABILITY_SOUNDPROOF); Innates(ABILITY_SNOW_WARNING); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Snow Warning summons hail (Gen4-8) (Traits)")
 SINGLE_BATTLE_TEST("Snow Warning summons snow (Gen9+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_SNOW_WARNING, GEN_9);
+        WITH_CONFIG(B_SNOW_WARNING, GEN_9);
         PLAYER(SPECIES_ABOMASNOW) { Ability(ABILITY_SOUNDPROOF); Innates(ABILITY_SNOW_WARNING); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -171,8 +171,8 @@ SINGLE_BATTLE_TEST("Snow Warning summons snow (Gen9+) (Traits)")
 SINGLE_BATTLE_TEST("Snow Warning sets up hail for 8 turns with Icy Rock (Gen6-8) (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_SNOW_WARNING, GEN_8);
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_SNOW_WARNING, GEN_8);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_ABOMASNOW) { Moves(MOVE_CELEBRATE); Ability(ABILITY_SNOW_WARNING); Items(ITEM_PECHA_BERRY, ITEM_ICY_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -200,8 +200,8 @@ SINGLE_BATTLE_TEST("Snow Warning sets up hail for 8 turns with Icy Rock (Gen6-8)
 SINGLE_BATTLE_TEST("Snow Warning sets up snow for 8 turns with Icy Rock (Gen9+) (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_SNOW_WARNING, GEN_9);
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_9);
+        WITH_CONFIG(B_SNOW_WARNING, GEN_9);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_9);
         PLAYER(SPECIES_ABOMASNOW) { Moves(MOVE_CELEBRATE); Ability(ABILITY_SNOW_WARNING); Items(ITEM_PECHA_BERRY, ITEM_ICY_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {

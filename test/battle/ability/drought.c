@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Drought sets up permanent sun (Gen3-5)")
 SINGLE_BATTLE_TEST("Drought sets up sun for 5 turns (Gen6+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_FLASH_FIRE); Innates(ABILITY_DROUGHT); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Drought sets up sun for 5 turns (Gen6+) (Traits)")
 SINGLE_BATTLE_TEST("Drought sets up sun for 8 turns with Heat Rock (Gen6+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_FLASH_FIRE); Innates(ABILITY_DROUGHT); Item(ITEM_HEAT_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Drought sets up sun for 8 turns with Heat Rock (Gen6+) (Trai
 SINGLE_BATTLE_TEST("Drought sets up permanent sun (Gen3-5) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_3);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_3);
         PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_FLASH_FIRE); Innates(ABILITY_DROUGHT); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -169,7 +169,7 @@ SINGLE_BATTLE_TEST("Drought sets up permanent sun (Gen3-5) (Traits)")
 SINGLE_BATTLE_TEST("Drought sets up sun for 8 turns with Heat Rock (Gen6+) (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DROUGHT); Items(ITEM_PECHA_BERRY, ITEM_HEAT_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {

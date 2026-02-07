@@ -253,7 +253,7 @@ SINGLE_BATTLE_TEST("Upper Hand is boosted by Sheer Force (Traits)")
 SINGLE_BATTLE_TEST("Upper Hand failing will prevent Protean activation (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
+        WITH_CONFIG(B_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTEAN); }
         OPPONENT(SPECIES_WOBBUFFET);

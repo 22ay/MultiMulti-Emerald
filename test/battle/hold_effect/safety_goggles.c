@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect (Traits)")
     KNOWN_FAILING;
     PASSES_RANDOMLY(100, 100, RNG_EFFECT_SPORE);
     GIVEN {
-        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
+        WITH_CONFIG(B_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_TECHNICIAN); Innates(ABILITY_EFFECT_SPORE); }
@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect (Multi)")
     KNOWN_FAILING;
     PASSES_RANDOMLY(100, 100, RNG_EFFECT_SPORE);
     GIVEN {
-        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
+        WITH_CONFIG(B_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SAFETY_GOGGLES); }
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }

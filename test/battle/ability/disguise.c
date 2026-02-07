@@ -232,7 +232,7 @@ SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish")
 SINGLE_BATTLE_TEST("Disguised Mimikyu doesn't lose 1/8 of its max HP upon changing to its busted form (Gen7) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_7);
+        WITH_CONFIG(B_DISGUISE_HP_LOSS, GEN_7);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -252,7 +252,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu will lose 1/8 of its max HP upon changing 
     s16 disguiseDamage;
 
     GIVEN {
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        WITH_CONFIG(B_DISGUISE_HP_LOSS, GEN_8);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

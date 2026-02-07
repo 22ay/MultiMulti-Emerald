@@ -313,7 +313,7 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - player faste
 SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6) (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_6);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_6);
         PLAYER(SPECIES_GARDEVOIR) { Items(ITEM_PECHA_BERRY, ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET) {}
     } WHEN {
@@ -329,7 +329,7 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6) (Multi)")
 SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+) (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7);
         PLAYER(SPECIES_GARDEVOIR) { Items(ITEM_PECHA_BERRY, ITEM_GARDEVOIRITE);}
         OPPONENT(SPECIES_WOBBUFFET) {}
     } WHEN {
@@ -345,7 +345,7 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+) (Multi)")
 SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn order (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7);
         ASSUME(GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 0) != ABILITY_STALL
             && GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 1) != ABILITY_STALL);
         PLAYER(SPECIES_SABLEYE) { Items(ITEM_PECHA_BERRY, ITEM_SABLENITE); Ability(ABILITY_STALL); Speed(105); }

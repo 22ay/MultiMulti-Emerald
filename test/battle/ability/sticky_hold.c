@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries")
 SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_INCINERATE_GEMS, GEN_6);
+        WITH_CONFIG(B_INCINERATE_GEMS, GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INCINERATE); }
         OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_GHOST_GEM); }
     } WHEN {
@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries (Tra
 SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_INCINERATE_GEMS, GEN_6);
+        WITH_CONFIG(B_INCINERATE_GEMS, GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INCINERATE); }
         OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STORM_DRAIN); Innates(ABILITY_STICKY_HOLD); Item(ITEM_GHOST_GEM); }
     } WHEN {
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries (Mul
 SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_INCINERATE_GEMS, GEN_6);
+        WITH_CONFIG(B_INCINERATE_GEMS, GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INCINERATE); }
         OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_GREAT_BALL, ITEM_GHOST_GEM); }
     } WHEN {

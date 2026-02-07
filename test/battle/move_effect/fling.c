@@ -718,7 +718,7 @@ SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability (Gen5+) (Multi)"
     PARAMETRIZE { ability = ABILITY_KLUTZ;    config = GEN_5; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_KLUTZ_FLING_INTERACTION, config);
+        WITH_CONFIG(B_KLUTZ_FLING_INTERACTION, config);
         PLAYER(SPECIES_BUNEARY) { Items(ITEM_NONE, ITEM_RAZOR_CLAW); Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

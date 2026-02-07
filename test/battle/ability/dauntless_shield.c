@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage (Traits)")
 SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage every time it switches in (Gen8) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DAUNTLESS_SHIELD, GEN_8);
+        WITH_CONFIG(B_DAUNTLESS_SHIELD, GEN_8);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DAUNTLESS_SHIELD); }
         OPPONENT(SPECIES_WYNAUT);
@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage every time it s
 SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage only once per battle (Gen 9+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DAUNTLESS_SHIELD, GEN_9);
+        WITH_CONFIG(B_DAUNTLESS_SHIELD, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DAUNTLESS_SHIELD); }
         OPPONENT(SPECIES_WYNAUT);

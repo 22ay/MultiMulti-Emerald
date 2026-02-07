@@ -177,7 +177,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage (Traits)")
 SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it switches in (Gen8) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_INTREPID_SWORD, GEN_8);
+        WITH_CONFIG(B_INTREPID_SWORD, GEN_8);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_WYNAUT);
@@ -199,7 +199,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it swit
 SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage only once per battle (Gen9+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_INTREPID_SWORD, GEN_9);
+        WITH_CONFIG(B_INTREPID_SWORD, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_WYNAUT);

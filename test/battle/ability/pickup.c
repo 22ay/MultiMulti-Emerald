@@ -331,7 +331,7 @@ SINGLE_BATTLE_TEST("Pickup grants an item used by another Pokémon (Traits)")
 WILD_BATTLE_TEST("Pickup grants an item used by itself in wild battles (Gen9+) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PICKUP_WILD, GEN_9);
+        WITH_CONFIG(B_PICKUP_WILD, GEN_9);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_RUN_AWAY); Innates(ABILITY_PICKUP); MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -637,7 +637,7 @@ SINGLE_BATTLE_TEST("Pickup grants an item used by another Pokémon (Multi)")
 WILD_BATTLE_TEST("Pickup grants an item used by itself in wild battles (Gen9+) (Multi)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PICKUP_WILD, GEN_9);
+        WITH_CONFIG(B_PICKUP_WILD, GEN_9);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); MaxHP(100); HP(51); Items(ITEM_GREAT_BALL, ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -521,7 +521,7 @@ SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed (Traits)")
 SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Court Changed (Gen8) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFIANT_STICKY_WEB, GEN_8);
+        WITH_CONFIG(B_DEFIANT_STICKY_WEB, GEN_8);
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
@@ -558,7 +558,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Co
 SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Changed (Gen9) (Traits)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFIANT_STICKY_WEB, GEN_9);
+        WITH_CONFIG(B_DEFIANT_STICKY_WEB, GEN_9);
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
