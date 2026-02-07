@@ -1776,7 +1776,7 @@ static void Cmd_critcalc(void)
          || gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
             continue;
 
-        if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
+        if (GetConfig(B_CRIT_CHANCE) == GEN_1)
             gBattleStruct->critChance[battlerDef] = CalcCritChanceStageGen1(gBattlerAttacker, battlerDef, gCurrentMove, TRUE);
         else
             gBattleStruct->critChance[battlerDef] = CalcCritChanceStage(gBattlerAttacker, battlerDef, gCurrentMove, TRUE);
@@ -1957,7 +1957,7 @@ static void Cmd_adjustdamage(void)
             gLastUsedItem = GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_FOCUS_BAND, TRUE);
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
         }
-        else if (GetConfig(CONFIG_STURDY) >= GEN_5 && BattlerHasTrait(battlerDef, ABILITY_STURDY) && IsBattlerAtMaxHp(battlerDef))
+        else if (GetConfig(B_STURDY) >= GEN_5 && BattlerHasTrait(battlerDef, ABILITY_STURDY) && IsBattlerAtMaxHp(battlerDef))
         {
             enduredHit |= 1u << battlerDef;
             PushTraitStack(gBattlerTarget, ABILITY_STURDY);
@@ -3287,7 +3287,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         else
         {
             if (BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_GRIP_CLAW, TRUE))
-                gDisableStructs[gEffectBattler].wrapTurns = GetConfig(CONFIG_BINDING_TURNS) >= GEN_5 ? 7 : 5;
+                gDisableStructs[gEffectBattler].wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? 7 : 5;
             else
                 gDisableStructs[gEffectBattler].wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, 5) : RandomUniform(RNG_WRAP, 2, 5);
             gBattleMons[gEffectBattler].volatiles.wrapped = TRUE;
@@ -4074,7 +4074,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             {
                 gBattleMons[battler].volatiles.wrapped = TRUE;
                 if (BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_GRIP_CLAW, TRUE))
-                    gDisableStructs[battler].wrapTurns = (GetConfig(CONFIG_BINDING_TURNS) >= GEN_5) ? 7 : 5;
+                    gDisableStructs[battler].wrapTurns = (GetConfig(B_BINDING_TURNS) >= GEN_5) ? 7 : 5;
                 else
                     gDisableStructs[battler].wrapTurns = (Random() % 2) + 4;
                 // The Wrap effect does not expire when the user switches, so here's some cheese.
@@ -5871,7 +5871,7 @@ if (SearchTraits(battlerTraits, ABILITY_MOXIE))
 
             if (!GetBattlerPartyState(battlerAtk)->battleBondBoost)
             {
-                if (GetConfig(CONFIG_BATTLE_BOND) < GEN_9 && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_BATTLE_BOND)
+                if (GetConfig(B_BATTLE_BOND) < GEN_9 && gBattleMons[battlerAtk].species == SPECIES_GRENINJA_BATTLE_BOND)
                 {
                     // TODO: Convert this to a proper FORM_CHANGE type.
                     gLastUsedAbility = ABILITY_BATTLE_BOND;
@@ -6025,7 +6025,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
 
             StealTargetItem(gBattlerAttacker, gBattlerTarget, slot);  // Attacker steals target item
 
-            if (!(GetConfig(CONFIG_STEAL_WILD_ITEMS) >= GEN_9
+            if (!(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
                 && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
             {
                 gBattleMons[gBattlerAttacker].items[slot] = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
@@ -6394,7 +6394,7 @@ static void Cmd_moveend(void)
                     s32 healAmount = (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
                     healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
                     effect = TRUE;
-                    if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) < GEN_5)
+                    if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(B_DREAM_EATER_LIQUID_OOZE) < GEN_5)
                         || !BattlerHasTrait(gBattlerTarget, ABILITY_LIQUID_OOZE))
                     {
                         SetHealAmount(gBattlerAttacker, healAmount);
@@ -9075,7 +9075,7 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd)
 {
     if (!GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_EJECT_BUTTON, TRUE)
         && !GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_EJECT_PACK, TRUE)
-        && (GetConfig(CONFIG_SYMBIOSIS_GEMS) < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
+        && (GetConfig(B_SYMBIOSIS_GEMS) < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
         && GetMoveEffect(gCurrentMove) != EFFECT_FLING //Fling and damage-reducing berries are handled separately.
         && !gSpecialStatuses[battler].berryReduced
         && TryTriggerSymbiosis(battler, BATTLE_PARTNER(battler)))
@@ -9850,7 +9850,7 @@ static bool32 IsElectricAbilityAffected(u32 battler, enum Ability ability)
         moveType = GetMoveType(gCurrentMove);
 
     if (moveType == TYPE_ELECTRIC
-     && (!BattlerHasTrait(battler, ABILITY_LIGHTNING_ROD) || GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
+     && (!BattlerHasTrait(battler, ABILITY_LIGHTNING_ROD) || GetConfig(B_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
      && BattlerHasTrait(battler, ability))
         return TRUE;
     else
@@ -10498,7 +10498,7 @@ static void TryPlayStatChangeAnimation(u32 battler, enum Ability ability, u32 st
                     }
                 }
                 else if (!((SearchTraits(battlerTraits, ABILITY_KEEN_EYE) || SearchTraits(battlerTraits, ABILITY_MINDS_EYE)) && currStat == STAT_ACC)
-                        && !(GetConfig(CONFIG_ILLUMINATE_EFFECT) >= GEN_9 && SearchTraits(battlerTraits, ABILITY_ILLUMINATE) && currStat == STAT_ACC)
+                        && !(GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && SearchTraits(battlerTraits, ABILITY_ILLUMINATE) && currStat == STAT_ACC)
                         && !(SearchTraits(battlerTraits, ABILITY_HYPER_CUTTER) && currStat == STAT_ATK)
                         && !(SearchTraits(battlerTraits, ABILITY_BIG_PECKS) && currStat == STAT_DEF))
                 {
@@ -10675,7 +10675,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
         }
         else if (!flags.certain
                 && (((SearchTraits(battlerTraits, ABILITY_KEEN_EYE) || SearchTraits(battlerTraits, ABILITY_MINDS_EYE)) && statId == STAT_ACC)
-                || (GetConfig(CONFIG_ILLUMINATE_EFFECT) >= GEN_9 && SearchTraits(battlerTraits, ABILITY_ILLUMINATE) && statId == STAT_ACC)
+                || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && SearchTraits(battlerTraits, ABILITY_ILLUMINATE) && statId == STAT_ACC)
                 || (SearchTraits(battlerTraits, ABILITY_HYPER_CUTTER) && statId == STAT_ATK)
                 || (SearchTraits(battlerTraits, ABILITY_BIG_PECKS) && statId == STAT_DEF)))
         {
@@ -12147,8 +12147,8 @@ static void Cmd_healpartystatus(void)
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
     bool32 isSoundMove = IsSoundMove(gCurrentMove);
 
-    if (GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
-     || GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) >= GEN_8
+    if (GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
+     || GetConfig(B_HEAL_BELL_SOUNDPROOF) >= GEN_8
      || !(isSoundMove && BattlerHasTrait(gBattlerAttacker, ABILITY_SOUNDPROOF)))
     {
         if (isSoundMove)
@@ -12171,7 +12171,7 @@ static void Cmd_healpartystatus(void)
 
     if (IsBattlerAlive(partner))
     {
-        if (GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
+        if (GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
          || !(isSoundMove && BattlerHasTrait(partner, ABILITY_SOUNDPROOF)))
         {
             gBattleMons[partner].status1 = 0;
@@ -12997,7 +12997,7 @@ static void Cmd_settaunt(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (GetConfig(CONFIG_OBLIVIOUS_TAUNT) >= GEN_6 && BattlerHasTrait(gBattlerTarget, ABILITY_OBLIVIOUS))
+    if (GetConfig(B_OBLIVIOUS_TAUNT) >= GEN_6 && BattlerHasTrait(gBattlerTarget, ABILITY_OBLIVIOUS))
     {
         gBattlescriptCurrInstr = BattleScript_NotAffectedAbilityPopUp;
         gLastUsedAbility = ABILITY_OBLIVIOUS;
@@ -13770,7 +13770,7 @@ bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move)
         return FALSE;
     else if (MoveIgnoresSubstitute(move))
         return FALSE;
-    else if (GetConfig(CONFIG_INFILTRATOR_SUBSTITUTE) < GEN_6)
+    else if (GetConfig(B_INFILTRATOR_SUBSTITUTE) < GEN_6)
         return TRUE;
     else if (GetMoveEffect(move) == EFFECT_TRANSFORM || GetMoveEffect(move) == EFFECT_SKY_DROP)
         return TRUE;
@@ -16941,7 +16941,7 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
         gBattlescriptCurrInstr = BattleScript_IntimidateInReverse;
         RecordAbilityBattle(gBattlerTarget, ABILITY_GUARD_DOG);
     }
-    else if (ability != ABILITY_NONE && GetConfig(CONFIG_UPDATED_INTIMIDATE) >= GEN_8)
+    else if (ability != ABILITY_NONE && GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8)
     {
         gLastUsedAbility = ability;
         gBattlerAbility = gBattlerTarget;
@@ -18736,7 +18736,7 @@ void BS_JumpIfAbilityPreventsRest(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    if (GetConfig(CONFIG_LEAF_GUARD_PREVENTS_REST) >= GEN_5 && IsLeafGuardProtected(battler))
+    if (GetConfig(B_LEAF_GUARD_PREVENTS_REST) >= GEN_5 && IsLeafGuardProtected(battler))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else if (IsShieldsDownProtected(battler))
         gBattlescriptCurrInstr = cmd->jumpInstr;

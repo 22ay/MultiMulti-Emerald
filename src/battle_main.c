@@ -4889,7 +4889,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
 
     // paralysis drop
     if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && !SearchTraits(battlerTraits, ABILITY_QUICK_FEET))
-        speed /= GetConfig(CONFIG_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
+        speed /= GetConfig(B_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
 
     if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SWAMP)
         speed /= 4;
@@ -4930,7 +4930,7 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         priority = -8;
     }
     if (SearchTraits(battlerTraits, ABILITY_GALE_WINGS)
-          && (GetConfig(CONFIG_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battler))
+          && (GetConfig(B_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battler))
           && GetMoveType(move) == TYPE_FLYING)
     {
         priority++;

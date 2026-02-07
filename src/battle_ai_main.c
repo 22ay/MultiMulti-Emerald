@@ -3449,7 +3449,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     || AISearchTraits(AIBattlerTraits, ABILITY_MOTOR_DRIVE)
                     || AISearchTraits(AIBattlerTraits, ABILITY_VOLT_ABSORB)))
                     {
-                    if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5 && BattlerHasTrait(battlerAtkPartner, ABILITY_LIGHTNING_ROD))
+                    if (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) < GEN_5 && BattlerHasTrait(battlerAtkPartner, ABILITY_LIGHTNING_ROD))
                     {
                         RETURN_SCORE_MINUS(10);
                     }

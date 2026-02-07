@@ -300,7 +300,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
     // Check if mon gets one shot
     if (maxDamageTaken > gBattleMons[battler].hp
-        && !(BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FOCUS_SASH, TRUE) || (!HasMoldBreakerTypeAbility(opposingBattler) && GetConfig(CONFIG_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battler, ABILITY_STURDY))))
+        && !(BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FOCUS_SASH, TRUE) || (!HasMoldBreakerTypeAbility(opposingBattler) && GetConfig(B_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battler, ABILITY_STURDY))))
     {
         getsOneShot = TRUE;
     }

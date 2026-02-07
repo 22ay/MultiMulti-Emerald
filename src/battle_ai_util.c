@@ -471,7 +471,7 @@ bool32 AI_BattlerAtMaxHp(u32 battlerId)
 
 bool32 AI_CanBattlerEscape(u32 battler)
 {
-    if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
     if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SHED_SHELL, gAiLogicData))
         return TRUE;
@@ -862,7 +862,7 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
     s32 critChanceIndex = 0;
 
     // Get crit chance
-    if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
+    if (GetConfig(B_CRIT_CHANCE) == GEN_1)
         critChanceIndex = CalcCritChanceStageGen1(battlerAtk, battlerDef, move, FALSE);
     else
         critChanceIndex = CalcCritChanceStage(battlerAtk, battlerDef, move, FALSE);
@@ -1446,7 +1446,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 
     if (!DoesBattlerIgnoreAbilityChecks(battler, move))
     {
-        if (GetConfig(CONFIG_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battlerTarget, ABILITY_STURDY))
+        if (GetConfig(B_STURDY) >= GEN_5 && AI_BATTLER_HAS_TRAIT(battlerTarget, ABILITY_STURDY))
             return TRUE;
         if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
@@ -1798,7 +1798,7 @@ u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon)
     if (ability == ABILITY_SAND_STREAM || SpeciesHasInnate(battleMon.species, ABILITY_SAND_STREAM))
         return B_WEATHER_SANDSTORM;
     if (ability == ABILITY_SNOW_WARNING || SpeciesHasInnate(battleMon.species, ABILITY_SNOW_WARNING))
-        return GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+        return GetConfig(B_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
 
     return gBattleWeather;
 }
@@ -2191,7 +2191,7 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
         if (SearchTraits(battlerTraits, ABILITY_BIG_PECKS))
             if (stat == STAT_DEF)
                 return FALSE;
-        if ((SearchTraits(battlerTraits, ABILITY_ILLUMINATE) && GetConfig(CONFIG_ILLUMINATE_EFFECT) >= GEN_9)
+        if ((SearchTraits(battlerTraits, ABILITY_ILLUMINATE) && GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9)
          || SearchTraits(battlerTraits, ABILITY_KEEN_EYE)
          || SearchTraits(battlerTraits, ABILITY_MINDS_EYE))
             if (stat == STAT_ACC)
@@ -3346,7 +3346,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveIndex
 
                     if (!IsBattleMoveStatus(move) && ((gAiLogicData->shouldSwitch & (1u << battlerAtk))
                         || (AI_BattlerAtMaxHp(battlerDef) && (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FOCUS_SASH, gAiLogicData)
-                        || (GetConfig(CONFIG_STURDY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_STURDY))
+                        || (GetConfig(B_STURDY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_STURDY))
                         || AISearchTraits(AIBattlerTraits, ABILITY_MULTISCALE)
                         || AISearchTraits(AIBattlerTraits, ABILITY_SHADOW_SHIELD)))))
                         return SHOULD_PIVOT;   // pivot to break sash/sturdy/multiscale
@@ -3354,7 +3354,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveIndex
                 else if (!hasStatBoost)
                 {
                     if (!IsBattleMoveStatus(move) && (AI_BattlerAtMaxHp(battlerDef) && (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FOCUS_SASH, gAiLogicData)
-                        || (GetConfig(CONFIG_STURDY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_STURDY))
+                        || (GetConfig(B_STURDY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_STURDY))
                         || AISearchTraits(AIBattlerTraits, ABILITY_MULTISCALE)
                         || AISearchTraits(AIBattlerTraits, ABILITY_SHADOW_SHIELD))))
                         return SHOULD_PIVOT;   // pivot to break sash/sturdy/multiscale
@@ -3807,17 +3807,6 @@ bool32 AI_HasChoiceEffect(u32 battler)
         return FALSE;
 }
 
-static u32 FindMoveUsedXTurnsAgo(u32 battlerId, u32 x)
-{
-    s32 i, index = gBattleHistory->moveHistoryIndex[battlerId];
-    for (i = 0; i < x; i++)
-    {
-        if (--index < 0)
-            index = AI_MOVE_HISTORY_COUNT - 1;
-    }
-    return gBattleHistory->moveHistory[battlerId][index];
-}
-
 bool32 IsWakeupTurn(u32 battler)
 {
     u32 sleepTurns = gBattleMons[battler].status1 & STATUS1_SLEEP;
@@ -3848,7 +3837,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
         battlerOnField1 = gBattlerPartyIndexes[battlerId];
         battlerOnField2 = gBattlerPartyIndexes[GetPartnerBattler(battlerId)];
         // Check partner's status
-        if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
+        if ((GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
             || !AI_BATTLER_HAS_TRAIT(BATTLE_PARTNER(battlerId), ABILITY_SOUNDPROOF)
             || !checkSoundproof)
          && GetMonData(&party[battlerOnField2], MON_DATA_STATUS) != STATUS1_NONE
@@ -3862,8 +3851,8 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     }
 
     // Check attacker's status
-    if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
-      || GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) >= GEN_8
+    if ((GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
+      || GetConfig(B_HEAL_BELL_SOUNDPROOF) >= GEN_8
       || !AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_SOUNDPROOF) || !checkSoundproof)
      && GetMonData(&party[battlerOnField1], MON_DATA_STATUS) != STATUS1_NONE
      && ShouldCureStatus(battlerId, battlerId, gAiLogicData))
@@ -5775,7 +5764,7 @@ bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef)
     {
         if ((SearchTraits(battlerTraits, ABILITY_LIGHTNING_ROD)
          || SearchTraits(battlerTraits, ABILITY_STORM_DRAIN))
-         && GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
+         && GetConfig(B_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
         {
             return (BattlerStatCanRise(battlerDef, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
         }
