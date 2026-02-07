@@ -5581,37 +5581,17 @@ static const u16 sUniversalMoves[] =
 u8 CanLearnTeachableMove(u16 species, u16 move)
 {
     if (species == SPECIES_EGG)
-    {
         return FALSE;
-    }
-    else if (species == SPECIES_MEW)
-    {
-        switch (move)
-        {
-        case MOVE_BADDY_BAD:
-        case MOVE_BOUNCY_BUBBLE:
-        case MOVE_BUZZY_BUZZ:
-        case MOVE_DRAGON_ASCENT:
-        case MOVE_FLOATY_FALL:
-        case MOVE_FREEZY_FROST:
-        case MOVE_GLITZY_GLOW:
-        case MOVE_RELIC_SONG:
-        case MOVE_SAPPY_SEED:
-        case MOVE_SECRET_SWORD:
-        case MOVE_SIZZLY_SLIDE:
-        case MOVE_SPARKLY_SWIRL:
-        case MOVE_SPLISHY_SPLASH:
-        case MOVE_VOLT_TACKLE:
-        case MOVE_ZIPPY_ZAP:
-            return FALSE;
-        default:
-            return TRUE;
-        }
-    }
-    else
+
+    // Mew and Smeargle: learn every teachable move with no exceptions
+    if (species == SPECIES_MEW || species == SPECIES_SMEARGLE)
+        return TRUE;
+
+    // Normal species logic
     {
         u32 i, j;
         const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+
         for (i = 0; i < ARRAY_COUNT(sUniversalMoves); i++)
         {
             if (sUniversalMoves[i] == move)
@@ -5620,7 +5600,8 @@ u8 CanLearnTeachableMove(u16 species, u16 move)
                 {
                     if (move == MOVE_TERA_BLAST && GET_BASE_SPECIES_ID(species) == SPECIES_TERAPAGOS)
                         return FALSE;
-                    if (GET_BASE_SPECIES_ID(species) == SPECIES_PYUKUMUKU && (move == MOVE_HIDDEN_POWER || move == MOVE_RETURN || move == MOVE_FRUSTRATION))
+                    if (GET_BASE_SPECIES_ID(species) == SPECIES_PYUKUMUKU
+                        && (move == MOVE_HIDDEN_POWER || move == MOVE_RETURN || move == MOVE_FRUSTRATION))
                         return FALSE;
                     return TRUE;
                 }
@@ -5640,11 +5621,13 @@ u8 CanLearnTeachableMove(u16 species, u16 move)
                 }
             }
         }
+
         for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         {
             if (teachableLearnset[i] == move)
                 return TRUE;
         }
+
         return FALSE;
     }
 }
