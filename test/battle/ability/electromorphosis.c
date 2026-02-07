@@ -6,8 +6,8 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
     s16 dmgBefore, dmgAfter;
     u16 move;
 
-    PARAMETRIZE {move = MOVE_SCRATCH; }
-    PARAMETRIZE {move = MOVE_GUST; }
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_GUST; }
 
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
@@ -52,7 +52,6 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         EXPECT_MUL_EQ(dmgBefore, Q_4_12(2.0), dmgAfter);
     }
 }
-
 
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move (Traits)")

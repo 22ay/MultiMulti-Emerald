@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
         PLAYER(SPECIES_PALAFIN_ZERO);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -166,7 +166,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PALAFIN_ZERO);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLIP_TURN); SEND_OUT(opponent, 1); }
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 0); }
@@ -179,6 +179,22 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
         MESSAGE("2 sent out Palafin!");
         ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
         MESSAGE("The opposing Palafin underwent a heroic transformation!");
+    }
+}
+
+// Write Trace test and move this one to that file (including every other ability that can't be copied)
+SINGLE_BATTLE_TEST("Zero to Hero cannot be copied by Trace")
+{
+    GIVEN {
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); }
+        OPPONENT(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_TRACE);
+            MESSAGE("The opposing Ralts Traced Palafin's Zero to Hero!");
+        }
     }
 }
 

@@ -124,7 +124,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_RAIN_DOWNPOUR:
         if (SearchTraits(battlerTraits, ABILITY_DRY_SKIN) || SearchTraits(battlerTraits, ABILITY_RAIN_DISH))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         break;
@@ -132,7 +132,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_SUN_PRIMAL:
         if (SearchTraits(battlerTraits, ABILITY_DRY_SKIN) || SearchTraits(battlerTraits, ABILITY_SOLAR_POWER))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         break;
@@ -159,7 +159,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_SNOW:
         if (SearchTraits(battlerTraits, ABILITY_ICE_BODY))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         else if (currBattleWeather == BATTLE_WEATHER_HAIL)
@@ -281,7 +281,7 @@ static bool32 HandleEndTurnWish(u32 battler)
         s32 wishHeal = 0;
         gBattlerTarget = battler;
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
-        if (GetConfig(CONFIG_WISH_HP_SOURCE) >= GEN_5)
+        if (GetConfig(B_WISH_HP_SOURCE) >= GEN_5)
         {
             if (IsOnPlayerSide(battler))
                 wishHeal = GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
@@ -390,7 +390,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         if (BattlerHasTrait(battler, ABILITY_HEALER)
          || BattlerHasTrait(battler, ABILITY_HYDRATION)
          || BattlerHasTrait(battler, ABILITY_SHED_SKIN))
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_STATUS_CURE, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
 
         if (effect == FALSE) //Loop End Turn abilities until none activate anymore (Multi)
@@ -547,7 +547,7 @@ static bool32 HandleEndTurnBurn(u32 battler)
      && !IsAbilityAndRecord(battler, ABILITY_IMPASSABLE)
      && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
     {
-        s32 burnDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 ? 16 : 8);
+        s32 burnDamage = GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8);
         if (BattlerHasTrait(battler, ABILITY_HEATPROOF))
         {
             if (burnDamage > (burnDamage / 2) + 1) // Record ability if the burn takes less damage than it normally would.
@@ -575,7 +575,7 @@ static bool32 HandleEndTurnFrostbite(u32 battler)
      && !IsAbilityAndRecord(battler, ABILITY_IMPASSABLE)
      && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
     {
-        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 ? 16 : 8));
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8));
         BattleScriptExecute(BattleScript_FrostbiteTurnDmg);
         effect = TRUE;
     }
@@ -595,7 +595,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
      && !IsAbilityAndRecord(battler, ABILITY_IMPASSABLE)
      && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
     {
-        if (gBattleMons[battler].status1 & STATUS1_SLEEP)
+        if (gBattleMons[battler].status1 & STATUS1_SLEEP || GetBattlerAbility(battler) == ABILITY_COMATOSE)
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
             BattleScriptExecute(BattleScript_NightmareTurnDmg);
@@ -931,9 +931,11 @@ static bool32 HandleEndTurnYawn(u32 battler)
             else
             {
                 if (B_SLEEP_TURNS >= GEN_5)
-                    gBattleMons[battler].status1 |= ((Random() % 3) + 2);
+                    gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 4));
+                else if (B_SLEEP_TURNS >= GEN_3)
+                    gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 5));
                 else
-                    gBattleMons[battler].status1 |= ((Random() % 4) + 3);
+                    gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 8));
 
                 CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
@@ -1374,7 +1376,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
      || SearchTraits(battlerTraits, ABILITY_SHIELDS_DOWN)
      || SearchTraits(battlerTraits, ABILITY_ZEN_MODE)
      || SearchTraits(battlerTraits, ABILITY_HUNGER_SWITCH))
-        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_FORM_CHANGE, battler, 0, MOVE_NONE))
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
             effect = TRUE;
 
     return effect;

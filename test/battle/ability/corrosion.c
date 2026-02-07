@@ -66,48 +66,21 @@ SINGLE_BATTLE_TEST("Corrosion does not effect poison type damaging moves if the 
     }
 }
 
-SINGLE_BATTLE_TEST("Corrosion can poison Poison- and Steel-type targets if it uses Fling while holding a Toxic Orb or a Poison Barb")
-{
-    u16 heldItem;
-
-    PARAMETRIZE { heldItem = ITEM_POISON_BARB; }
-    PARAMETRIZE { heldItem = ITEM_TOXIC_ORB; }
-
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
-        ASSUME(gItemsInfo[ITEM_POISON_BARB].holdEffect == HOLD_EFFECT_TYPE_POWER);
-        ASSUME(gItemsInfo[ITEM_POISON_BARB].secondaryId == TYPE_POISON);
-        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(heldItem); }
-        OPPONENT(SPECIES_ODDISH);
-    } WHEN {
-        TURN { MOVE(player, MOVE_FLING); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
-        HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-        if (heldItem == ITEM_POISON_BARB)
-            STATUS_ICON(opponent, poison: TRUE);
-        else
-            STATUS_ICON(opponent, badPoison: TRUE);
-    }
-}
-
-SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion holds a Toxic Orb, it will badly poison itself")
+SINGLE_BATTLE_TEST("Corrosion badly poisons its Poison/Steel-type user who holds a Toxic Orb")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
         PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_ODDISH);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, badPoison: TRUE);
     }
 }
 
-SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion poisons a target with Synchronize, Synchronize will not poison Poison- or Steel-type Pokémon")
+SINGLE_BATTLE_TEST("Corrosion can poison a target with Synchronize and Synchronize will not poison Poison- or Steel-type Pokémon")
 {
     u16 move;
     PARAMETRIZE { move = MOVE_TOXIC; }
@@ -350,9 +323,9 @@ SINGLE_BATTLE_TEST("Corrosion does not affect Poison Spikes")
     }
 }
 
-#if MAX_MON_TRAITS > 1
 TO_DO_BATTLE_TEST("Dynamax: Corrosion can poison Poison/Steel types if the Pokémon uses G-Max Malodor")
-TO_DO_BATTLE_TEST("Corrosion does not affect Poison Spikes")
+
+#if MAX_MON_TRAITS > 1
 
 SINGLE_BATTLE_TEST("Corrosion can poison or badly poison a Pokemon regardless of its typing (Traits)")
 {

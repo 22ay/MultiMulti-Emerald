@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own ber
         PLAYER(mon) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAWST_BERRY); Status1(STATUS1_BURN); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ability);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
@@ -104,7 +104,7 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
 {
     u16 mon;
     u16 ability;
-    PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE;}
+    PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RAWST_BERRY].holdEffect == HOLD_EFFECT_CURE_BRN);
@@ -125,7 +125,6 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
 
 }
 
-// Remember to add a PARAMETRIZE for As One in the following tests:
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own berries (Traits)")
 {
