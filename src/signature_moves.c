@@ -5,28 +5,28 @@
 
 static const struct SignatureMoveEntry sSignatureMoves[] =
 {
-    { SPECIES_SMEARGLE, MOVE_DIG, 0, 0, FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, SIG_ENV_NONE },
-    { SPECIES_SCIZOR, MOVE_BULLET_PUNCH, 60,  0, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, SIG_ENV_NONE },
-    { SPECIES_TYPHLOSION, MOVE_ERUPTION, 0, 1, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, SIG_ENV_NONE },
-    { SPECIES_VENUSAUR, MOVE_CHLOROBLAST, 0, 0, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, SIG_ENV_SUN },
+    { SPECIES_SMEARGLE,   MOVE_TACKLE, 0, 0, FALSE,  FALSE,  SIG_PWRFORMULA_WATERSPOUT,     SIG_ATKSTAT_NORMAL, SIG_ENV_NONE, SIG_STATBOOST_SPD_PLUS_1 },
+    { SPECIES_SCIZOR,     MOVE_BULLET_PUNCH, 60, 0, FALSE, FALSE, SIG_PWRFORMULA_NORMAL,     SIG_ATKSTAT_NORMAL, SIG_ENV_NONE, SIG_STATBOOST_NONE },
+    { SPECIES_TYPHLOSION, MOVE_ERUPTION,     0, 1, FALSE, FALSE, SIG_PWRFORMULA_REVERSAL, SIG_ATKSTAT_NORMAL, SIG_ENV_NONE, SIG_STATBOOST_NONE },
+    { SPECIES_VENUSAUR,   MOVE_CHLOROBLAST,  0, 0, FALSE, FALSE, SIG_PWRFORMULA_NORMAL,     SIG_ATKSTAT_NORMAL, SIG_ENV_SUN,  SIG_STATBOOST_NONE },
 };
 
 u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
 {
     u16 species = gBattleMons[attacker].species;
-    u16 hp = gBattleMons[attacker].hp;
-    u16 maxHp = gBattleMons[attacker].maxHP;
+    u16 hp      = gBattleMons[attacker].hp;
+    u16 maxHp   = gBattleMons[attacker].maxHP;
 
     for (u32 i = 0; i < ARRAY_COUNT(sSignatureMoves); i++)
     {
-        if (sSignatureMoves[i].species == species
-         && sSignatureMoves[i].move == move)
+        const struct SignatureMoveEntry *entry = &sSignatureMoves[i];
+
+        if (entry->species == species && entry->move == move)
         {
-            // If using Reversal-style scaling
-            if (sSignatureMoves[i].useReversalFormula)
+            switch (entry->powerFormula)
             {
-                // Reversal formula:
-                // BP = 20, 40, 80, 100, 150, or 200 depending on HP%
+            case SIG_PWRFORMULA_REVERSAL:
+            {
                 u32 hpPercent = (hp * 100) / maxHp;
 
                 if (hpPercent <= 4)
@@ -42,20 +42,22 @@ u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
                 else
                     return 20;
             }
-            // Water Spout-style scaling
-            if (sSignatureMoves[i].useWaterSpoutFormula)
+
+            case SIG_PWRFORMULA_WATERSPOUT:
             {
-                // Formula: BP = basePower * currentHP / maxHP
-                // Minimum 1
                 u32 scaled = (150 * hp) / maxHp;
                 if (scaled < 1)
                     scaled = 1;
                 return scaled;
             }
 
-            // Otherwise use static override
-            if (sSignatureMoves[i].basePower != 0)
-                return sSignatureMoves[i].basePower;
+            case SIG_PWRFORMULA_NORMAL:
+            default:
+                break;
+            }
+
+            if (entry->basePower != 0)
+                return entry->basePower;
         }
     }
 

@@ -4270,9 +4270,7 @@ static void Cmd_setadditionaleffects(void)
     CMD_ARGS();
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
-    {
-        // Signature move: environment effect (weather / terrain / rooms)
-        {
+    {   
             const struct SignatureMoveEntry *entry =
                 GetSignatureMoveEntry(
                     GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
@@ -4345,8 +4343,46 @@ static void Cmd_setadditionaleffects(void)
                     // We *don’t* early-return here; additional effects can still run later.
                 }
             }
-        }
+        
 
+            if (entry && entry->statBoostMode != SIG_STATBOOST_NONE)
+            {
+                u8 moveEffect = 0;
+
+                switch (entry->statBoostMode)
+                {
+                case SIG_STATBOOST_ATK_PLUS_1:
+                    moveEffect = MOVE_EFFECT_ATK_PLUS_1;
+                    break;
+                case SIG_STATBOOST_DEF_PLUS_1:
+                    moveEffect = MOVE_EFFECT_DEF_PLUS_1;
+                    break;
+                case SIG_STATBOOST_SPD_PLUS_1:
+                    moveEffect = MOVE_EFFECT_SPD_PLUS_1;
+                    break;
+                case SIG_STATBOOST_SPATK_PLUS_1:
+                    moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1;
+                    break;
+                case SIG_STATBOOST_SPDEF_PLUS_1:
+                    moveEffect = MOVE_EFFECT_SP_DEF_PLUS_1;
+                    break;
+                default:
+                    break;
+                }
+
+                if (moveEffect != 0)
+                {
+                    enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
+
+                    SetMoveEffect(
+                        gBattlerAttacker,
+                        gBattlerAttacker,
+                        moveEffect,
+                        cmd->nextInstr,
+                        flags
+                    );
+                }
+            }
 
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
         SetToxicChainPriority();
