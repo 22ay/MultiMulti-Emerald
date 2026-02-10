@@ -1628,18 +1628,18 @@ static inline u32 GetHoldEffectCritChanceIncrease(u32 battler)
     {
         item = GetSlotHeldItem(battler, i, TRUE);
         
-        if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_SCOPE_LENS && (firstScope || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_SCOPE_LENS && (firstScope || GetConfig(B_ALLOW_HELD_DUPES)))
         {
             firstScope = FALSE;
             critStageIncrease += 1;
         }
-        if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_LUCKY_PUNCH && (firstPunch || GetConfig(CONFIG_ALLOW_HELD_DUPES))
+        if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_LUCKY_PUNCH && (firstPunch || GetConfig(B_ALLOW_HELD_DUPES))
             && gBattleMons[battler].species == SPECIES_CHANSEY)
         {
             firstPunch = FALSE;
             critStageIncrease += 2;
         }
-        if (IsBattlerLeekAffected(battler, item) && (firstLeek || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if (IsBattlerLeekAffected(battler, item) && (firstLeek || GetConfig(B_ALLOW_HELD_DUPES)))
         {
             firstLeek = FALSE;
             critStageIncrease += 2;
@@ -1967,7 +1967,7 @@ static void Cmd_adjustdamage(void)
         {
             item = GetSlotHeldItem(battlerDef, i, TRUE);
 
-            if (GetBattlerItemHoldEffect(battlerDef, item) == HOLD_EFFECT_FOCUS_BAND && (bandParam == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            if (GetBattlerItemHoldEffect(battlerDef, item) == HOLD_EFFECT_FOCUS_BAND && (bandParam == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
                 bandParam += (100 - bandParam) * GetItemHoldEffectParam(item) / 100;
         }
 
@@ -3006,7 +3006,7 @@ static inline bool32 TrySetReflect(u32 battler)
         for (u32 i = 0; i < MAX_MON_ITEMS; i++)
         {
             if (GetSlotHeldItemEffect(battler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
-             && (gSideTimers[side].reflectTimer == 5 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+             && (gSideTimers[side].reflectTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                 gSideTimers[side].reflectTimer += 3;
         }
 
@@ -3031,7 +3031,7 @@ static inline bool32 TrySetLightScreen(u32 battler)
         for (u32 i = 0; i < MAX_MON_ITEMS; i++)
         {
             if (GetSlotHeldItemEffect(battler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
-             && (gSideTimers[side].lightscreenTimer == 5 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+             && (gSideTimers[side].lightscreenTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                 gSideTimers[side].lightscreenTimer += 3;
         }
 
@@ -3335,14 +3335,14 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
                 if (GetSlotHeldItemEffect(gBattlerAttacker, i, TRUE) == HOLD_EFFECT_GRIP_CLAW)
                 {
                     if (gDisableStructs[gEffectBattler].wrapTurns == 0)
-                        gDisableStructs[gEffectBattler].wrapTurns = GetConfig(CONFIG_BINDING_TURNS) >= GEN_5 ? 7 : 5;
-                    else if (GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                        gDisableStructs[gEffectBattler].wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? 7 : 5;
+                    else if (GetConfig(B_ALLOW_HELD_DUPES))
                         gDisableStructs[gEffectBattler].wrapTurns += 2;
                 }
             }
 
             if (gDisableStructs[gEffectBattler].wrapTurns == 0)
-                gDisableStructs[gEffectBattler].wrapTurns = GetConfig(CONFIG_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, 5) : RandomUniform(RNG_WRAP, 2, 5);
+                gDisableStructs[gEffectBattler].wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, 5) : RandomUniform(RNG_WRAP, 2, 5);
 
             gBattleMons[gEffectBattler].volatiles.wrapped = TRUE;
             gBattleMons[gEffectBattler].volatiles.wrappedMove = gCurrentMove;
@@ -4104,7 +4104,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             for (i = 0; i < MAX_MON_ITEMS; i++)
             {
                 if (GetSlotHeldItemEffect(gBattlerAttacker, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
-                 && (gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer == 5 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+                 && (gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                     gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer += 3;
             }
                 
@@ -4142,8 +4142,8 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
                     if (GetSlotHeldItemEffect(gBattlerAttacker, i, TRUE) == HOLD_EFFECT_GRIP_CLAW)
                     {
                         if (firstClaw)
-                            gDisableStructs[gEffectBattler].wrapTurns = GetConfig(CONFIG_BINDING_TURNS) >= GEN_5 ? 7 : 5;
-                        else if (GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                            gDisableStructs[gEffectBattler].wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? 7 : 5;
+                        else if (GetConfig(B_ALLOW_HELD_DUPES))
                             gDisableStructs[gEffectBattler].wrapTurns += 2;
                     }
                 }
@@ -15553,7 +15553,7 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
         if (GetItemHoldEffect(GetMonData(&gPlayerParty[expGetterMonId], MON_DATA_HELD_ITEM + i)) == HOLD_EFFECT_LUCKY_EGG
-         && (firstEgg || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+         && (firstEgg || GetConfig(B_ALLOW_HELD_DUPES)))
             {
                 firstEgg = FALSE;
                 *expAmount = (*expAmount * 150) / 100;
@@ -18559,7 +18559,7 @@ void BS_SetAuroraVeil(void)
         for (u32 i = 0; i < MAX_MON_ITEMS; i++)
         {
             if (GetSlotHeldItemEffect(gBattlerAttacker, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
-             && (gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer == 5 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+             && (gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                 gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer += 3;
         }
 

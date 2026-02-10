@@ -7940,7 +7940,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12_Floored(holdEffectParamAtk)));
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_WISE_GLASSES
@@ -7948,7 +7948,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12_Floored(holdEffectParamAtk)));
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_LUSTROUS_ORB
@@ -7956,7 +7956,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, holdEffectModifier);
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_ADAMANT_ORB
@@ -7964,7 +7964,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, holdEffectModifier);
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_GRISEOUS_ORB
@@ -7972,7 +7972,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, holdEffectModifier);
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_SOUL_DEW
@@ -7982,7 +7982,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, holdEffectModifier);
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_TYPE_POWER
@@ -7990,7 +7990,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, holdEffectModifier);
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_PLATE
@@ -7998,21 +7998,21 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             {
                 ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
                 modifier = uq4_12_multiply(modifier, holdEffectModifier);
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_PUNCHING_GLOVE
              && IsPunchingMove(move))
             {
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.1));
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
             else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_OGERPON_MASK
              && GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_OGERPON)
             {
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
-                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                if (!GetConfig(B_ALLOW_HELD_DUPES))
                     i = MAX_MON_ITEMS;
             }
         }
@@ -8845,7 +8845,7 @@ static inline uq4_12_t GetAttackerItemsModifier(u32 battlerAtk, uq4_12_t typeEff
     {
         item = GetSlotHeldItem(battlerAtk, i, TRUE);
 
-        if (GetItemHoldEffect(item) == HOLD_EFFECT_METRONOME && (firstMetronome || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if (GetItemHoldEffect(item) == HOLD_EFFECT_METRONOME && (firstMetronome || GetConfig(B_ALLOW_HELD_DUPES)))
         {
             firstMetronome = FALSE;
             metronomeBoostBase = PercentToUQ4_12(GetBattlerItemHoldEffectParam(battlerAtk, item));
@@ -8860,14 +8860,14 @@ static inline uq4_12_t GetAttackerItemsModifier(u32 battlerAtk, uq4_12_t typeEff
     {
         item = GetSlotHeldItem(battlerAtk, i, TRUE);
 
-        if (GetItemHoldEffect(item) == HOLD_EFFECT_EXPERT_BELT && (firstBelt || GetConfig(CONFIG_ALLOW_HELD_DUPES))
+        if (GetItemHoldEffect(item) == HOLD_EFFECT_EXPERT_BELT && (firstBelt || GetConfig(B_ALLOW_HELD_DUPES))
          && typeEffectivenessModifier >= UQ_4_12(2.0))
         {
             firstBelt = FALSE;
             percentBoost = uq4_12_multiply_half_down(percentBoost, UQ_4_12(1.2));
         }
 
-        if (GetItemHoldEffect(item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if (GetItemHoldEffect(item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(B_ALLOW_HELD_DUPES)))
         {
             firstOrb = FALSE;
             percentBoost = uq4_12_multiply_half_down(percentBoost, UQ_4_12(1.3));

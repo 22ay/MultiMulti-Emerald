@@ -4882,28 +4882,28 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     {
         itemEffect = GetSlotHeldItemEffect(battler, i, TRUE);
 
-        if ((itemEffect == HOLD_EFFECT_MACHO_BRACE) && (firstMach || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if ((itemEffect == HOLD_EFFECT_MACHO_BRACE) && (firstMach || GetConfig(B_ALLOW_HELD_DUPES)))
             {
                 firstMach = FALSE;
                 speed /= 2;
             }
-        if ((itemEffect == HOLD_EFFECT_POWER_ITEM) && (firstPower || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if ((itemEffect == HOLD_EFFECT_POWER_ITEM) && (firstPower || GetConfig(B_ALLOW_HELD_DUPES)))
             {
                 firstPower = FALSE;
                 speed /= 2;
             }
-        if ((itemEffect == HOLD_EFFECT_IRON_BALL) && (firstIron || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if ((itemEffect == HOLD_EFFECT_IRON_BALL) && (firstIron || GetConfig(B_ALLOW_HELD_DUPES)))
             {
                 firstIron = FALSE;
                 speed /= 2;
             }
-        if ((itemEffect == HOLD_EFFECT_CHOICE_SCARF) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX && (firstChoice || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if ((itemEffect == HOLD_EFFECT_CHOICE_SCARF) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX && (firstChoice || GetConfig(B_ALLOW_HELD_DUPES)))
             {
                 firstChoice = FALSE;
                 speed = (speed * 150) / 100;
             }
         if ((itemEffect == HOLD_EFFECT_QUICK_POWDER) && gBattleMons[battler].species == SPECIES_DITTO
-         && !(gBattleMons[battler].volatiles.transformed) && (firstQuick || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+         && !(gBattleMons[battler].volatiles.transformed) && (firstQuick || GetConfig(B_ALLOW_HELD_DUPES)))
             {
                 firstQuick = FALSE;
                 speed *= 2;
@@ -5192,7 +5192,7 @@ static void SetActionsAndBattlersTurnOrder(void)
                     {
                         item = GetSlotHeldItem(battler, i, TRUE);
 
-                        if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_QUICK_CLAW && (quickChance == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+                        if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_QUICK_CLAW && (quickChance == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
                             quickChance += (100 - quickChance) * GetItemHoldEffectParam(item) / 100;
                     }
 

@@ -658,7 +658,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
                 {
                     if (bindDamage == 0)
                         bindDamage += GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
-                    else if (GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    else if (GetConfig(B_ALLOW_HELD_DUPES))
                         bindDamage += GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 24 : 16);
                 }
             }

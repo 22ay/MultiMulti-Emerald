@@ -5288,7 +5288,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     for (j = 0; j < MAX_MON_ITEMS; j++)
     {
         if (GetItemHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + j)) == HOLD_EFFECT_MACHO_BRACE
-        && (braceCount == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        && (braceCount == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
         {
             braceCount++;
         }

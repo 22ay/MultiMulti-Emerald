@@ -223,7 +223,7 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef)
     {
         item = GetSlotHeldItem(battlerAtk, i, TRUE);
         
-        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_FLINCH && (holdEffectParam == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_FLINCH && (holdEffectParam == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
             holdEffectParam += (100 - holdEffectParam) * GetItemHoldEffectParam(item) / 100; // Multiplicitive effect (2 Kings Rocks = 19% flinch chance)
     }
 
@@ -284,7 +284,7 @@ static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk)
         {
             item = GetSlotHeldItem(battlerDef, i, TRUE);
 
-            if (GetBattlerItemHoldEffect(battlerDef, item) == HOLD_EFFECT_ROCKY_HELMET && (damage == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            if (GetBattlerItemHoldEffect(battlerDef, item) == HOLD_EFFECT_ROCKY_HELMET && (damage == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
             {
                 if (damage == 0)
                     PREPARE_ITEM_BUFFER(gBattleTextBuff1, item); // Set item in message to first activated item
@@ -583,7 +583,7 @@ static enum ItemEffect TryLifeOrbShellBell(u32 battlerAtk)
     {
         item = GetSlotHeldItem(battlerAtk, i, TRUE);
 
-        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_SHELL_BELL && (firstShell || GetConfig(CONFIG_ALLOW_HELD_DUPES))
+        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_SHELL_BELL && (firstShell || GetConfig(B_ALLOW_HELD_DUPES))
         && gBattleScripting.savedDmg > 0
         && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
         && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
@@ -600,7 +600,7 @@ static enum ItemEffect TryLifeOrbShellBell(u32 battlerAtk)
             hpValue += hpValue2;
         }
 
-        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(CONFIG_ALLOW_HELD_DUPES))
+        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(B_ALLOW_HELD_DUPES))
         && IsBattlerAlive(battlerAtk)
         && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
         && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
@@ -722,13 +722,13 @@ static enum ItemEffect TryLeftoversBlackSludge(u32 battler)
         if (gBattleMons[battler].hp < gBattleMons[battler].maxHP
         && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battler].volatiles.healBlock))
         {
-            if (itemEffect == HOLD_EFFECT_LEFTOVERS && (firstLeftover || GetConfig(CONFIG_ALLOW_HELD_DUPES))) 
+            if (itemEffect == HOLD_EFFECT_LEFTOVERS && (firstLeftover || GetConfig(B_ALLOW_HELD_DUPES))) 
             {
                 firstLeftover = FALSE;
                 hpValue += GetNonDynamaxMaxHP(battler) / 16;
                 RecordItemEffectBattle(battler, HOLD_EFFECT_LEFTOVERS);
             }
-            if (itemEffect == HOLD_EFFECT_BLACK_SLUDGE && (firstSludge || GetConfig(CONFIG_ALLOW_HELD_DUPES)) //Black Sludge heal
+            if (itemEffect == HOLD_EFFECT_BLACK_SLUDGE && (firstSludge || GetConfig(B_ALLOW_HELD_DUPES)) //Black Sludge heal
             && IS_BATTLER_OF_TYPE(battler, TYPE_POISON)) 
             {
                 firstSludge = FALSE;
@@ -737,7 +737,7 @@ static enum ItemEffect TryLeftoversBlackSludge(u32 battler)
             }
         }
 
-        if (itemEffect == HOLD_EFFECT_BLACK_SLUDGE && (firstSludge || GetConfig(CONFIG_ALLOW_HELD_DUPES)) //Black Sludge damage
+        if (itemEffect == HOLD_EFFECT_BLACK_SLUDGE && (firstSludge || GetConfig(B_ALLOW_HELD_DUPES)) //Black Sludge damage
         && !IS_BATTLER_OF_TYPE(battler, TYPE_POISON)
         && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
         && !IsAbilityAndRecord(battler, ABILITY_IMPASSABLE)
