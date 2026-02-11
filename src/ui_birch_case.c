@@ -136,17 +136,17 @@ struct MonChoiceData{ // This is the format used to define a mon, everything lef
 //
 static const struct MonChoiceData sStarterChoices[9] = 
 {
-    [BALL_TOP_FIRST]        = {SPECIES_MUDKIP, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_GROWL, MOVE_WATER_GUN, MOVE_NONE}, 0, 0, 0},
-    [BALL_TOP_SECOND]       = {SPECIES_TREECKO, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_POUND, MOVE_LEER, MOVE_LEAFAGE, MOVE_NONE}, 0, 0, 0},
-    [BALL_MIDDLE_FIRST]     = {SPECIES_TORCHIC, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_SCRATCH, MOVE_GROWL, MOVE_EMBER, MOVE_NONE}, 0, 0, 0},
+    [BALL_TOP_FIRST]        = {SPECIES_MUDKIP, 5, WATER_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_GROWL, MOVE_WATER_GUN, MOVE_NONE}, 0, 0, 0},
+    [BALL_TOP_SECOND]       = {SPECIES_TREECKO, 5, GRASS_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_POUND, MOVE_LEER, MOVE_LEAFAGE, MOVE_NONE}, 0, 0, 0},
+    [BALL_MIDDLE_FIRST]     = {SPECIES_TORCHIC, 5, FIRE_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_SCRATCH, MOVE_GROWL, MOVE_EMBER, MOVE_NONE}, 0, 0, 0},
 
-    [BALL_TOP_THIRD]        = {SPECIES_PICHU_SPIKY_EARED, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_FEMALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_THUNDER_SHOCK, MOVE_TAIL_WHIP, MOVE_PLAY_NICE, MOVE_NONE}, 0, 0, 0},
-    [BALL_TOP_FOURTH]       = {SPECIES_PORYGON, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_GENDERLESS, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_CONVERSION, MOVE_RECYCLE, MOVE_NONE}, 0, 0, 0},
-    [BALL_MIDDLE_THIRD]     = {SPECIES_VULPIX_ALOLA, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_FEMALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_POWDER_SNOW, MOVE_TAIL_WHIP, MOVE_DISABLE, MOVE_NONE}, 0, 0, 0},
+    [BALL_TOP_THIRD]        = {SPECIES_PICHU_SPIKY_EARED, 5, WATER_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_FEMALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_THUNDER_SHOCK, MOVE_TAIL_WHIP, MOVE_PLAY_NICE, MOVE_NONE}, 0, 0, 0},
+    [BALL_TOP_FOURTH]       = {SPECIES_PORYGON, 5, GRASS_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_GENDERLESS, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_CONVERSION, MOVE_RECYCLE, MOVE_NONE}, 0, 0, 0},
+    [BALL_MIDDLE_THIRD]     = {SPECIES_VULPIX_ALOLA, 5, FIRE_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_FEMALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_POWDER_SNOW, MOVE_TAIL_WHIP, MOVE_DISABLE, MOVE_NONE}, 0, 0, 0},
 
-    [BALL_MIDDLE_SECOND]    = {SPECIES_RIOLU, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_QUICK_ATTACK, MOVE_ENDURE, MOVE_FEINT, MOVE_NONE}, 0, 0, 0},
-    [BALL_BOTTOM_FIRST]     = {SPECIES_ROCKRUFF, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_LEER, MOVE_SAND_ATTACK, MOVE_NONE}, 0, 0, 0},
-    [BALL_BOTTOM_SECOND]    = {SPECIES_LEDYBA, 5, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_FEMALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_SUPERSONIC, MOVE_NONE, MOVE_NONE}, 0, 0, 0},
+    [BALL_MIDDLE_SECOND]    = {SPECIES_RIOLU, 5, WATER_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_QUICK_ATTACK, MOVE_ENDURE, MOVE_FEINT, MOVE_NONE}, 0, 0, 0},
+    [BALL_BOTTOM_FIRST]     = {SPECIES_ROCKRUFF, 5, GRASS_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_MALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_LEER, MOVE_SAND_ATTACK, MOVE_NONE}, 0, 0, 0},
+    [BALL_BOTTOM_SECOND]    = {SPECIES_LEDYBA, 5, FIRE_STARTER, ITEM_NONE, BALL_POKE, NUM_NATURES +1, 1, MON_FEMALE, {0, 0, 0, 0, 0, 0}, {31, 31, 31, 31, 31, 31}, {MOVE_TACKLE, MOVE_SUPERSONIC, MOVE_NONE, MOVE_NONE}, 0, 0, 0},
 };
 
 //==========EWRAM==========//
@@ -473,7 +473,7 @@ static void BirchCase_GiveMon() // Function that calls the GiveMon function pull
                 sStarterChoices[sBirchCaseDataPtr->handPosition].item, sStarterChoices[sBirchCaseDataPtr->handPosition].ball, \
                 sStarterChoices[sBirchCaseDataPtr->handPosition].nature, sStarterChoices[sBirchCaseDataPtr->handPosition].abilityNum, \
                 sStarterChoices[sBirchCaseDataPtr->handPosition].gender, evs, ivs, moves, \
-                sStarterChoices[sBirchCaseDataPtr->handPosition].gMaxFactor, sStarterChoices[sBirchCaseDataPtr->handPosition].teraType,\
+                sStarterChoices[sBirchCaseDataPtr->handPosition].gmaxFactor, sStarterChoices[sBirchCaseDataPtr->handPosition].teraType,\
                 sStarterChoices[sBirchCaseDataPtr->handPosition].isShinyExpansion);
 }
 
@@ -489,7 +489,7 @@ static void BirchCase_GiveStarter() // Function that calls the GiveMon function 
                 sStarterChoices[sBirchCaseDataPtr->handPosition].item, sStarterChoices[sBirchCaseDataPtr->handPosition].ball, \
                 sStarterChoices[sBirchCaseDataPtr->handPosition].nature, sStarterChoices[sBirchCaseDataPtr->handPosition].abilityNum, \
                 sStarterChoices[sBirchCaseDataPtr->handPosition].gender, evs, ivs, moves, \
-                sStarterChoices[sBirchCaseDataPtr->handPosition].gMaxFactor, sStarterChoices[sBirchCaseDataPtr->handPosition].teraType,\
+                sStarterChoices[sBirchCaseDataPtr->handPosition].gmaxFactor, sStarterChoices[sBirchCaseDataPtr->handPosition].teraType,\
                 sStarterChoices[sBirchCaseDataPtr->handPosition].isShinyExpansion);
     
     //store hand position can use that to get starter choice
