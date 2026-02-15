@@ -5858,13 +5858,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         if (!IsBattlerAlive(battler))
             return effect;
 
+        bool32 transformReturnCheck = FALSE;
+
         if (SearchTraits(battlerTraits, ABILITY_FORECAST))
         {
             u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
-                // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+                transformReturnCheck = TRUE;
             }
 
             if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
@@ -5885,9 +5886,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
-                DebugPrintf("Flower Gift prevents reversion when Eiscue Noice gets broken");
-                // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+                transformReturnCheck = TRUE;
             }
 
             if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
@@ -5908,8 +5907,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
-                // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+                transformReturnCheck = TRUE;
             }
 
             if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
@@ -5925,6 +5923,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 effect++;
             }
         }
+        // Disables weather return transformation at the end of the transform block to reduce conflicts
+        if (transformReturnCheck)
+        {
+            // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
+            gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+        }
+
        if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS)
         && !gDisableStructs[battler].weatherAbilityDone
         && (gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()
