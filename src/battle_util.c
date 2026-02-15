@@ -8134,24 +8134,21 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             switch (entry->attackStatMode)
             {
             case SIG_ATKSTAT_HIGHEST_OFFENSIVE:
-            {
-                u16 atk   = gBattleMons[battlerAtk].attack;
-                u16 spatk = gBattleMons[battlerAtk].spAttack;
-
-                if (atk > spatk)
                 {
-                    atkStat  = atk;
-                    atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
-                }
-                else
-                {
-                    atkStat  = spatk;
-                    atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
-                }
+                    if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
+                    {
+                        atkStat  = gBattleMons[battlerAtk].attack;
+                        atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+                    }
+                    else
+                    {
+                        atkStat  = gBattleMons[battlerAtk].spAttack;
+                        atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+                    }
 
-                usedOverride = TRUE;
-                break;
-            }
+                    usedOverride = TRUE;
+                    break;
+                }
 
             case SIG_ATKSTAT_DEFENSIVE:
                 if (IsBattleMovePhysical(move))

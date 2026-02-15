@@ -4337,16 +4337,23 @@ static void PrintMoveNameAndPP(u8 moveIndex)
 
         if (IsSignatureMove(summary->species, move))
             colorId = 1;
+        
+            u8 fontId = FONT_NORMAL;
+            int maxWidth = 72; // 9 tiles * 8 px
 
-        AddTextPrinterParameterized3(
-            moveNameWindowId,
-            FONT_NORMAL,
-            0,
-            moveIndex * 16 + 1,
-            sMoveNameTextColors[colorId],
-            0,
-            GetMoveName(move)
-        );
+            int textWidth = GetStringWidth(FONT_NORMAL, GetMoveName(move), 0);
+            if (textWidth > maxWidth)
+                fontId = FONT_SMALL; // or FONT_NARROW depending on your build
+
+            AddTextPrinterParameterized3(
+                moveNameWindowId,
+                fontId,
+                0,
+                moveIndex * 16 + 1,
+                sMoveNameTextColors[colorId],
+                0,
+                GetMoveName(move)
+            );
         ConvertIntToDecimalStringN(gStringVar1, summary->pp[moveIndex], STR_CONV_MODE_RIGHT_ALIGN, 2);
         ConvertIntToDecimalStringN(gStringVar2, pp, STR_CONV_MODE_RIGHT_ALIGN, 2);
         DynamicPlaceholderTextUtil_Reset();
