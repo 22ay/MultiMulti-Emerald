@@ -4330,137 +4330,110 @@ static void Cmd_setadditionaleffects(void)
     CMD_ARGS();
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
-    {   
-            const struct SignatureMoveEntry *entry =
-                GetSignatureMoveEntry(
-                    GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
-                    gCurrentMove
+    {
+        const struct SignatureMoveEntry *entry =
+            GetSignatureMoveEntry(
+                GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
+                gCurrentMove
+            );
+
+        //
+        // ============================================================
+        //  SIGNATURE EFFECTS (SAFE) — DO NOT RETURN EARLY
+        //  These can run BEFORE vanilla effects without breaking anything
+        // ============================================================
+        //
+
+        // --- Signature environment effects (SetMoveEffect only) ---
+        if (entry && entry->environmentEffect != SIG_ENV_NONE)
+        {
+            u8 moveEffect = 0;
+
+            switch (entry->environmentEffect)
+            {
+            case SIG_ENV_SUN:              moveEffect = MOVE_EFFECT_SUN; break;
+            case SIG_ENV_RAIN:             moveEffect = MOVE_EFFECT_RAIN; break;
+            case SIG_ENV_SAND:             moveEffect = MOVE_EFFECT_SANDSTORM; break;
+            case SIG_ENV_SNOW:             moveEffect = MOVE_EFFECT_HAIL; break;
+            case SIG_ENV_ELECTRIC_TERRAIN: moveEffect = MOVE_EFFECT_ELECTRIC_TERRAIN; break;
+            case SIG_ENV_GRASSY_TERRAIN:   moveEffect = MOVE_EFFECT_GRASSY_TERRAIN; break;
+            case SIG_ENV_PSYCHIC_TERRAIN:  moveEffect = MOVE_EFFECT_PSYCHIC_TERRAIN; break;
+            case SIG_ENV_MISTY_TERRAIN:    moveEffect = MOVE_EFFECT_MISTY_TERRAIN; break;
+            case SIG_ENV_GRAVITY:          moveEffect = MOVE_EFFECT_GRAVITY; break;
+
+            // Trick Room / Inverse Room moved BELOW vanilla effects
+            case SIG_ENV_TRICK_ROOM:
+            case SIG_ENV_INVERSE_ROOM:
+            case SIG_ENV_TAILWIND:
+                break;
+
+            default:
+                break;
+            }
+
+            if (moveEffect != 0)
+            {
+                enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
+
+                SetMoveEffect(
+                    gBattlerAttacker,
+                    gBattlerAttacker,
+                    moveEffect,
+                    cmd->nextInstr,
+                    flags
                 );
-
-            if (entry && entry->environmentEffect != SIG_ENV_NONE)
-            {
-                u8 moveEffect = 0;
-
-                switch (entry->environmentEffect)
-                {
-                case SIG_ENV_SUN:
-                    moveEffect = MOVE_EFFECT_SUN;
-                    break;
-                case SIG_ENV_RAIN:
-                    moveEffect = MOVE_EFFECT_RAIN;
-                    break;
-                case SIG_ENV_SAND:
-                    moveEffect = MOVE_EFFECT_SANDSTORM;
-                    break;
-                case SIG_ENV_SNOW:
-                    moveEffect = MOVE_EFFECT_HAIL; // engine handles snow vs hail
-                    break;
-                case SIG_ENV_ELECTRIC_TERRAIN:
-                    moveEffect = MOVE_EFFECT_ELECTRIC_TERRAIN;
-                    break;
-                case SIG_ENV_GRASSY_TERRAIN:
-                    moveEffect = MOVE_EFFECT_GRASSY_TERRAIN;
-                    break;
-                case SIG_ENV_PSYCHIC_TERRAIN:
-                    moveEffect = MOVE_EFFECT_PSYCHIC_TERRAIN;
-                    break;
-                case SIG_ENV_MISTY_TERRAIN:
-                    moveEffect = MOVE_EFFECT_MISTY_TERRAIN;
-                    break;
-                case SIG_ENV_GRAVITY:
-                    moveEffect = MOVE_EFFECT_GRAVITY;
-                    break;
-                case SIG_ENV_TRICK_ROOM:
-                    gFieldStatuses ^= STATUS_FIELD_TRICK_ROOM;
-                    gFieldTimers.trickRoomTimer = 5;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_EffectTrickRoom;
-                    break;
-                case SIG_ENV_INVERSE_ROOM:
-                    // No built-in MOVE_EFFECT, so we trigger it manually
-                    gFieldStatuses ^= STATUS_FIELD_INVERSE_ROOM; // toggle on/off
-                    gFieldTimers.inverseRoomTimer = 5;           // or 8 with an extender if you want
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_InverseRoomActivates;
-                    break;
-                default:
-                    break;
-                }
-
-                if (moveEffect != 0)
-                {
-                    enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
-
-                    SetMoveEffect(
-                        gBattlerAttacker,
-                        gBattlerAttacker,   // weather/terrain are “self” effects
-                        moveEffect,
-                        cmd->nextInstr,
-                        flags
-                    );
-
-                    // Let the battle script jump if SetMoveEffect changed gBattlescriptCurrInstr.
-                    // We *don’t* early-return here; additional effects can still run later.
-                }
             }
-        
+        }
 
-            if (entry && entry->statBoostMode != SIG_STATBOOST_NONE)
+        // --- Signature stat boosts (SetMoveEffect only) ---
+        if (entry && entry->statBoostMode != SIG_STATBOOST_NONE)
+        {
+            u8 moveEffect = 0;
+
+            switch (entry->statBoostMode)
             {
-                u8 moveEffect = 0;
-
-                switch (entry->statBoostMode)
-                {
-                case SIG_STATBOOST_ATK_PLUS_1:
-                    moveEffect = MOVE_EFFECT_ATK_PLUS_1;
-                    break;
-                case SIG_STATBOOST_DEF_PLUS_1:
-                    moveEffect = MOVE_EFFECT_DEF_PLUS_1;
-                    break;
-                case SIG_STATBOOST_SPD_PLUS_1:
-                    moveEffect = MOVE_EFFECT_SPD_PLUS_1;
-                    break;
-                case SIG_STATBOOST_SPATK_PLUS_1:
-                    moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1;
-                    break;
-                case SIG_STATBOOST_SPDEF_PLUS_1:
-                    moveEffect = MOVE_EFFECT_SP_DEF_PLUS_1;
-                    break;
-                default:
-                    break;
-                }
-
-                if (moveEffect != 0)
-                {
-                    enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
-
-                    SetMoveEffect(
-                        gBattlerAttacker,
-                        gBattlerAttacker,
-                        moveEffect,
-                        cmd->nextInstr,
-                        flags
-                    );
-                }
+            case SIG_STATBOOST_ATK_PLUS_1:    moveEffect = MOVE_EFFECT_ATK_PLUS_1; break;
+            case SIG_STATBOOST_DEF_PLUS_1:    moveEffect = MOVE_EFFECT_DEF_PLUS_1; break;
+            case SIG_STATBOOST_SPD_PLUS_1:    moveEffect = MOVE_EFFECT_SPD_PLUS_1; break;
+            case SIG_STATBOOST_SPATK_PLUS_1:  moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1; break;
+            case SIG_STATBOOST_SPDEF_PLUS_1:  moveEffect = MOVE_EFFECT_SP_DEF_PLUS_1; break;
+            default:
+                break;
             }
+
+            if (moveEffect != 0)
+            {
+                enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
+
+                SetMoveEffect(
+                    gBattlerAttacker,
+                    gBattlerAttacker,
+                    moveEffect,
+                    cmd->nextInstr,
+                    flags
+                );
+            }
+        }
 
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
         SetToxicChainPriority();
+
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
         {
             u32 percentChance;
-            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            const struct AdditionalEffect *additionalEffect =
+                GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
             const u8 *currentPtr = gBattlescriptCurrInstr;
 
-            // Various checks for if this move effect can be applied this turn
             if (CanApplyAdditionalEffect(additionalEffect))
             {
                 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, additionalEffect);
 
-                // Activate effect if it's primary (chance == 0) or if RNGesus says so
-                if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+                if ((percentChance == 0)
+                    || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
                 {
-                    gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
+                    gBattleCommunication[MULTISTRING_CHOOSER] =
+                        *((u8 *)&additionalEffect->multistring);
 
                     enum SetMoveEffectFlags flags = NO_FLAGS;
                     if (percentChance == 0) flags |= EFFECT_PRIMARY;
@@ -4476,11 +4449,9 @@ static void Cmd_setadditionaleffects(void)
                 }
             }
 
-            // Move script along if we haven't jumped elsewhere
             if (gBattlescriptCurrInstr == currentPtr)
                 gBattlescriptCurrInstr = cmd->nextInstr;
 
-            // Call setadditionaleffects again in the case of a move with multiple effects
             gBattleStruct->additionalEffectsCounter++;
             if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
                 gBattleScripting.moveEffect = MOVE_EFFECT_CONTINUE;
@@ -4491,6 +4462,67 @@ static void Cmd_setadditionaleffects(void)
         {
             gBattleScripting.moveEffect = 0;
             gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+
+        // --- Trick Room ---
+        if (entry && entry->environmentEffect == SIG_ENV_TRICK_ROOM)
+        {
+            gFieldStatuses ^= STATUS_FIELD_TRICK_ROOM;
+            gFieldTimers.trickRoomTimer = 5;
+
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_EffectTrickRoom;
+            return;
+        }
+
+        // --- Inverse Room ---
+        if (entry && entry->environmentEffect == SIG_ENV_INVERSE_ROOM)
+        {
+            gFieldStatuses ^= STATUS_FIELD_INVERSE_ROOM;
+            gFieldTimers.inverseRoomTimer = 5;
+
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_InverseRoomActivates;
+            return;
+        }
+
+        // --- Tailwind ---
+        if (entry && entry->environmentEffect == SIG_ENV_TAILWIND)
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_EffectTailwind;
+            return;
+        }
+
+        // --- restoreHP (Absorb) ---
+        if (entry && entry->restoreHP
+            && IsBattlerAlive(gBattlerAttacker)
+            && !gBattleMons[gBattlerAttacker].volatiles.healBlock
+            && gBattleStruct->moveDamage[gBattlerTarget] > 0)
+        {
+            s32 healAmount =
+                (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
+
+            healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
+
+            if (!BattlerHasTrait(gBattlerTarget, ABILITY_LIQUID_OOZE))
+            {
+                SetHealAmount(gBattlerAttacker, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
+
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_EffectAbsorb;
+                return;
+            }
+            else
+            {
+                SetPassiveDamageAmount(gBattlerAttacker, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
+                return;
+            }
         }
     }
     else

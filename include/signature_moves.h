@@ -32,6 +32,7 @@ enum SignatureEnvironmentEffect
     SIG_ENV_GRAVITY,
     SIG_ENV_TRICK_ROOM,
     SIG_ENV_INVERSE_ROOM,
+    SIG_ENV_TAILWIND
 };
 
 enum SignatureStatBoostMode
@@ -52,6 +53,7 @@ struct SignatureMoveEntry
     s8 priority;
     bool8 ignoreTypeImmunity; 
     bool8 alwaysCrit;
+    bool8 restoreHP;
     enum SignaturePowerFormula powerFormula; 
     enum SignatureAttackStatMode attackStatMode;
     enum SignatureEnvironmentEffect environmentEffect;
