@@ -4336,85 +4336,7 @@ static void Cmd_setadditionaleffects(void)
                 GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
                 gCurrentMove
             );
-
-        //
-        // ============================================================
-        //  SIGNATURE EFFECTS (SAFE) — DO NOT RETURN EARLY
-        //  These can run BEFORE vanilla effects without breaking anything
-        // ============================================================
-        //
-
-        // --- Signature environment effects (SetMoveEffect only) ---
-        if (entry && entry->environmentEffect != SIG_ENV_NONE)
-        {
-            u8 moveEffect = 0;
-
-            switch (entry->environmentEffect)
-            {
-            case SIG_ENV_SUN:              moveEffect = MOVE_EFFECT_SUN; break;
-            case SIG_ENV_RAIN:             moveEffect = MOVE_EFFECT_RAIN; break;
-            case SIG_ENV_SAND:             moveEffect = MOVE_EFFECT_SANDSTORM; break;
-            case SIG_ENV_SNOW:             moveEffect = MOVE_EFFECT_HAIL; break;
-            case SIG_ENV_ELECTRIC_TERRAIN: moveEffect = MOVE_EFFECT_ELECTRIC_TERRAIN; break;
-            case SIG_ENV_GRASSY_TERRAIN:   moveEffect = MOVE_EFFECT_GRASSY_TERRAIN; break;
-            case SIG_ENV_PSYCHIC_TERRAIN:  moveEffect = MOVE_EFFECT_PSYCHIC_TERRAIN; break;
-            case SIG_ENV_MISTY_TERRAIN:    moveEffect = MOVE_EFFECT_MISTY_TERRAIN; break;
-            case SIG_ENV_GRAVITY:          moveEffect = MOVE_EFFECT_GRAVITY; break;
-
-            // Trick Room / Inverse Room moved BELOW vanilla effects
-            case SIG_ENV_TRICK_ROOM:
-            case SIG_ENV_INVERSE_ROOM:
-            case SIG_ENV_TAILWIND:
-                break;
-
-            default:
-                break;
-            }
-
-            if (moveEffect != 0)
-            {
-                enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
-
-                SetMoveEffect(
-                    gBattlerAttacker,
-                    gBattlerAttacker,
-                    moveEffect,
-                    cmd->nextInstr,
-                    flags
-                );
-            }
-        }
-
-        // --- Signature stat boosts (SetMoveEffect only) ---
-        if (entry && entry->statBoostMode != SIG_STATBOOST_NONE)
-        {
-            u8 moveEffect = 0;
-
-            switch (entry->statBoostMode)
-            {
-            case SIG_STATBOOST_ATK_PLUS_1:    moveEffect = MOVE_EFFECT_ATK_PLUS_1; break;
-            case SIG_STATBOOST_DEF_PLUS_1:    moveEffect = MOVE_EFFECT_DEF_PLUS_1; break;
-            case SIG_STATBOOST_SPD_PLUS_1:    moveEffect = MOVE_EFFECT_SPD_PLUS_1; break;
-            case SIG_STATBOOST_SPATK_PLUS_1:  moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1; break;
-            case SIG_STATBOOST_SPDEF_PLUS_1:  moveEffect = MOVE_EFFECT_SP_DEF_PLUS_1; break;
-            default:
-                break;
-            }
-
-            if (moveEffect != 0)
-            {
-                enum SetMoveEffectFlags flags = EFFECT_PRIMARY | EFFECT_CERTAIN;
-
-                SetMoveEffect(
-                    gBattlerAttacker,
-                    gBattlerAttacker,
-                    moveEffect,
-                    cmd->nextInstr,
-                    flags
-                );
-            }
-        }
-
+            //vanilla
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
         SetToxicChainPriority();
 
@@ -4463,38 +4385,165 @@ static void Cmd_setadditionaleffects(void)
             gBattleScripting.moveEffect = 0;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
-
-        // --- Trick Room ---
-        if (entry && entry->environmentEffect == SIG_ENV_TRICK_ROOM)
+        //signature
+        if (entry && entry->environmentEffect != SIG_ENV_NONE)
         {
-            gFieldStatuses ^= STATUS_FIELD_TRICK_ROOM;
-            gFieldTimers.trickRoomTimer = 5;
+            switch (entry->environmentEffect)
+            {
+            case SIG_ENV_SUN:
+                if (!(gBattleWeather & B_WEATHER_SUN))
+                {
+                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SUN, FALSE);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureSun;
+                    return;
+                }
+                break;
 
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_EffectTrickRoom;
-            return;
+            case SIG_ENV_RAIN:
+                if (!(gBattleWeather & B_WEATHER_RAIN))
+                {
+                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_RAIN, FALSE);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureRain;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_SAND:
+                if (!(gBattleWeather & B_WEATHER_SANDSTORM))
+                {
+                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SANDSTORM, FALSE);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureSandstorm;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_SNOW:
+                if (!(gBattleWeather & B_WEATHER_SNOW))
+                {
+                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SNOW, FALSE);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureSnow;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_MISTY_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+                {
+                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_MISTY_TERRAIN);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureMistyTerrain;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_GRASSY_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
+                {
+                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_GRASSY_TERRAIN);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureGrassyTerrain;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_ELECTRIC_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
+                {
+                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_ELECTRIC_TERRAIN);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureElectricTerrain;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_PSYCHIC_TERRAIN:
+                if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+                {
+                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_PSYCHIC_TERRAIN);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignaturePsychicTerrain;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_GRAVITY:
+                if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
+                {
+                    gFieldStatuses |= STATUS_FIELD_GRAVITY;
+                    gFieldTimers.gravityTimer = 5;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureGravity;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_TRICK_ROOM:
+                if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM))
+                {
+                    gFieldStatuses |= STATUS_FIELD_TRICK_ROOM;
+                    gFieldTimers.trickRoomTimer = 5;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureTrickRoom;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_INVERSE_ROOM:
+                if (!(gFieldStatuses & STATUS_FIELD_INVERSE_ROOM))
+                {
+                    gFieldStatuses |= STATUS_FIELD_INVERSE_ROOM;
+                    gFieldTimers.inverseRoomTimer = 5;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureInverseRoom;
+                    return;
+                }
+                break;
+
+            case SIG_ENV_TAILWIND:
+                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_TAILWIND))
+                {
+                    gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_TAILWIND;
+                    gSideTimers[GetBattlerSide(gBattlerAttacker)].tailwindTimer = 4;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureTailwind;
+                    return;
+                }
+                break;
+
+            default:
+                break;
+            }
         }
 
-        // --- Inverse Room ---
-        if (entry && entry->environmentEffect == SIG_ENV_INVERSE_ROOM)
+        if (entry && entry->statBoostMode != SIG_STATBOOST_NONE)
         {
-            gFieldStatuses ^= STATUS_FIELD_INVERSE_ROOM;
-            gFieldTimers.inverseRoomTimer = 5;
+            u8 statId = 0;
 
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_InverseRoomActivates;
-            return;
+            switch (entry->statBoostMode)
+            {
+            case SIG_STATBOOST_ATK_PLUS_1:   statId = STAT_ATK; break;
+            case SIG_STATBOOST_DEF_PLUS_1:   statId = STAT_DEF; break;
+            case SIG_STATBOOST_SPD_PLUS_1:   statId = STAT_SPEED; break;
+            case SIG_STATBOOST_SPATK_PLUS_1: statId = STAT_SPATK; break;
+            case SIG_STATBOOST_SPDEF_PLUS_1: statId = STAT_SPDEF; break;
+            default: break;
+            }
+
+            if (statId != 0)
+            {
+                gBattleScripting.statChanger = SET_STAT_BUFF_VALUE(1) | statId;
+                gBattleScripting.battler = gBattlerAttacker;
+
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureStatUp;
+                return;
+            }
         }
-
-        // --- Tailwind ---
-        if (entry && entry->environmentEffect == SIG_ENV_TAILWIND)
-        {
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_EffectTailwind;
-            return;
-        }
-
-        // --- restoreHP (Absorb) ---
+        
         if (entry && entry->restoreHP
             && IsBattlerAlive(gBattlerAttacker)
             && !gBattleMons[gBattlerAttacker].volatiles.healBlock
@@ -4505,30 +4554,23 @@ static void Cmd_setadditionaleffects(void)
 
             healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
 
+            BattleScriptPush(cmd->nextInstr);
+
             if (!BattlerHasTrait(gBattlerTarget, ABILITY_LIQUID_OOZE))
             {
                 SetHealAmount(gBattlerAttacker, healAmount);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
-
-                BattleScriptPush(cmd->nextInstr);
                 gBattlescriptCurrInstr = BattleScript_EffectAbsorb;
-                return;
             }
             else
             {
                 SetPassiveDamageAmount(gBattlerAttacker, healAmount);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
-
-                BattleScriptPush(cmd->nextInstr);
                 gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
-                return;
             }
+
+            return;
         }
-    }
-    else
-    {
-        gBattleScripting.moveEffect = 0;
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

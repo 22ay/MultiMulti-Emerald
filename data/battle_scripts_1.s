@@ -1979,6 +1979,38 @@ BattleScript_EffectPsychicTerrain::
 	call BattleScript_ActivateTerrainEffects
 	goto BattleScript_MoveEnd
 
+BattleScript_SignatureMistyTerrain::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_TERRAINBECOMESMISTY
+    waitmessage B_WAIT_TIME_LONG
+    playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
+    call BattleScript_ActivateTerrainEffects
+    return
+
+BattleScript_SignatureGrassyTerrain::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_TERRAINBECOMESGRASSY
+    waitmessage B_WAIT_TIME_LONG
+    playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
+    call BattleScript_ActivateTerrainEffects
+    return
+
+BattleScript_SignatureElectricTerrain::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_TERRAINBECOMESELECTRIC
+    waitmessage B_WAIT_TIME_LONG
+    playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
+    call BattleScript_ActivateTerrainEffects
+    return
+
+BattleScript_SignaturePsychicTerrain::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_TERRAINBECOMESPSYCHIC
+    waitmessage B_WAIT_TIME_LONG
+    playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
+    call BattleScript_ActivateTerrainEffects
+    return
+
 BattleScript_EffectTopsyTurvy::
 	attackcanceler
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
@@ -2429,6 +2461,34 @@ BattleScript_AbilityGravity_LoopEnd:
     restoretarget
     end3
 
+BattleScript_SignatureGravity::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_GRAVITYINTENSIFIED
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_MAGIC_ROOM
+    return
+
+BattleScript_SignatureTrickRoom::
+    pause B_WAIT_TIME_SHORT
+    printfromtable gRoomsStringIds
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_TRICK_ROOM
+    return
+
+BattleScript_SignatureInverseRoom::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_INVERSEROOMSTART
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_WONDER_ROOM
+    return
+
+BattleScript_SignatureTailwind::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_TAILWINDBLEW
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_TAILWIND
+    return
+
 BattleScript_InverseRoomActivates::
     attackcanceler
     printstring STRINGID_INVERSEROOMSTART
@@ -2730,6 +2790,21 @@ BattleScript_StatUp::
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
+
+BattleScript_SignatureStatUp::
+    statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_SignatureStatUpEnd
+    jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_SignatureStatUpDoAnim
+    printfromtable gStatUpStringIds
+    waitmessage B_WAIT_TIME_LONG
+    return
+
+BattleScript_SignatureStatUpDoAnim::
+    statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_SignatureStatUpEnd
+    printfromtable gStatUpStringIds
+    waitmessage B_WAIT_TIME_LONG
+    playanimation BS_ATTACKER, B_ANIM_STATS_CHANGE
+BattleScript_SignatureStatUpEnd::
+    return
 
 BattleScript_EffectAttackDown::
 	setstatchanger STAT_ATK, 1, TRUE
@@ -6581,6 +6656,13 @@ BattleScript_DrizzleActivates::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
+BattleScript_SignatureRain::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_STARTEDTORAIN
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_RAIN_CONTINUES
+    return
+
 BattleScript_AbilityRaisesDefenderStat::
 	pause B_WAIT_TIME_SHORT
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_AbilityCantRaiseDefenderStat
@@ -6800,6 +6882,13 @@ BattleScript_SandstreamActivates::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
+BattleScript_SignatureSandstorm::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_SANDSTORMBREWED
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_SANDSTORM_CONTINUES
+    return
+
 BattleScript_SandSpitActivates::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
@@ -6950,6 +7039,13 @@ BattleScript_DroughtActivates::
 	playanimation BS_BATTLER_0, B_ANIM_SUN_CONTINUES
 	call BattleScript_ActivateWeatherAbilities
 	end3
+
+BattleScript_SignatureSun::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_SUNLIGHTGOTBRIGHT
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_SUN_CONTINUES
+    return
 
 BattleScript_DesolateLandActivates::
 	pause B_WAIT_TIME_SHORT
@@ -7124,6 +7220,13 @@ BattleScript_SnowWarningActivatesSnow::
 	playanimation BS_BATTLER_0, B_ANIM_SNOW_CONTINUES
 	call BattleScript_ActivateWeatherAbilities
 	end3
+
+BattleScript_SignatureSnow::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_STARTEDSNOW
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_SNOW_CONTINUES
+    return
 
 BattleScript_ActivateTerrainEffects:
 	saveattacker
