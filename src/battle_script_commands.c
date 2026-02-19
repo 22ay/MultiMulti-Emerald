@@ -4385,6 +4385,21 @@ static void Cmd_setadditionaleffects(void)
             gBattleScripting.moveEffect = 0;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
+
+        // Skip signature effects if the target fainted AND the battle is ending
+        if (gBattleMons[gBattlerTarget].hp == 0)
+        {
+            // Wild battle: last mon → battle ends
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+                return;
+
+            // Trainer battle: check if the opposing side has any mons left
+            if (GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT
+                && NoAliveMonsForBattlerSide(gBattlerTarget))
+            {
+                return;
+            }
+        }
         //signature
         if (entry && entry->environmentEffect != SIG_ENV_NONE)
         {
