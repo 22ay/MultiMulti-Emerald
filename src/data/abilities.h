@@ -2441,4 +2441,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_WIND_STORM] =
+    {
+        .name = _("Wind Storm"),
+        .description = COMPOUND_STRING("Summons Tailwind."),
+        .aiRating = 6,
+    },
+
 };

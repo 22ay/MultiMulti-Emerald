@@ -2315,7 +2315,8 @@ BattleScript_EffectTrickRoom::
 BattleScript_AbilityTrickRoom::
     call BattleScript_AbilityPopUp
     printfromtable gRoomsStringIds
-    waitmessage B_WAIT_TIME_LONG
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_TRICK_ROOM
     end3
 
 BattleScript_TryRoomServiceLoop:
@@ -2437,7 +2438,8 @@ BattleScript_GravityLoopEnd:
 BattleScript_AbilityGravity::
     call BattleScript_AbilityPopUp
     printstring STRINGID_GRAVITYINTENSIFIED
-    waitmessage B_WAIT_TIME_LONG
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_GRAVITY
 
     @ Drop airborne Pokémon
     savetarget
@@ -2465,7 +2467,7 @@ BattleScript_SignatureGravity::
     pause B_WAIT_TIME_SHORT
     printstring STRINGID_GRAVITYINTENSIFIED
     waitstate
-    playanimation BS_ATTACKER, B_ANIM_MAGIC_ROOM
+    playanimation BS_ATTACKER, B_ANIM_GRAVITY
     return
 
 BattleScript_SignatureTrickRoom::
@@ -2479,7 +2481,7 @@ BattleScript_SignatureInverseRoom::
     pause B_WAIT_TIME_SHORT
     printstring STRINGID_INVERSEROOMSTART
     waitstate
-    playanimation BS_ATTACKER, B_ANIM_WONDER_ROOM
+    playanimation BS_ATTACKER, B_ANIM_MAGIC_ROOM
     return
 
 BattleScript_SignatureTailwind::
@@ -2498,7 +2500,8 @@ BattleScript_InverseRoomActivates::
 BattleScript_AbilityInverseRoom::
     call BattleScript_AbilityPopUp
     printstring STRINGID_INVERSEROOMSTART
-    waitmessage B_WAIT_TIME_LONG
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_MAGIC_ROOM
     end3
 
 BattleScript_EffectRoost::
