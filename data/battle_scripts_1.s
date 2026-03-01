@@ -2396,6 +2396,13 @@ BattleScript_TryTailwindAbilitiesLoop_WindPower:
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_TryTailwindAbilitiesLoop_Increment
 
+BattleScript_AbilityTailwind::
+	call BattleScript_AbilityPopUp
+    printstring STRINGID_TAILWINDBLEW
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_TAILWIND
+    end3
+
 BattleScript_EffectMiracleEye::
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE

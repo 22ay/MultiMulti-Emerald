@@ -785,6 +785,7 @@ extern const u8 BattleScript_SignatureGravity[];
 extern const u8 BattleScript_SignatureTrickRoom[];
 extern const u8 BattleScript_SignatureInverseRoom[];
 extern const u8 BattleScript_SignatureTailwind[];
+extern const u8 BattleScript_AbilityTailwind[];
 extern const u8 BattleScript_EffectMiracleEye[];
 extern const u8 BattleScript_EffectTailwind[];
 extern const u8 BattleScript_EffectEmbargo[];

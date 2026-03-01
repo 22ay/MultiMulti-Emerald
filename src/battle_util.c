@@ -4507,6 +4507,15 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 effect += CommonSwitchInAbilities(battler, ABILITY_GRAVITATIONAL, traitCheck, BattleScript_AbilityGravity);
             }
         }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_WIND_STORM)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_TAILWIND))
+            {
+                gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_TAILWIND;
+                gSideTimers[GetBattlerSide(gBattlerAttacker)].tailwindTimer = 4;
+                effect += CommonSwitchInAbilities(battler, ABILITY_WIND_STORM, traitCheck, BattleScript_AbilityTailwind);
+            }
+        }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CLOUD_NINE)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
             effect += CommonSwitchInAbilities(battler, ABILITY_CLOUD_NINE, traitCheck, BattleScript_AnnounceAirLockCloudNine);
 
