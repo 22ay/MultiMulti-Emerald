@@ -18,31 +18,27 @@ enum SignatureAttackStatMode
     SIG_ATKSTAT_SPEED,               // Use Speed
 };
 
-enum SignatureEnvironmentEffect
+enum SignatureEffect
 {
-    SIG_ENV_NONE,
-    SIG_ENV_SUN,
-    SIG_ENV_RAIN,
-    SIG_ENV_SAND,
-    SIG_ENV_SNOW,
-    SIG_ENV_MISTY_TERRAIN,
-    SIG_ENV_GRASSY_TERRAIN,
-    SIG_ENV_ELECTRIC_TERRAIN,
-    SIG_ENV_PSYCHIC_TERRAIN,
-    SIG_ENV_GRAVITY,
-    SIG_ENV_TRICK_ROOM,
-    SIG_ENV_INVERSE_ROOM,
-    SIG_ENV_TAILWIND,
-};
-
-enum SignatureStatBoostMode
-{
-    SIG_STATBOOST_NONE,
-    SIG_STATBOOST_ATK_PLUS_1,
-    SIG_STATBOOST_DEF_PLUS_1,
-    SIG_STATBOOST_SPD_PLUS_1,
-    SIG_STATBOOST_SPATK_PLUS_1,
-    SIG_STATBOOST_SPDEF_PLUS_1,
+    SIG_EFFECT_NONE = 0,
+    SIG_EFFECT_SUN,
+    SIG_EFFECT_RAIN,
+    SIG_EFFECT_SAND,
+    SIG_EFFECT_SNOW,
+    SIG_EFFECT_MISTY_TERRAIN,
+    SIG_EFFECT_GRASSY_TERRAIN,
+    SIG_EFFECT_ELECTRIC_TERRAIN,
+    SIG_EFFECT_PSYCHIC_TERRAIN,
+    SIG_EFFECT_GRAVITY,
+    SIG_EFFECT_TRICK_ROOM,
+    SIG_EFFECT_INVERSE_ROOM,
+    SIG_EFFECT_TAILWIND,
+    SIG_EFFECT_ATK_PLUS_1,
+    SIG_EFFECT_DEF_PLUS_1,
+    SIG_EFFECT_SPD_PLUS_1,
+    SIG_EFFECT_SPATK_PLUS_1,
+    SIG_EFFECT_SPDEF_PLUS_1,
+    SIG_EFFECT_RESTORE_HP,
 };
 
 struct SignatureMoveEntry
@@ -51,13 +47,11 @@ struct SignatureMoveEntry
     u16 move;
     u16 basePower;
     s8 priority;
-    bool8 ignoreTypeImmunity; 
+    bool8 ignoreTypeImmunity;
     bool8 alwaysCrit;
-    bool8 restoreHP;
-    enum SignaturePowerFormula powerFormula; 
+    enum SignaturePowerFormula powerFormula;
     enum SignatureAttackStatMode attackStatMode;
-    enum SignatureEnvironmentEffect environmentEffect;
-    enum SignatureStatBoostMode statBoostMode;
+    enum SignatureEffect addedEffect;
 };
 
 // Existing public APIs
