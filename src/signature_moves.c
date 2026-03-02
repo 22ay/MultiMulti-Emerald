@@ -25,30 +25,113 @@ u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
         {
             switch (entry->powerFormula)
             {
+            // ----------------------------------------------------
+            // Reversal / Flail (your existing style)
+            // ----------------------------------------------------
             case SIG_PWRFORMULA_REVERSAL:
             {
                 u32 hpPercent = (hp * 100) / maxHp;
 
-                if (hpPercent <= 4)
-                    return 200;
-                else if (hpPercent <= 10)
-                    return 150;
-                else if (hpPercent <= 20)
-                    return 100;
-                else if (hpPercent <= 35)
-                    return 80;
-                else if (hpPercent <= 70)
-                    return 40;
-                else
-                    return 20;
+                if (hpPercent <= 4)  return 200;
+                if (hpPercent <= 10) return 150;
+                if (hpPercent <= 20) return 100;
+                if (hpPercent <= 35) return 80;
+                if (hpPercent <= 70) return 40;
+                return 20;
             }
 
+            // ----------------------------------------------------
+            // Water Spout / Eruption
+            // ----------------------------------------------------
             case SIG_PWRFORMULA_WATERSPOUT:
             {
                 u32 scaled = (150 * hp) / maxHp;
                 if (scaled < 1)
                     scaled = 1;
                 return scaled;
+            }
+
+            // ----------------------------------------------------
+            // Electro Ball (vanilla thresholds)
+            // ----------------------------------------------------
+            case SIG_PWRFORMULA_ELECTRO_BALL:
+            {
+                u32 atkSpeed = GetBattlerTotalSpeedStat(attacker);
+                u32 defSpeed = GetBattlerTotalSpeedStat(gBattlerTarget);
+
+                if (defSpeed == 0)
+                    return 150;
+
+                u32 ratio = (atkSpeed * 100) / defSpeed;
+
+                if (ratio >= 400) return 150;
+                if (ratio >= 300) return 120;
+                if (ratio >= 200) return 80;
+                if (ratio >= 150) return 60;
+                return 40;
+            }
+
+            // ----------------------------------------------------
+            // Gyro Ball (vanilla formula)
+            // ----------------------------------------------------
+            case SIG_PWRFORMULA_GYRO_BALL:
+            {
+                u32 atkSpeed = GetBattlerTotalSpeedStat(attacker);
+                u32 defSpeed = GetBattlerTotalSpeedStat(gBattlerTarget);
+
+                if (atkSpeed == 0)
+                    return 1;
+
+                u32 bp = (25 * defSpeed) / atkSpeed + 1;
+                if (bp > 150)
+                    bp = 150;
+
+                return bp;
+            }
+
+            // ----------------------------------------------------
+            // Heavy Slam (vanilla thresholds)
+            // ----------------------------------------------------
+            case SIG_PWRFORMULA_HEAVY_SLAM:
+            {
+                u32 atkW = GetBattlerWeight(attacker);
+                u32 defW = GetBattlerWeight(gBattlerTarget);
+
+                if (atkW > defW * 5) return 120;
+                if (atkW > defW * 4) return 100;
+                if (atkW > defW * 3) return 80;
+                if (atkW > defW * 2) return 60;
+                return 40;
+            }
+
+            // ----------------------------------------------------
+            // Low Kick (vanilla thresholds)
+            // ----------------------------------------------------
+            case SIG_PWRFORMULA_LOW_KICK:
+            {
+                u32 w = GetBattlerWeight(gBattlerTarget);
+
+                if (w >= 2000) return 120;
+                if (w >= 1000) return 100;
+                if (w >= 500)  return 80;
+                if (w >= 250)  return 60;
+                if (w >= 100)  return 40;
+                return 20;
+            }
+
+            // ----------------------------------------------------
+            // Bolt Beak / Fishious Rend (double if user moves first)
+            // ----------------------------------------------------
+            case SIG_PWRFORMULA_BOLT_BEAK:
+            {
+                u16 bp = entry->basePower ? entry->basePower : basePower;
+
+                if (!HasBattlerActedThisTurn(gBattlerTarget)
+                 || gDisableStructs[gBattlerTarget].isFirstTurn == 2)
+                {
+                    return bp * 2;
+                }
+                return bp;
             }
 
             case SIG_PWRFORMULA_NORMAL:

@@ -5,9 +5,14 @@
 
 enum SignaturePowerFormula
 {
-    SIG_PWRFORMULA_NORMAL,     // No override
-    SIG_PWRFORMULA_REVERSAL,   // Reversal / Flail formula
-    SIG_PWRFORMULA_WATERSPOUT, // Water Spout / Eruption formula
+    SIG_PWRFORMULA_NORMAL,
+    SIG_PWRFORMULA_REVERSAL,
+    SIG_PWRFORMULA_WATERSPOUT,
+    SIG_PWRFORMULA_ELECTRO_BALL,
+    SIG_PWRFORMULA_GYRO_BALL,
+    SIG_PWRFORMULA_HEAVY_SLAM,
+    SIG_PWRFORMULA_LOW_KICK,
+    SIG_PWRFORMULA_BOLT_BEAK,
 };
 
 enum SignatureAttackStatMode
