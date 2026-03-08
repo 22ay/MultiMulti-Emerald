@@ -2462,4 +2462,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 8,
     },
 
+    [ABILITY_ONSLAUGHT] =
+    {
+        .name = _("Onslaught"),
+        .description = COMPOUND_STRING("Moves hit twice"),
+        .aiRating = 10,
+    },
+
 };
