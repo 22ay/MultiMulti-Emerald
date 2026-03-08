@@ -2448,4 +2448,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_MYSTIC_POWER] =
+    {
+        .name = _("Mystic Power"),
+        .description = COMPOUND_STRING("Raises Special Attack."),
+        .aiRating = 10,
+    },
+
+    [ABILITY_VERSATILE] =
+    {
+        .name = _("Versatile"),
+        .description = COMPOUND_STRING("Grants STAB on moves"),
+        .aiRating = 8,
+    },
+
 };

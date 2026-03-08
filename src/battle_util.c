@@ -3661,6 +3661,16 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, enum Functi
             battleScriptBlocksMove = BattleScript_GoodAsGoldActivates;
         }
     }
+    else if (SearchTraits(battlerTraits, ABILITY_INNER_FOCUS)
+     && IsBattleMoveStatus(move))
+    {
+        if (!(GetBattlerMoveTargetType(battlerAtk, move) & (MOVE_TARGET_OPPONENTS_FIELD | MOVE_TARGET_ALL_BATTLERS)))
+        {
+            abilityDef = ABILITY_INNER_FOCUS;
+            PushTraitStack(battlerDef, ABILITY_INNER_FOCUS);
+            battleScriptBlocksMove = BattleScript_GoodAsGoldActivates;
+        }
+    }
     if (battleScriptBlocksMove == NULL)
     {
         s32 atkPriority = 0;
@@ -8230,6 +8240,9 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_PURE_POWER)
      && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
+    if (SearchTraits(battlerTraits, ABILITY_MYSTIC_POWER)
+     && IsBattleMoveSpecial(move))
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
     if (SearchTraits(battlerTraits, ABILITY_SLOW_START)
      && gDisableStructs[battlerAtk].slowStartTimer > 0)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
@@ -8625,7 +8638,7 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
         return UQ_4_12(1.0);
     else if (gBattleStruct->pledgeMove && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(ctx->battlerAtk), ctx->moveType))
         return (BattlerHasTrait(ctx->battlerAtk, ABILITY_ADAPTABILITY)) ? UQ_4_12(2.0) : UQ_4_12(1.5);
-    else if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) || ctx->move == MOVE_STRUGGLE || ctx->move == MOVE_NONE)
+    else if ((!IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) && !BattlerHasTrait(ctx->battlerAtk, ABILITY_VERSATILE)) || ctx->move == MOVE_STRUGGLE || ctx->move == MOVE_NONE)
         return UQ_4_12(1.0);
     return (BattlerHasTrait(ctx->battlerAtk, ABILITY_ADAPTABILITY)) ? UQ_4_12(2.0) : UQ_4_12(1.5);
 }
