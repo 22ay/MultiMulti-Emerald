@@ -31947,6 +31947,9 @@ gBattleAnimGeneral_SaltCureDamage::
 	waitforvisualfinish
 	end
 
+gBattleAnimGeneral_NewRainbow::
+	goto SetRainbowBackground
+
 gBattleAnimGeneral_Rainbow::
 	call RainDrops
 	delay 30

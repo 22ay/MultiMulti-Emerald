@@ -4531,6 +4531,42 @@ static void Cmd_setadditionaleffects(void)
                 }
                 break;
 
+            case SIG_EFFECT_RAINBOW:
+                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_RAINBOW))
+                {
+                    u8 side = GetBattlerSide(gBattlerAttacker);
+                    gSideStatuses[side] |= SIDE_STATUS_RAINBOW;
+                    gSideTimers[side].rainbowTimer = 4;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureRainbow;
+                    return;
+                }
+                break;
+
+            case SIG_EFFECT_SEA_OF_FIRE:
+                if (!(gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SEA_OF_FIRE))
+                {
+                    u8 side = GetBattlerSide(gBattlerTarget);
+                    gSideStatuses[side] |= SIDE_STATUS_SEA_OF_FIRE;
+                    gSideTimers[side].seaOfFireTimer = 4;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureSeaOfFire;
+                    return;
+                }
+                break;
+
+            case SIG_EFFECT_SWAMP:
+                if (!(gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SWAMP))
+                {
+                    u8 side = GetBattlerSide(gBattlerTarget);
+                    gSideStatuses[side] |= SIDE_STATUS_SWAMP;
+                    gSideTimers[side].swampTimer = 4;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureSwamp;
+                    return;
+                }
+                break;
+
             case SIG_EFFECT_ATK_PLUS_1:
             case SIG_EFFECT_DEF_PLUS_1:
             case SIG_EFFECT_SPD_PLUS_1:

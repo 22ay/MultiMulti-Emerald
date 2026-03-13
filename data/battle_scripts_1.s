@@ -361,6 +361,27 @@ BattleScript_EffectCombinedPledge_Grass::
 	waitanimation
 	goto BattleScript_MoveEnd
 
+BattleScript_SignatureRainbow::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_ARAINBOWAPPEAREDONSIDE
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_NEWRAINBOW
+    return
+
+BattleScript_SignatureSeaOfFire::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_SEAOFFIREENVELOPEDSIDE
+    waitstate
+    playanimation BS_TARGET, B_ANIM_SEA_OF_FIRE
+    return
+
+BattleScript_SignatureSwamp::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_SWAMPENVELOPEDSIDE
+    waitstate
+    playanimation BS_TARGET, B_ANIM_SWAMP
+    return
+
 BattleScript_TheSwampDisappeared::
 	printstring STRINGID_THESWAMPDISAPPEARED
 	waitmessage B_WAIT_TIME_LONG
