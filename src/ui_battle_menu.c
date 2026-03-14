@@ -2613,9 +2613,9 @@ const u8 sText_Title_Field_Weather_Description_Primal_Rain[]  = _("Boosts the po
 const u8 sText_Title_Field_Weather_Description_Primal_Sun[]  = _("Boosts the power of Fire-type\n"
                                                                  "moves and protects Pokémon from\n"
                                                                  "Water-type moves.");
-const u8 sText_Title_Field_Weather_Description_EerieFog[]    = _("Makes Ghost-type Pokémon harder\n"
-                                                                 "to hit and reduces stat gains for\n"
-                                                                 "non-Ghost and Psychic types.");
+const u8 sText_Title_Field_Weather_Description_EerieFog[]    = _("Boosts the power of Ghost, Dark and\n"
+                                                                 "Bug-type moves. Reduces accuracy\n"
+                                                                 "for other types.");
 //Terrains
 const u8 sText_Title_Field_Terrain[]                      = _("{STR_VAR_1} Terrain");
 const u8 sText_Title_Field_Terrain_Electric[]             = _("Electric");

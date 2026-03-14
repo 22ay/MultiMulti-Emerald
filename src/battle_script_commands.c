@@ -4446,6 +4446,16 @@ static void Cmd_setadditionaleffects(void)
                 }
                 break;
 
+            case SIG_EFFECT_FOG:
+                if (!(gBattleWeather & B_WEATHER_FOG))
+                {
+                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_FOG, FALSE);
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureFog;
+                    return;
+                }
+                break;
+
             case SIG_EFFECT_MISTY_TERRAIN:
                 if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
                 {

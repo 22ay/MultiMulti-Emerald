@@ -8704,6 +8704,12 @@ static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
             return UQ_4_12(1.0);
         return (ctx->moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
     }
+    if (ctx->weather & B_WEATHER_FOG)
+    {
+        if (ctx->moveType != TYPE_GHOST && ctx->moveType != TYPE_DARK && ctx->moveType != TYPE_BUG)
+            return UQ_4_12(1.0);
+        return UQ_4_12(1.5);
+    }
     return UQ_4_12(1.0);
 }
 
@@ -11676,7 +11682,17 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
         calc = (calc * 90) / 100;
 
     if (HasWeatherEffect() && gBattleWeather & B_WEATHER_FOG)
-        calc = (calc * 60) / 100; // modified by 3/5
+    {
+        u8 monType1 = gBattleMons[battlerAtk].types[0];
+        u8 monType2 = gBattleMons[battlerAtk].types[1];
+
+        if (monType1 != TYPE_GHOST && monType2 != TYPE_GHOST &&
+            monType1 != TYPE_DARK  && monType2 != TYPE_DARK  &&
+            monType1 != TYPE_BUG   && monType2 != TYPE_BUG)
+        {
+            calc = (calc * 80) / 100; // modified by 4/5
+        }
+    }
 
     return calc;
 }

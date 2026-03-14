@@ -7282,6 +7282,13 @@ BattleScript_SignatureSnow::
     playanimation BS_ATTACKER, B_ANIM_SNOW_CONTINUES
     return
 
+BattleScript_SignatureFog::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_FOGCREPTUP
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_FOG_CONTINUES
+    return
+
 BattleScript_ActivateTerrainEffects:
 	saveattacker
 	savetarget
