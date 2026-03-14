@@ -1331,6 +1331,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
          || SearchTraits(battlerTraits, ABILITY_HARVEST)
          || SearchTraits(battlerTraits, ABILITY_MOODY)
          || SearchTraits(battlerTraits, ABILITY_PICKUP)
+         || SearchTraits(battlerTraits, ABILITY_REGENERATOR)
          || SearchTraits(battlerTraits, ABILITY_SPEED_BOOST))
             if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
@@ -1346,6 +1347,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
          || SearchTraits(battlerTraits, ABILITY_HARVEST)
          || SearchTraits(battlerTraits, ABILITY_MOODY)
          || SearchTraits(battlerTraits, ABILITY_PICKUP)
+         || SearchTraits(battlerTraits, ABILITY_REGENERATOR)
          || SearchTraits(battlerTraits, ABILITY_SPEED_BOOST))
             effect = TRUE; // Set effect again outside above loop
         break;

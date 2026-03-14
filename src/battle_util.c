@@ -5050,6 +5050,17 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                     break;
                 }
             }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_REGENERATOR)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+            && !IsBattlerAtMaxHp(battler)
+            && !gBattleMons[battler].volatiles.healBlock)
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_REGENERATOR);
+                BattleScriptExecute(BattleScript_IceBodyHeal);
+                SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                effect++;
+                break;
+            }
             if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SCHOOLING)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
              && gBattleMons[battler].level >= 20
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
