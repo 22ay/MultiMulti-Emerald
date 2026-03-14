@@ -297,6 +297,7 @@ extern const u8 BattleScript_SnowWarningActivatesHail[];
 extern const u8 BattleScript_SnowWarningActivatesSnow[];
 extern const u8 BattleScript_SignatureSnow[];
 extern const u8 BattleScript_SignatureFog[];
+extern const u8 BattleScript_AbilityFog[];
 extern const u8 BattleScript_PickupActivates[];
 extern const u8 BattleScript_HarvestActivates[];
 extern const u8 BattleScript_ImposterActivates[];

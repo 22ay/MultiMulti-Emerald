@@ -2490,4 +2490,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 10,
     },
 
+    [ABILITY_EERIE_HAZE] =
+    {
+        .name = _("Eerie Haze"),
+        .description = COMPOUND_STRING("Summons Eerie Fog"),
+        .aiRating = 10,
+    },
+
 };

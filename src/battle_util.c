@@ -4465,6 +4465,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
                 effect += CommonSwitchInAbilities(battler, ABILITY_SNOW_WARNING, traitCheck, BattleScript_BlockedByPrimalWeatherEnd3);
         }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_EERIE_HAZE)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            if (TryChangeBattleWeather(battler, BATTLE_WEATHER_FOG, TRUE))
+                effect += CommonSwitchInAbilities(battler, ABILITY_EERIE_HAZE, traitCheck, BattleScript_AbilityFog);
+            else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
+                effect += CommonSwitchInAbilities(battler, ABILITY_EERIE_HAZE, traitCheck, BattleScript_BlockedByPrimalWeatherEnd3);
+        }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ELECTRIC_SURGE)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
         {
             gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1] = TRUE;

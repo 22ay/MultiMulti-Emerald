@@ -418,6 +418,15 @@ BattleScript_AbilitySwamp::
 	playanimation BS_TARGET, B_ANIM_SWAMP
     end3
 
+BattleScript_AbilityFog::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_FOGCREPTUP
+	waitstate
+	playanimation BS_BATTLER_0, B_ANIM_FOG_CONTINUES
+	call BattleScript_ActivateWeatherAbilities
+	end3
+
 BattleScript_MoveEffectSaltCure::
 	printstring STRINGID_TARGETISBEINGSALTCURED
 	waitmessage B_WAIT_TIME_LONG
