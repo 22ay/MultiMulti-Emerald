@@ -5151,6 +5151,17 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetBerserk);
             effect++;
         }
+        if (SearchTraits(battlerTraits, ABILITY_VITAL_SPIRIT)
+         && IsBattlerTurnDamaged(battler)
+         && IsBattlerAlive(battler)
+         && HadMoreThanHalfHpNowDoesnt(battler)
+         && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            gEffectBattler = battler;
+            PushTraitStack(battler, ABILITY_VITAL_SPIRIT);
+            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetVitalSpirit);
+            effect++;
+        }
         if (SearchTraits(battlerTraits, ABILITY_ANGER_SHELL)
          && IsBattlerTurnDamaged(battler)
          && IsBattlerAlive(battler)

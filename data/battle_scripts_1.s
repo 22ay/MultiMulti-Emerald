@@ -9132,6 +9132,17 @@ BattleScript_TargetAbilityStatRaiseRetBerserk_End:
 	restoreattacker
 	return
 
+BattleScript_TargetAbilityStatRaiseRetVitalSpirit::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_ATK, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetVitalSpirit_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetVitalSpirit_End:
+	restoreattacker
+	return
+
 BattleScript_TargetAbilityStatRaiseRetSteam::
 	saveattacker
 	copybyte gBattlerAttacker, gEffectBattler
