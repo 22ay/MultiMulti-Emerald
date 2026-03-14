@@ -361,6 +361,19 @@ BattleScript_EffectCombinedPledge_Grass::
 	waitanimation
 	goto BattleScript_MoveEnd
 
+BattleScript_TheSwampDisappeared::
+	printstring STRINGID_THESWAMPDISAPPEARED
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_EffectHit_Pledge::
+	pause B_WAIT_TIME_MED
+	printstring STRINGID_THETWOMOVESBECOMEONE
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_EffectHit_RetFromAccCheck
+	tryfaintmon BS_TARGET
+	return
+
 BattleScript_SignatureRainbow::
     pause B_WAIT_TIME_SHORT
     printstring STRINGID_ARAINBOWAPPEAREDONSIDE
@@ -382,18 +395,28 @@ BattleScript_SignatureSwamp::
     playanimation BS_TARGET, B_ANIM_SWAMP
     return
 
-BattleScript_TheSwampDisappeared::
-	printstring STRINGID_THESWAMPDISAPPEARED
-	waitmessage B_WAIT_TIME_LONG
-	end2
+BattleScript_AbilityRainbow::
+	call BattleScript_AbilityPopUp
+    printstring STRINGID_ARAINBOWAPPEAREDONSIDE
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_NEWRAINBOW
+    end3
 
-BattleScript_EffectHit_Pledge::
-	pause B_WAIT_TIME_MED
-	printstring STRINGID_THETWOMOVESBECOMEONE
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_EffectHit_RetFromAccCheck
-	tryfaintmon BS_TARGET
-	return
+BattleScript_AbilitySeaOfFire::
+	savetarget
+	call BattleScript_AbilityPopUp
+    printstring STRINGID_SEAOFFIREENVELOPEDSIDE
+    waitstate
+	playanimation BS_TARGET, B_ANIM_SEA_OF_FIRE
+    end3
+
+BattleScript_AbilitySwamp::
+	savetarget
+	call BattleScript_AbilityPopUp
+    printstring STRINGID_SWAMPENVELOPEDSIDE
+    waitstate
+	playanimation BS_TARGET, B_ANIM_SWAMP
+    end3
 
 BattleScript_MoveEffectSaltCure::
 	printstring STRINGID_TARGETISBEINGSALTCURED

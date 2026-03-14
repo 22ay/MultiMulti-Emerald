@@ -2469,4 +2469,25 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 10,
     },
 
+    [ABILITY_MERRY_RAINBOW] =
+    {
+        .name = _("Merry Rainbow"),
+        .description = COMPOUND_STRING("Creates a Rainbow"),
+        .aiRating = 10,
+    },
+
+    [ABILITY_SEA_OF_FLAMES] =
+    {
+        .name = _("Sea of Flames"),
+        .description = COMPOUND_STRING("Summons Sea of Fire"),
+        .aiRating = 10,
+    },
+
+    [ABILITY_SWAMPED] =
+    {
+        .name = _("Swamped"),
+        .description = COMPOUND_STRING("Swamps the area"),
+        .aiRating = 10,
+    },
+
 };

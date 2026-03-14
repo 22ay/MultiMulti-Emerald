@@ -4519,11 +4519,50 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_WIND_STORM)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
         {
-            if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_TAILWIND))
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND))
             {
-                gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_TAILWIND;
-                gSideTimers[GetBattlerSide(gBattlerAttacker)].tailwindTimer = 4;
+                gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_TAILWIND;
+                gSideTimers[GetBattlerSide(battler)].tailwindTimer = 4;
                 effect += CommonSwitchInAbilities(battler, ABILITY_WIND_STORM, traitCheck, BattleScript_AbilityTailwind);
+            }
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MERRY_RAINBOW)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_RAINBOW))
+            {
+                gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_RAINBOW;
+                gSideTimers[GetBattlerSide(battler)].rainbowTimer = 4;
+                effect += CommonSwitchInAbilities(battler, ABILITY_MERRY_RAINBOW, traitCheck, BattleScript_AbilityRainbow);
+            }
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SEA_OF_FLAMES)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            u32 oppositeBattler = BATTLE_OPPOSITE(battler);
+
+            if (!(gSideStatuses[GetBattlerSide(oppositeBattler)] & SIDE_STATUS_SEA_OF_FIRE))
+            {
+                gSideStatuses[GetBattlerSide(oppositeBattler)] |= SIDE_STATUS_SEA_OF_FIRE;
+                gSideTimers[GetBattlerSide(oppositeBattler)].seaOfFireTimer = 4;
+                PushTraitStack(battler, ABILITY_SEA_OF_FLAMES);
+                SaveBattlerAttacker(gBattlerAttacker);
+                gBattlerAttacker = battler;
+                gBattlerTarget   = oppositeBattler;
+                effect += CommonSwitchInAbilities(battler, ABILITY_SEA_OF_FLAMES, traitCheck, BattleScript_AbilitySeaOfFire);
+            }
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SWAMPED)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            u32 oppositeBattler = BATTLE_OPPOSITE(battler);
+
+            if (!(gSideStatuses[GetBattlerSide(oppositeBattler)] & SIDE_STATUS_SWAMP))
+            {
+                gSideStatuses[GetBattlerSide(oppositeBattler)] |= SIDE_STATUS_SWAMP;
+                gSideTimers[GetBattlerSide(oppositeBattler)].swampTimer = 4;
+                PushTraitStack(battler, ABILITY_SWAMPED);
+                SaveBattlerAttacker(gBattlerAttacker);
+                gBattlerAttacker = battler;
+                gBattlerTarget   = oppositeBattler;
+                effect += CommonSwitchInAbilities(battler, ABILITY_SWAMPED, traitCheck, BattleScript_AbilitySwamp);
             }
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CLOUD_NINE)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
