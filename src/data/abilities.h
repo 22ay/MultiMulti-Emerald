@@ -2518,4 +2518,39 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 8,
     },
 
+    [ABILITY_INFERNAL_SOUL] =
+    {
+        .name = _("Infernal Soul"),
+        .description = COMPOUND_STRING("Fire moves go first"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_TIDAL_SOUL] =
+    {
+        .name = _("Tidal Soul"),
+        .description = COMPOUND_STRING("Water moves go first"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_NATURE_SOUL] =
+    {
+        .name = _("Nature Soul"),
+        .description = COMPOUND_STRING("Grass moves go first"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_THUNDEROUS_SOUL] =
+    {
+        .name = _("Thunderous Soul"),
+        .description = COMPOUND_STRING("Electric moves go first"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_WARRIOR_SOUL] =
+    {
+        .name = _("Warrior Soul"),
+        .description = COMPOUND_STRING("Fighting moves go first"),
+        .aiRating = 6,
+    },
+
 };

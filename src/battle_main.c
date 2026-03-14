@@ -4963,6 +4963,36 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
     {
         priority++;
     }
+    if (SearchTraits(battlerTraits, ABILITY_INFERNAL_SOUL)
+          && (gBattleWeather & B_WEATHER_SUN)
+          && GetMoveType(move) == TYPE_FIRE)
+    {
+        priority++;
+    }
+    if (SearchTraits(battlerTraits, ABILITY_TIDAL_SOUL)
+          && (gBattleWeather & B_WEATHER_RAIN)
+          && GetMoveType(move) == TYPE_WATER)
+    {
+        priority++;
+    }
+    if (SearchTraits(battlerTraits, ABILITY_NATURE_SOUL)
+          && (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+          && GetMoveType(move) == TYPE_GRASS)
+    {
+        priority++;
+    }
+    if (SearchTraits(battlerTraits, ABILITY_THUNDEROUS_SOUL)
+          && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+          && GetMoveType(move) == TYPE_ELECTRIC)
+    {
+        priority++;
+    }
+    if (SearchTraits(battlerTraits, ABILITY_WARRIOR_SOUL)
+          && IsBattlerAtMaxHp(battler)
+          && GetMoveType(move) == TYPE_FIGHTING)
+    {
+        priority++;
+    }
     if (IsBattleMoveStatus(move) && IsAbilityAndRecord(battler, ABILITY_PRANKSTER))
     {
         gProtectStructs[battler].pranksterElevated = 1;
