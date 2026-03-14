@@ -2504,4 +2504,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 4,
     },
 
+    [ABILITY_TECTONIZE] =
+    {
+        .name = _("Tectonize"),
+        .description = COMPOUND_STRING("Normal moves become Ground"),
+        .aiRating = 8,
+    },
+
+    [ABILITY_SPECTRALIZE] =
+    {
+        .name = _("Spectralize"),
+        .description = COMPOUND_STRING("Normal moves become Ghost"),
+        .aiRating = 8,
+    },
+
 };

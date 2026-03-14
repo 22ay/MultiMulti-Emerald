@@ -7944,6 +7944,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
     if (SearchTraits(battlerTraits, ABILITY_NORMALIZE) && moveType == TYPE_NORMAL && gBattleStruct->battlerState[battlerAtk].ateBoost && GetConfig(B_ATE_MULTIPLIER) >= GEN_7)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+    if (SearchTraits(battlerTraits, ABILITY_TECTONIZE) && moveType == TYPE_GROUND && gBattleStruct->battlerState[battlerAtk].ateBoost)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+    if (SearchTraits(battlerTraits, ABILITY_SPECTRALIZE) && moveType == TYPE_GHOST && gBattleStruct->battlerState[battlerAtk].ateBoost)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
     if (SearchTraits(battlerTraits, ABILITY_PUNK_ROCK) && IsSoundMove(move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
     if (SearchTraits(battlerTraits, ABILITY_STEELY_SPIRIT) && moveType == TYPE_STEEL)
@@ -9309,6 +9313,14 @@ static inline void MulByTypeEffectiveness(struct DamageContext *ctx, uq4_12_t *m
             RecordAbilityBattle(ctx->battlerAtk, ABILITY_SCRAPPY);
         else if (SearchTraits(battlerTraits, ABILITY_MINDS_EYE))
             RecordAbilityBattle(ctx->battlerAtk, ABILITY_MINDS_EYE);
+    }
+    if ((ctx->moveType == TYPE_POISON) && defType == TYPE_STEEL
+        && (SearchTraits(battlerTraits, ABILITY_CORROSION))
+        && mod == UQ_4_12(0.0) && !ctx->isAnticipation)
+    {
+        mod = UQ_4_12(1.0);
+        if (SearchTraits(battlerTraits, ABILITY_CORROSION))
+            RecordAbilityBattle(ctx->battlerAtk, ABILITY_CORROSION);
     }
 
     if (ctx->moveType == TYPE_PSYCHIC && defType == TYPE_DARK && gBattleMons[ctx->battlerDef].volatiles.miracleEye && mod == UQ_4_12(0.0))

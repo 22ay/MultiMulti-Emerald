@@ -5948,6 +5948,16 @@ enum Type TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
         ateType = TYPE_FLYING;
     else if (BattlerHasTrait(battlerAtk, ABILITY_GALVANIZE))
         ateType = TYPE_ELECTRIC;
+    else if (BattlerHasTrait(battlerAtk, ABILITY_CORROSION))
+        ateType = TYPE_POISON;
+    else if (BattlerHasTrait(battlerAtk, ABILITY_ROCKY_PAYLOAD))
+        ateType = TYPE_ROCK;
+    else if (BattlerHasTrait(battlerAtk, ABILITY_TECTONIZE))
+        ateType = TYPE_GROUND;
+    else if (BattlerHasTrait(battlerAtk, ABILITY_SPECTRALIZE))
+        ateType = TYPE_GHOST;
+    else if (BattlerHasTrait(battlerAtk, ABILITY_STEELY_SPIRIT))
+        ateType = TYPE_STEEL;
 
     return ateType;
 }
