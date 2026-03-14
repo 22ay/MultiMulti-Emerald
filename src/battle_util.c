@@ -5171,21 +5171,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_AngerShellActivates);
             effect++;
         }
-        if (SearchTraits(battlerTraits, ABILITY_COLOR_CHANGE) // Last so the other abilities don't overwrite the gBattleTextBuff1
-         && IsBattlerTurnDamaged(battler)
-         && IsBattlerAlive(battler)
-         && !IS_BATTLER_OF_TYPE(battler, moveType)
-         && move != MOVE_STRUGGLE
-         && moveType != TYPE_STELLAR
-         && moveType != TYPE_MYSTERY)
-        {
-            gEffectBattler = gBattlerAbility = battler;
-            SET_BATTLER_TYPE(battler, moveType);
-            PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
-            PushTraitStack(battler, ABILITY_COLOR_CHANGE);
-            BattleScriptCall(BattleScript_ColorChangeActivates);
-            effect++;
-        }
         break;
     case ABILITYEFFECT_MOVE_END: // Think contact abilities.
         if (SearchTraits(battlerTraits, ABILITY_JUSTIFIED)
