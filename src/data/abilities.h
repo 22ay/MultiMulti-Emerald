@@ -2473,28 +2473,35 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Merry Rainbow"),
         .description = COMPOUND_STRING("Creates a Rainbow"),
-        .aiRating = 10,
+        .aiRating = 6,
     },
 
     [ABILITY_SEA_OF_FLAMES] =
     {
         .name = _("Sea of Flames"),
         .description = COMPOUND_STRING("Summons Sea of Fire"),
-        .aiRating = 10,
+        .aiRating = 6,
     },
 
     [ABILITY_SWAMPED] =
     {
         .name = _("Swamped"),
         .description = COMPOUND_STRING("Swamps the area"),
-        .aiRating = 10,
+        .aiRating = 6,
     },
 
     [ABILITY_EERIE_HAZE] =
     {
         .name = _("Eerie Haze"),
         .description = COMPOUND_STRING("Summons Eerie Fog"),
-        .aiRating = 10,
+        .aiRating = 6,
+    },
+
+    [ABILITY_AVIAN_PROWESS] =
+    {
+        .name = _("Avian Prowess"),
+        .description = COMPOUND_STRING("Ups Sp.Atk but locks move"),
+        .aiRating = 4,
     },
 
 };
