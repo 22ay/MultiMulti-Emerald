@@ -4367,12 +4367,7 @@ static void Cmd_setadditionaleffects(void)
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
     {
-        const struct SignatureMoveEntry *entry =
-            GetSignatureMoveEntry(
-                GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
-                gCurrentMove
-            );
-            //vanilla
+        //vanilla
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
         SetToxicChainPriority();
 
@@ -4380,7 +4375,7 @@ static void Cmd_setadditionaleffects(void)
         {
             u32 percentChance;
             const struct AdditionalEffect *additionalEffect =
-                GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
             const u8 *currentPtr = gBattlescriptCurrInstr;
 
             if (CanApplyAdditionalEffect(additionalEffect))
@@ -4421,8 +4416,23 @@ static void Cmd_setadditionaleffects(void)
             gBattleScripting.moveEffect = 0;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
-
-        // Skip signature effects if the target fainted AND the battle is ending
+    }
+    else
+    {
+        gBattleScripting.moveEffect = 0;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    
+    if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)) //signature
+    {
+        
+        const struct SignatureMoveEntry *entry =
+            GetSignatureMoveEntry(
+                GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
+                gCurrentMove
+            );
+        
+            // Skip signature effects if the target fainted AND the battle is ending
         if (gBattleMons[gBattlerTarget].hp == 0)
         {
             // Wild battle: last mon → battle ends
@@ -4436,7 +4446,7 @@ static void Cmd_setadditionaleffects(void)
                 return;
             }
         }
-        //signature
+        
         if (entry && entry->addedEffect != SIG_EFFECT_NONE)
         {
             switch (entry->addedEffect)
@@ -4675,6 +4685,11 @@ static void Cmd_setadditionaleffects(void)
                 break;
             }
         }
+    }
+    else
+    {
+        gBattleScripting.moveEffect = 0;
+        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 
