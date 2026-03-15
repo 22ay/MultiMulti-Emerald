@@ -24,7 +24,7 @@
 //   (only trainers in level_scaling_rules.h are scaled)
 // Set to any other mode for opt-out behavior (all trainers scaled unless explicitly disabled)
 
-#define B_TRAINER_SCALING_ENABLED           TRUE
+#define B_TRAINER_SCALING_ENABLED           FALSE
 #define B_TRAINER_SCALING_DEFAULT_MODE      LEVEL_SCALING_PARTY_HIGHEST
 #define B_TRAINER_SCALING_LEVEL_AUGMENT     0       // Add/subtract levels from base (-127 to +127)
                                                      // Example: -2 makes trainers 2 levels lower
@@ -43,7 +43,7 @@
 // These settings apply to ALL wild Pokémon encounters unless you implement
 // per-area or per-species overrides (future enhancement)
 
-#define B_WILD_SCALING_ENABLED              TRUE
+#define B_WILD_SCALING_ENABLED              FALSE
 #define B_WILD_SCALING_DEFAULT_MODE         LEVEL_SCALING_PARTY_HIGHEST
 #define B_WILD_SCALING_LEVEL_AUGMENT        0       // Add/subtract levels from base (-127 to +127)
                                                      // Example: -5 makes wild Pokémon 5 levels lower

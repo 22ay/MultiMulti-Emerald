@@ -1212,22 +1212,6 @@ static void Cmd_attackcanceler(void)
             ctx.currentMove,
             RUN_SCRIPT))
         return;
-    
-    if (BattlerHasTrait(ctx.battlerDef, ABILITY_COLOR_CHANGE) // wip, might still be buggy
-        && IsBattlerAlive(ctx.battlerDef)
-        && gMovesInfo[gCurrentMove].power != 0
-        && !IS_BATTLER_OF_TYPE(ctx.battlerDef, GetBattleMoveType(gCurrentMove))
-        && gCurrentMove != MOVE_STRUGGLE
-        && GetBattleMoveType(gCurrentMove) != TYPE_STELLAR
-        && GetBattleMoveType(gCurrentMove) != TYPE_MYSTERY)
-    {
-        gEffectBattler = gBattlerAbility = ctx.battlerDef;
-        SET_BATTLER_TYPE(ctx.battlerDef, GetBattleMoveType(gCurrentMove));
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, GetBattleMoveType(gCurrentMove));
-        PushTraitStack(ctx.battlerDef, ABILITY_COLOR_CHANGE);
-        BattleScriptCall(BattleScript_ColorChangeActivates);
-        return;
-    }
 
     if (GetMoveNonVolatileStatus(ctx.currentMove) == MOVE_EFFECT_PARALYSIS)
     {
@@ -1344,6 +1328,41 @@ static void Cmd_attackcanceler(void)
             gBattleStruct->snatchedMoveIsUsed = TRUE;
             gBattleScripting.battler = gBattlerByTurnOrder[i];
             BattleScriptCall(BattleScript_SnatchedMove);
+            return;
+        }
+    }
+
+    if (BattlerHasTrait(ctx.battlerDef, ABILITY_COLOR_CHANGE) // wip, might still be buggy
+        && IsBattlerAlive(ctx.battlerDef)
+        && gMovesInfo[gCurrentMove].power != 0
+        && !IS_BATTLER_OF_TYPE(ctx.battlerDef, GetBattleMoveType(gCurrentMove))
+        && gCurrentMove != MOVE_STRUGGLE
+        && GetBattleMoveType(gCurrentMove) != TYPE_STELLAR
+        && GetBattleMoveType(gCurrentMove) != TYPE_MYSTERY)
+    {
+        u32 currentType;
+        u32 bestType = gBattleMons[gBattlerTarget].types[0];
+        u16 moveType = GetBattleMoveType(gCurrentMove);
+        u16 bestModifier = GetTypeModifier(moveType, bestType);
+
+        for (currentType = TYPE_NORMAL; currentType < NUMBER_OF_MON_TYPES; ++currentType) 
+        {
+            u16 currentModifier = GetTypeModifier(moveType, currentType);
+            if (currentModifier < bestModifier) 
+            {
+                bestModifier = currentModifier;
+                bestType = currentType;
+            }
+            if (bestModifier == UQ_4_12(0.0))
+                break;
+        }
+        if (gBattleMons[gBattlerTarget].types[0] != bestType) 
+        {
+            SET_BATTLER_TYPE(ctx.battlerDef, bestType);
+            PREPARE_TYPE_BUFFER(gBattleTextBuff1, bestType);
+            gBattlerAbility = ctx.battlerDef;
+            PushTraitStack(ctx.battlerDef, ABILITY_COLOR_CHANGE);
+            BattleScriptCall(BattleScript_ColorChangeActivates);
             return;
         }
     }
