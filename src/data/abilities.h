@@ -2553,4 +2553,25 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_EQUILIBRIUM] =
+    {
+        .name = _("Equilibrium"),
+        .description = COMPOUND_STRING("Uses highest attack stat"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_COLOSSUS] =
+    {
+        .name = _("Colossus"),
+        .description = COMPOUND_STRING("Defenses used for attacking"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_BLITZ] =
+    {
+        .name = _("Blitz"),
+        .description = COMPOUND_STRING("Speed used for attacking"),
+        .aiRating = 6,
+    },
+
 };

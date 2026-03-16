@@ -8168,13 +8168,19 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     u32 battlerAtk = ctx->battlerAtk;
     u32 battlerDef = ctx->battlerDef;
     u32 move = ctx->move;
+    u32 atkStatCheck = gBattleMons[battlerAtk].attack;
+    u32 spAtkStatCheck = gBattleMons[battlerAtk].spAttack;
+    u8  highestAttackStat = STAT_ATK;
     enum Type moveType = ctx->moveType;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battlerAtk);
 
     atkBaseSpeciesId = GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species);
-    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(atkBaseSpeciesId, move); 
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(atkBaseSpeciesId, move);
+
+    if(spAtkStatCheck > atkStatCheck)
+        highestAttackStat = STAT_SPATK;
 
     if (moveEffect == EFFECT_FOUL_PLAY)
     {
@@ -8206,61 +8212,74 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
         }
     }
-    else
+    else if (BattlerHasTrait(battlerAtk, ABILITY_EQUILIBRIUM))
     {
-        bool8 usedOverride = FALSE;
-
-        if (entry)
+		if (highestAttackStat == STAT_ATK)
         {
-            switch (entry->attackStatMode)
+            atkStat  = gBattleMons[battlerAtk].attack;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+        }
+        else
+        {
+            atkStat  = gBattleMons[battlerAtk].spAttack;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+        }
+    }
+    else if (BattlerHasTrait(battlerAtk, ABILITY_COLOSSUS))
+    {
+		if (IsBattleMovePhysical(move))
+        {
+            atkStat  = gBattleMons[battlerAtk].defense;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_DEF];
+        }
+        else
+        {
+            atkStat  = gBattleMons[battlerAtk].spDefense;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
+        }
+    }
+    else if (BattlerHasTrait(battlerAtk, ABILITY_BLITZ))
+    {
+		atkStat  = gBattleMons[battlerAtk].speed;
+        atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
+    }
+    else if (entry)
+    {
+        switch (entry->attackStatMode)
+        {
+        case SIG_ATKSTAT_HIGHEST_OFFENSIVE:
+            if (highestAttackStat == STAT_ATK)
             {
-            case SIG_ATKSTAT_HIGHEST_OFFENSIVE:
-                {
-                    if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
-                    {
-                        atkStat  = gBattleMons[battlerAtk].attack;
-                        atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
-                    }
-                    else
-                    {
-                        atkStat  = gBattleMons[battlerAtk].spAttack;
-                        atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
-                    }
-
-                    usedOverride = TRUE;
-                    break;
-                }
-
-            case SIG_ATKSTAT_DEFENSIVE:
-                if (IsBattleMovePhysical(move))
-                {
-                    atkStat  = gBattleMons[battlerAtk].defense;
-                    atkStage = gBattleMons[battlerAtk].statStages[STAT_DEF];
-                }
-                else
-                {
-                    atkStat  = gBattleMons[battlerAtk].spDefense;
-                    atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
-                }
-
-                usedOverride = TRUE;
-                break;
-
-            case SIG_ATKSTAT_SPEED:
-                atkStat  = gBattleMons[battlerAtk].speed;
-                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
-                usedOverride = TRUE;
-                break;
-
-            case SIG_ATKSTAT_NORMAL:
-            default:
-                break;
+                atkStat  = gBattleMons[battlerAtk].attack;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
             }
-        } 
+            else
+            {
+                atkStat  = gBattleMons[battlerAtk].spAttack;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+            }
+            break;
 
-        // Your normal behavior stays EXACTLY as-is
-        if (!usedOverride)
-        {  
+        case SIG_ATKSTAT_DEFENSIVE:
+            if (IsBattleMovePhysical(move))
+            {
+                atkStat  = gBattleMons[battlerAtk].defense;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_DEF];
+            }
+            else
+            {
+                atkStat  = gBattleMons[battlerAtk].spDefense;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
+            }
+            break;
+
+        case SIG_ATKSTAT_SPEED:
+            atkStat  = gBattleMons[battlerAtk].speed;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
+            break;
+
+        case SIG_ATKSTAT_NORMAL:
+        default:
             if (IsBattleMovePhysical(move))
             {
                 atkStat  = gBattleMons[battlerAtk].attack;
@@ -8271,8 +8290,23 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
                 atkStat  = gBattleMons[battlerAtk].spAttack;
                 atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
             }
+            break;
         }
     }
+    else
+    {
+        if (IsBattleMovePhysical(move))
+        {
+            atkStat  = gBattleMons[battlerAtk].attack;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+        }
+        else
+        {
+            atkStat  = gBattleMons[battlerAtk].spAttack;
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+        }
+    }
+
 
     // critical hits ignore attack stat's stage drops
     if (ctx->isCrit && atkStage < DEFAULT_STAT_STAGE)
