@@ -13,6 +13,7 @@ enum SignaturePowerFormula
     SIG_PWRFORMULA_HEAVY_SLAM,
     SIG_PWRFORMULA_LOW_KICK,
     SIG_PWRFORMULA_BOLT_BEAK,
+    SIG_PWRFORMULA_BRINE,
 };
 
 enum SignatureAttackStatMode

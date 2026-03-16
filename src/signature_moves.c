@@ -113,6 +113,17 @@ u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
                     return bp;
                 }
 
+                case SIG_PWRFORMULA_BRINE:
+                {
+                    u16 bp = entry->basePower ? entry->basePower : basePower;
+
+                    if (gBattleMons[gBattlerTarget].hp <= (gBattleMons[gBattlerTarget].maxHP/2))
+                    {
+                        return bp * 2;
+                    }
+                    return bp;
+                }
+
                 case SIG_PWRFORMULA_NORMAL:
                 default:
                     break;
