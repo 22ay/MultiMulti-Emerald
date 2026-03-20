@@ -10462,6 +10462,9 @@ void SetDynamicMoveCategory(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_PHOTON_GEYSER:
         gBattleStruct->swapDamageCategory = (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL);
         break;
+    case EFFECT_HIDDEN_POWER:
+        gBattleStruct->swapDamageCategory = (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL);
+        break;
     case EFFECT_SHELL_SIDE_ARM:
         if (gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)
             gBattleStruct->swapDamageCategory = TRUE;
