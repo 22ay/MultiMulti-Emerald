@@ -8396,6 +8396,10 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
      && gDisableStructs[battlerDef].isFirstTurn == 2) // just switched in
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
 
+    if (SearchTraits(battlerTraits, ABILITY_VIOLENT_RUSH)
+     && gDisableStructs[battlerAtk].isFirstTurn)
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+
     if (SearchTraits(battlerTraits, ABILITY_GUTS)
      && gBattleMons[battlerAtk].status1 & STATUS1_ANY && IsBattleMovePhysical(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));

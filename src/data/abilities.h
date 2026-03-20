@@ -2581,4 +2581,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_VIOLENT_RUSH] =
+    {
+        .name = _("Violent Rush"),
+        .description = COMPOUND_STRING("Hits hard first turn"),
+        .aiRating = 6,
+    },
+
 };
