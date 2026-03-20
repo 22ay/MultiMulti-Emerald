@@ -2574,4 +2574,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_RUTHLESS] =
+    {
+        .name = _("Ruthless"),
+        .description = COMPOUND_STRING("Strong against weak foes"),
+        .aiRating = 6,
+    },
+
 };

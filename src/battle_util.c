@@ -8328,58 +8328,78 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_HUGE_POWER)
      && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
+
     if (SearchTraits(battlerTraits, ABILITY_PURE_POWER)
      && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
+
     if (SearchTraits(battlerTraits, ABILITY_MYSTIC_POWER)
      && IsBattleMoveSpecial(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
+
     if (SearchTraits(battlerTraits, ABILITY_SLOW_START)
      && gDisableStructs[battlerAtk].slowStartTimer > 0)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
+
     if (SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)
-     && IsBattleMoveSpecial(move) && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN))
+     && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_DEFEATIST)
      && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 2))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
+
+    if (SearchTraits(battlerTraits, ABILITY_RUTHLESS)
+     && gBattleMons[battlerDef].hp <= (gBattleMons[battlerDef].maxHP / 2))
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.3));
+
     if (SearchTraits(battlerTraits, ABILITY_FLASH_FIRE)
      && moveType == TYPE_FIRE && gDisableStructs[battlerAtk].flashFireBoosted)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_SWARM)
-     && moveType == TYPE_BUG && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 3))
+     && moveType == TYPE_BUG && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 2))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_TORRENT)
-     && moveType == TYPE_WATER && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 3))
+     && moveType == TYPE_WATER && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 2))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_BLAZE)
-     && moveType == TYPE_FIRE && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 3))
+     && moveType == TYPE_FIRE && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 2))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_OVERGROW)
-     && moveType == TYPE_GRASS && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 3))
+     && moveType == TYPE_GRASS && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 2))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_PLUS)
      && IsBattleMoveSpecial(move) && IsBattlerAlive(BATTLE_PARTNER(battlerAtk))
      && (BattlerHasTrait(BATTLE_PARTNER(battlerAtk), ABILITY_MINUS)
      || (B_PLUS_MINUS_INTERACTION >= GEN_5 && BattlerHasTrait(BATTLE_PARTNER(battlerAtk), ABILITY_PLUS))))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_MINUS)
      && IsBattleMoveSpecial(move) && IsBattlerAlive(BATTLE_PARTNER(battlerAtk))
      && (BattlerHasTrait(BATTLE_PARTNER(battlerAtk), ABILITY_PLUS)
      || (B_PLUS_MINUS_INTERACTION >= GEN_5 && BattlerHasTrait(BATTLE_PARTNER(battlerAtk), ABILITY_MINUS))))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_FLOWER_GIFT)
      && gBattleMons[battlerAtk].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN) && IsBattleMovePhysical(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-    if (SearchTraits(battlerTraits, ABILITY_HUSTLE)
-     && IsBattleMovePhysical(move))
+
+    if (SearchTraits(battlerTraits, ABILITY_HUSTLE))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_STAKEOUT)
      && gDisableStructs[battlerDef].isFirstTurn == 2) // just switched in
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
+
     if (SearchTraits(battlerTraits, ABILITY_GUTS)
      && gBattleMons[battlerAtk].status1 & STATUS1_ANY && IsBattleMovePhysical(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_TRANSISTOR)
      && moveType == TYPE_ELECTRIC)
         {
@@ -8391,15 +8411,19 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_DRAGONS_MAW)
      && moveType == TYPE_DRAGON)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_GORILLA_TACTICS)
      && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_AVIAN_PROWESS)
      && IsBattleMoveSpecial(move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_ROCKY_PAYLOAD)
      && moveType == TYPE_ROCK)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS)
      && !(gBattleMons[battlerAtk].volatiles.transformed))
     {
@@ -8424,6 +8448,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
      && (ctx->weather & B_WEATHER_SUN) && HasWeatherEffect() && IsBattleMovePhysical(move)
             && !BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.3333));
+            
     if (SearchTraits(battlerTraits, ABILITY_HADRON_ENGINE)
      && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN && IsBattleMoveSpecial(move)))
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3333));
