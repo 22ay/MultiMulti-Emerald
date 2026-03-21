@@ -151,7 +151,8 @@ static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather)
     if (AISearchTraits(AIBattlerTraits, ABILITY_DRY_SKIN)
      || AISearchTraits(AIBattlerTraits, ABILITY_HYDRATION)
      || AISearchTraits(AIBattlerTraits, ABILITY_RAIN_DISH)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SWIFT_SWIM))
+     || AISearchTraits(AIBattlerTraits, ABILITY_SWIFT_SWIM)
+     || AISearchTraits(AIBattlerTraits, ABILITY_TIDAL_SOUL))
         return (weather & B_WEATHER_RAIN);
     if (AISearchTraits(AIBattlerTraits, ABILITY_CHLOROPHYLL)
      || AISearchTraits(AIBattlerTraits, ABILITY_FLOWER_GIFT)
@@ -159,6 +160,7 @@ static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather)
      || AISearchTraits(AIBattlerTraits, ABILITY_LEAF_GUARD)
      || AISearchTraits(AIBattlerTraits, ABILITY_ORICHALCUM_PULSE)
      || AISearchTraits(AIBattlerTraits, ABILITY_PROTOSYNTHESIS)
+     || AISearchTraits(AIBattlerTraits, ABILITY_INFERNAL_SOUL)
      || AISearchTraits(AIBattlerTraits, ABILITY_SOLAR_POWER))
         return (weather & B_WEATHER_SUN);
 
@@ -174,9 +176,11 @@ static bool32 DoesBattlerBenefitFromFieldStatus(u32 battler, u32 fieldStatus)
         return (fieldStatus & STATUS_FIELD_TERRAIN_ANY);
     if (AISearchTraits(AIBattlerTraits, ABILITY_HADRON_ENGINE)
      || AISearchTraits(AIBattlerTraits, ABILITY_QUARK_DRIVE)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SURGE_SURFER))
+     || AISearchTraits(AIBattlerTraits, ABILITY_SURGE_SURFER)
+     || AISearchTraits(AIBattlerTraits, ABILITY_THUNDEROUS_SOUL))
         return (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_GRASS_PELT))
+    if (AISearchTraits(AIBattlerTraits, ABILITY_GRASS_PELT)
+     || AISearchTraits(AIBattlerTraits, ABILITY_NATURE_SOUL))
         return (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN);
     // no abilities inherently benefit from Misty or Psychic Terrains
     // return (fieldStatus & STATUS_FIELD_MISTY_TERRAIN);
@@ -412,6 +416,11 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
         // harass priority
         if (AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_GALE_WINGS)
          || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_TRIAGE)
+         || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_INFERNAL_SOUL)
+         || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_TIDAL_SOUL)
+         || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_NATURE_SOUL)
+         || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_THUNDEROUS_SOUL)
+         || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_WARRIOR_SOUL)
          || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_PRANKSTER))
             return FIELD_EFFECT_POSITIVE;
     }
@@ -424,6 +433,11 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
 
     if (AI_IsAbilityOnSide(battler, ABILITY_GALE_WINGS)
      || AI_IsAbilityOnSide(battler, ABILITY_TRIAGE)
+     || AI_IsAbilityOnSide(battler, ABILITY_INFERNAL_SOUL)
+     || AI_IsAbilityOnSide(battler, ABILITY_TIDAL_SOUL)
+     || AI_IsAbilityOnSide(battler, ABILITY_NATURE_SOUL)
+     || AI_IsAbilityOnSide(battler, ABILITY_THUNDEROUS_SOUL)
+     || AI_IsAbilityOnSide(battler, ABILITY_WARRIOR_SOUL)
      || AI_IsAbilityOnSide(battler, ABILITY_PRANKSTER))
         return FIELD_EFFECT_NEGATIVE;
 
