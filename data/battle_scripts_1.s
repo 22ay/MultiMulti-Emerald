@@ -427,6 +427,27 @@ BattleScript_AbilityFog::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
+BattleScript_AbilityReflect::
+	call BattleScript_AbilityPopUp
+    printstring STRINGID_PKMNRAISEDDEF
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_REFLECT
+    end3
+
+BattleScript_AbilityLightScreen::
+	call BattleScript_AbilityPopUp
+    printstring STRINGID_PKMNRAISEDSPDEF
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_LIGHTSCREEN
+    end3
+
+BattleScript_AbilityAuroraVeil::
+	call BattleScript_AbilityPopUp
+    printstring STRINGID_PKMNCOVEREDBYVEIL
+    waitstate
+	playanimation BS_BATTLER_0, B_ANIM_AURORAVEIL
+    end3
+
 BattleScript_MoveEffectSaltCure::
 	printstring STRINGID_TARGETISBEINGSALTCURED
 	waitmessage B_WAIT_TIME_LONG

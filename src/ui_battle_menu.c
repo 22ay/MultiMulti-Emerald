@@ -2601,9 +2601,8 @@ const u8 sText_Title_Field_Weather_Description_Sun[]          = _("Strengthens t
 const u8 sText_Title_Field_Weather_Description_Sandstorm[]    = _("Any Pokémon that is not Rock, Ground\n"
                                                                   "or Steel-type will be damaged for\n"
                                                                   "1/16 of its maximum HP each turn.");
-const u8 sText_Title_Field_Weather_Description_Hail[]         = _("Any Pokémon that is not Ice-type\n"
-                                                                  "will be damaged each turn, Pokémon\n"
-                                                                  "are twice as likely to get frostbite.");
+const u8 sText_Title_Field_Weather_Description_Hail[]         = _("All Ice-type Pokémon will have\n"
+                                                                  "their Defense boosted by 50%.");
 const u8 sText_Title_Field_Weather_Description_Strong_Winds[] = _("Causes Electric, Ice, and Rock-type\n"
                                                                   "moves to deal neutral damage to \n"
                                                                   "Flying-type Pokémon.");

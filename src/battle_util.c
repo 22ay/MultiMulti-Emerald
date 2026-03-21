@@ -4572,6 +4572,33 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 effect += CommonSwitchInAbilities(battler, ABILITY_SWAMPED, traitCheck, BattleScript_AbilitySwamp);
             }
         }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PHYSICAL_WALL)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_REFLECT))
+            {
+                gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_REFLECT;
+                gSideTimers[GetBattlerSide(battler)].reflectTimer = 5;
+                effect += CommonSwitchInAbilities(battler, ABILITY_PHYSICAL_WALL, traitCheck, BattleScript_AbilityReflect);
+            }
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MAGIC_WALL)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_LIGHTSCREEN))
+            {
+                gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_LIGHTSCREEN;
+                gSideTimers[GetBattlerSide(battler)].lightscreenTimer = 5;
+                effect += CommonSwitchInAbilities(battler, ABILITY_MAGIC_WALL, traitCheck, BattleScript_AbilityLightScreen);
+            }
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ARCTIC_WALL)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_AURORA_VEIL) && (gBattleWeather & B_WEATHER_SNOW))
+            {
+                gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_AURORA_VEIL;
+                gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = 5;
+                effect += CommonSwitchInAbilities(battler, ABILITY_ARCTIC_WALL, traitCheck, BattleScript_AbilityAuroraVeil);
+            }
+        }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CLOUD_NINE)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
             effect += CommonSwitchInAbilities(battler, ABILITY_CLOUD_NINE, traitCheck, BattleScript_AnnounceAirLockCloudNine);
 

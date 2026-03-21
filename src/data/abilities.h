@@ -2588,4 +2588,25 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_PHYSICAL_WALL] =
+    {
+        .name = _("Physical Wall"),
+        .description = COMPOUND_STRING("Sets Reflect"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MAGIC_WALL] =
+    {
+        .name = _("Magic Wall"),
+        .description = COMPOUND_STRING("Sets Light Screen"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_ARCTIC_WALL] =
+    {
+        .name = _("Arctic Wall"),
+        .description = COMPOUND_STRING("Sets Aurora Veil"),
+        .aiRating = 6,
+    },
+
 };
