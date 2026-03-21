@@ -2908,7 +2908,7 @@ static void PrintFieldTab(void)
     CopyWindowToVram(windowId, 3);
 }
 
-const u8 sText_Title_Side_Aurora_Veil[]                    = _("Auora Veil");
+const u8 sText_Title_Side_Aurora_Veil[]                    = _("Aurora Veil");
 const u8 sText_Title_Side_Aurora_Veil_Description[]        = _("Reduces the damage done to the user\n"
                                                                "by physical and special moves by\n"
                                                                "50%.");
@@ -2955,7 +2955,7 @@ const u8 sText_Title_Side_Safeguard[]                      = _("Safeguard");
 const u8 sText_Title_Side_Safeguard_Description[]          = _("A protective field that prevents\n"
                                                                "status problems like poison,\n"
                                                                "paralysis, burn and sleep.");
-const u8 sText_Title_Side_Mist[]                           = _("Safeguard");
+const u8 sText_Title_Side_Mist[]                           = _("Mist");
 const u8 sText_Title_Side_Mist_Description[]               = _("A white mist that prevents any\n"
                                                                "Pokémon on this side from having\n"
                                                                "any of it's stat lowered.");

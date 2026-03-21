@@ -4621,6 +4621,42 @@ static void Cmd_setadditionaleffects(void)
                     return;
                 }
                 break;
+            
+            case SIG_EFFECT_REFLECT:
+                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_REFLECT))
+                {
+                    u8 side = GetBattlerSide(gBattlerAttacker);
+                    gSideStatuses[side] |= SIDE_STATUS_REFLECT;
+                    gSideTimers[side].reflectTimer = 5;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureReflect;
+                    return;
+                }
+                break;
+            
+            case SIG_EFFECT_LIGHT_SCREEN:
+                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_LIGHTSCREEN))
+                {
+                    u8 side = GetBattlerSide(gBattlerAttacker);
+                    gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
+                    gSideTimers[side].lightscreenTimer = 5;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureLightScreen;
+                    return;
+                }
+                break;
+
+            case SIG_EFFECT_AURORA_VEIL:
+                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_AURORA_VEIL) && (gBattleWeather & B_WEATHER_SNOW))
+                {
+                    u8 side = GetBattlerSide(gBattlerAttacker);
+                    gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
+                    gSideTimers[side].auroraVeilTimer = 5;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_SignatureAuroraVeil;
+                    return;
+                }
+                break;
 
             case SIG_EFFECT_ATK_PLUS_1:
             case SIG_EFFECT_DEF_PLUS_1:

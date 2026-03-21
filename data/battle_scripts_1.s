@@ -2564,6 +2564,27 @@ BattleScript_AbilityInverseRoom::
 	playanimation BS_BATTLER_0, B_ANIM_MAGIC_ROOM
     end3
 
+BattleScript_SignatureReflect::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_PKMNRAISEDDEF
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_REFLECT
+    return
+
+BattleScript_SignatureLightScreen::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_PKMNRAISEDSPDEF
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_LIGHTSCREEN
+    return
+
+BattleScript_SignatureAuroraVeil::
+    pause B_WAIT_TIME_SHORT
+    printstring STRINGID_PKMNCOVEREDBYVEIL
+    waitstate
+    playanimation BS_ATTACKER, B_ANIM_AURORAVEIL
+    return
+
 BattleScript_EffectRoost::
 	attackcanceler
 	tryhealhalfhealth BS_TARGET, BattleScript_AlreadyAtFullHp
