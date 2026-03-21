@@ -4452,7 +4452,9 @@ static void Cmd_setadditionaleffects(void)
             switch (entry->addedEffect)
             {
             case SIG_EFFECT_SUN:
-                if (!(gBattleWeather & B_WEATHER_SUN))
+                if (!(gBattleWeather & B_WEATHER_SUN) 
+                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
+                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
                 {
                     TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SUN, FALSE);
                     BattleScriptPush(cmd->nextInstr);
@@ -4462,7 +4464,9 @@ static void Cmd_setadditionaleffects(void)
                 break;
 
             case SIG_EFFECT_RAIN:
-                if (!(gBattleWeather & B_WEATHER_RAIN))
+                if (!(gBattleWeather & B_WEATHER_RAIN)
+                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
+                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
                 {
                     TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_RAIN, FALSE);
                     BattleScriptPush(cmd->nextInstr);
@@ -4472,7 +4476,9 @@ static void Cmd_setadditionaleffects(void)
                 break;
 
             case SIG_EFFECT_SAND:
-                if (!(gBattleWeather & B_WEATHER_SANDSTORM))
+                if (!(gBattleWeather & B_WEATHER_SANDSTORM)
+                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
+                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
                 {
                     TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SANDSTORM, FALSE);
                     BattleScriptPush(cmd->nextInstr);
@@ -4482,7 +4488,9 @@ static void Cmd_setadditionaleffects(void)
                 break;
 
             case SIG_EFFECT_SNOW:
-                if (!(gBattleWeather & B_WEATHER_SNOW))
+                if (!(gBattleWeather & B_WEATHER_SNOW)
+                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
+                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
                 {
                     TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SNOW, FALSE);
                     BattleScriptPush(cmd->nextInstr);
@@ -4492,7 +4500,9 @@ static void Cmd_setadditionaleffects(void)
                 break;
 
             case SIG_EFFECT_FOG:
-                if (!(gBattleWeather & B_WEATHER_FOG))
+                if (!(gBattleWeather & B_WEATHER_FOG)
+                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
+                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
                 {
                     TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_FOG, FALSE);
                     BattleScriptPush(cmd->nextInstr);
