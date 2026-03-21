@@ -276,7 +276,7 @@ static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk)
      && IsBattlerAlive(battlerAtk)
      && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, ABILITY_MAGIC_GUARD)
-     && !IsAbilityAndRecord(battlerAtk, ABILITY_IMPASSABLE)
+     && !IsAbilityAndRecord(battlerAtk, ABILITY_INDOMITABLE)
      && !IsAbilityAndRecord(battlerAtk, ABILITY_THICK_FAT))
     {
 
@@ -388,7 +388,7 @@ static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, u32 item)
      && !DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
      && IsBattleMovePhysical(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, ABILITY_MAGIC_GUARD)
-     && !IsAbilityAndRecord(battlerAtk, ABILITY_IMPASSABLE)
+     && !IsAbilityAndRecord(battlerAtk, ABILITY_INDOMITABLE)
      && !IsAbilityAndRecord(battlerAtk, ABILITY_THICK_FAT))
     {
         s32 jabocaDamage = GetNonDynamaxMaxHP(battlerAtk) / 8;
@@ -412,7 +412,7 @@ static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk, u32 item)
      && !DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
      && IsBattleMoveSpecial(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, ABILITY_MAGIC_GUARD)
-     && !IsAbilityAndRecord(battlerAtk, ABILITY_IMPASSABLE)
+     && !IsAbilityAndRecord(battlerAtk, ABILITY_INDOMITABLE)
      && !IsAbilityAndRecord(battlerAtk, ABILITY_THICK_FAT))
     {
         s32 rowapDamage = GetNonDynamaxMaxHP(battlerAtk) / 8;
@@ -605,7 +605,7 @@ static enum ItemEffect TryLifeOrbShellBell(u32 battlerAtk)
         && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
         && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
         && !IsAbilityAndRecord(battlerAtk, ABILITY_MAGIC_GUARD)
-        && !IsAbilityAndRecord(battlerAtk, ABILITY_IMPASSABLE)
+        && !IsAbilityAndRecord(battlerAtk, ABILITY_INDOMITABLE)
         && !IsAbilityAndRecord(battlerAtk, ABILITY_THICK_FAT)
         && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
         && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove))
@@ -668,7 +668,7 @@ static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler, u32 item)
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (!IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
-    && !IsAbilityAndRecord(battler, ABILITY_IMPASSABLE)
+    && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
     && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
@@ -740,7 +740,7 @@ static enum ItemEffect TryLeftoversBlackSludge(u32 battler)
         if (itemEffect == HOLD_EFFECT_BLACK_SLUDGE && (firstSludge || GetConfig(B_ALLOW_HELD_DUPES)) //Black Sludge damage
         && !IS_BATTLER_OF_TYPE(battler, TYPE_POISON)
         && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
-        && !IsAbilityAndRecord(battler, ABILITY_IMPASSABLE)
+        && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
         && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
         {
             firstSludge = FALSE;

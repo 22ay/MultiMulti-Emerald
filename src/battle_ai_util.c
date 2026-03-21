@@ -1006,7 +1006,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
 bool32 AI_IsDamagedByRecoil(u32 battler)
 {
-    if (AI_BATTLER_HAS_TRAIT(battler, ABILITY_MAGIC_GUARD) || AI_BATTLER_HAS_TRAIT(battler, ABILITY_ROCK_HEAD))
+    if (AI_BATTLER_HAS_TRAIT(battler, ABILITY_MAGIC_GUARD) || AI_BATTLER_HAS_TRAIT(battler, ABILITY_ROCK_HEAD) || AI_BATTLER_HAS_TRAIT(battler, ABILITY_INDOMITABLE))
         return FALSE;
     return TRUE;
 }
@@ -3207,7 +3207,7 @@ u32 GetBattlerSecondaryDamage(u32 battlerId)
 {
     u32 secondaryDamage;
 
-    if (AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_MAGIC_GUARD))
+    if (AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_MAGIC_GUARD) || AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_INDOMITABLE))
         return FALSE;
 
     secondaryDamage = GetLeechSeedDamage(battlerId)
@@ -3279,7 +3279,8 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     if (!AreAnyHazardsOnSide(side))
         return FALSE;
 
-    if (BattlerHasTrait(currBattler, ABILITY_MAGIC_GUARD) || BattlerHasTrait(switchBattler, ABILITY_MAGIC_GUARD))
+    if (BattlerHasTrait(currBattler, ABILITY_MAGIC_GUARD) || BattlerHasTrait(switchBattler, ABILITY_MAGIC_GUARD) 
+        || BattlerHasTrait(currBattler, ABILITY_INDOMITABLE) || BattlerHasTrait(switchBattler, ABILITY_INDOMITABLE))
         return FALSE;
     if (BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_HEAVY_DUTY_BOOTS, TRUE))
         return FALSE;
@@ -3540,6 +3541,7 @@ static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler)
     if (AISearchTraits(AIBattlerTraits, ABILITY_MARVEL_SCALE)
       || AISearchTraits(AIBattlerTraits, ABILITY_QUICK_FEET)
       || AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD)
+      || AISearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE)
       || (AISearchTraits(AIBattlerTraits, ABILITY_GUTS) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
       || HasMoveWithEffect(battler, EFFECT_FACADE)
       || HasMoveWithEffect(battler, EFFECT_PSYCHO_SHIFT))
@@ -6040,6 +6042,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct Ai
     case ABILITY_CLEAR_BODY:
     case ABILITY_GOOD_AS_GOLD:
     case ABILITY_MAGIC_GUARD:
+    case ABILITY_INDOMITABLE:
     case ABILITY_MOODY:
     case ABILITY_PURIFYING_SALT:
     case ABILITY_SPEED_BOOST:

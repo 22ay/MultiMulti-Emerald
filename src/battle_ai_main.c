@@ -1204,7 +1204,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         if (!ignoreAbility && CanAbilityAbsorbMove(battlerAtk, battlerDef, move, moveType, AI_CHECK))
             RETURN_SCORE_MINUS(20);
 
-            if (AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD))
+            if (AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD) || AISearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE))
             {    
                 switch (moveEffect)
                 {
@@ -2268,7 +2268,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_RECOIL_IF_MISS:
-            if (!AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD) && gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] < 75
+            if (!AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD) && !AISearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE) && gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] < 75
             && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY))
                 ADJUST_SCORE(-6);
             break;
@@ -4442,6 +4442,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_POPULATION_BOMB:
         if (AI_MoveMakesContact(move, battlerAtk)
           && !AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD)
+          && !AISearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE)
           && Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_ROCKY_HELMET, aiData))
             ADJUST_SCORE(-2);
         break;
@@ -4563,7 +4564,8 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
           || gBattleMons[battlerDef].volatiles.leechSeed
           || HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN)
           || AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_LIQUID_OOZE)
-          || AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_MAGIC_GUARD))
+          || AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_MAGIC_GUARD)
+          || AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_INDOMITABLE))
             break;
         ADJUST_SCORE(GOOD_EFFECT);
         if (!HasDamagingMove(battlerDef)
@@ -5047,7 +5049,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         }
         if(BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
         {
-            if (!IS_BATTLER_OF_TYPE(battlerDef, TYPE_POISON) && !AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_MAGIC_GUARD))
+            if (!IS_BATTLER_OF_TYPE(battlerDef, TYPE_POISON) && !AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_MAGIC_GUARD) && !AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_INDOMITABLE))
                 ADJUST_SCORE(DECENT_EFFECT);
         }
         if(BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_IRON_BALL, TRUE))
@@ -5097,7 +5099,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                     ADJUST_SCORE(DECENT_EFFECT);
             }
             if(BattlerHasHeldItemEffect(battlerDef, HOLD_EFFECT_BLACK_SLUDGE, TRUE)){
-                if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON) || AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD))
+                if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON) || AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD) || AISearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE))
                     ADJUST_SCORE(DECENT_EFFECT);
             }
             if(BattlerHasHeldItemEffect(battlerDef, HOLD_EFFECT_IRON_BALL, TRUE)){

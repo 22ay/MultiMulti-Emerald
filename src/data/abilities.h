@@ -2413,9 +2413,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
     },
 
-    [ABILITY_IMPASSABLE] =
+    [ABILITY_INDOMITABLE] =
     {
-        .name = _("Impassable"),
+        .name = _("Indomitable"),
         .description = COMPOUND_STRING("Only direct attacks damage it."),
         .aiRating = 8,
     },

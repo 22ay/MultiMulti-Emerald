@@ -3588,7 +3588,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         if (IsBattlerAlive(BATTLE_PARTNER(gBattlerTarget))
          && !IsSemiInvulnerable(BATTLE_PARTNER(gBattlerTarget), CHECK_ALL)
          && !BattlerHasTrait(BATTLE_PARTNER(gBattlerTarget), ABILITY_MAGIC_GUARD)
-         && !BattlerHasTrait(BATTLE_PARTNER(gBattlerTarget), ABILITY_IMPASSABLE)
+         && !BattlerHasTrait(BATTLE_PARTNER(gBattlerTarget), ABILITY_INDOMITABLE)
          && !BattlerHasTrait(BATTLE_PARTNER(gBattlerTarget), ABILITY_THICK_FAT))
         {
             u32 partnerTarget = BATTLE_PARTNER(gBattlerTarget);
@@ -6534,7 +6534,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
         {
             if (IsAbilityAndRecord(gBattlerAttacker, ABILITY_ROCK_HEAD)
              || IsAbilityAndRecord(gBattlerAttacker, ABILITY_MAGIC_GUARD)
-             || IsAbilityAndRecord(gBattlerAttacker, ABILITY_IMPASSABLE)
+             || IsAbilityAndRecord(gBattlerAttacker, ABILITY_INDOMITABLE)
              || IsAbilityAndRecord(gBattlerAttacker, ABILITY_THICK_FAT))
                 break;
 
@@ -6557,7 +6557,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
         if (IsBattlerAlive(gBattlerAttacker)
          && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
          && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_MAGIC_GUARD)
-         && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_IMPASSABLE)
+         && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_INDOMITABLE)
          && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_THICK_FAT))
         {
             s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
@@ -6572,7 +6572,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
         {
             if (IsAbilityAndRecord(gBattlerAttacker, ABILITY_ROCK_HEAD)
              || IsAbilityAndRecord(gBattlerAttacker, ABILITY_MAGIC_GUARD)
-             || IsAbilityAndRecord(gBattlerAttacker, ABILITY_IMPASSABLE)
+             || IsAbilityAndRecord(gBattlerAttacker, ABILITY_INDOMITABLE)
              || IsAbilityAndRecord(gBattlerAttacker, ABILITY_THICK_FAT))
                 break;
 
@@ -6680,7 +6680,7 @@ static void Cmd_moveend(void)
                     if (moveEffect != EFFECT_COUNTER
                      && !IsProtectivePadsProtected(gBattlerAttacker)
                      && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_MAGIC_GUARD)
-                     && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_IMPASSABLE)
+                     && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_INDOMITABLE)
                      && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_THICK_FAT))
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
@@ -8560,7 +8560,7 @@ void TryHazardsOnSwitchIn(u32 battler, u32 side, enum Hazards hazardType)
         break;
     case HAZARDS_SPIKES:
         if (!SearchTraits(battlerTraits, ABILITY_MAGIC_GUARD)
-         && !SearchTraits(battlerTraits, ABILITY_IMPASSABLE)
+         && !SearchTraits(battlerTraits, ABILITY_INDOMITABLE)
          && !SearchTraits(battlerTraits, ABILITY_THICK_FAT)
          && IsBattlerAffectedByHazards(battler, FALSE)
          && IsBattlerGrounded(battler))
@@ -8612,7 +8612,7 @@ void TryHazardsOnSwitchIn(u32 battler, u32 side, enum Hazards hazardType)
     case HAZARDS_STEALTH_ROCK:
         if (IsBattlerAffectedByHazards(battler, FALSE) 
         && !SearchTraits(battlerTraits, ABILITY_MAGIC_GUARD) 
-        && !SearchTraits(battlerTraits, ABILITY_IMPASSABLE)
+        && !SearchTraits(battlerTraits, ABILITY_INDOMITABLE)
         && !SearchTraits(battlerTraits, ABILITY_THICK_FAT))
         {
             gBattleStruct->passiveHpUpdate[battler] = GetStealthHazardDamage(TYPE_SIDE_HAZARD_POINTED_STONES, battler);
@@ -8623,7 +8623,7 @@ void TryHazardsOnSwitchIn(u32 battler, u32 side, enum Hazards hazardType)
     case HAZARDS_STEELSURGE:
         if (IsBattlerAffectedByHazards(battler, FALSE) 
         && !SearchTraits(battlerTraits, ABILITY_MAGIC_GUARD) 
-        && !SearchTraits(battlerTraits, ABILITY_IMPASSABLE)
+        && !SearchTraits(battlerTraits, ABILITY_INDOMITABLE)
         && !SearchTraits(battlerTraits, ABILITY_THICK_FAT))
         {
             gBattleStruct->passiveHpUpdate[battler] = GetStealthHazardDamage(TYPE_SIDE_HAZARD_SHARP_STEEL, battler);
@@ -16590,7 +16590,7 @@ void BS_TryActivateGulpMissile(void)
         && BattlerHasTrait(gBattlerTarget, ABILITY_GULP_MISSILE))
     {
         PushTraitStack(gBattlerAttacker, ABILITY_GULP_MISSILE);
-        if (!BattlerHasTrait(gBattlerAttacker, ABILITY_MAGIC_GUARD) && !BattlerHasTrait(gBattlerAttacker, ABILITY_IMPASSABLE)
+        if (!BattlerHasTrait(gBattlerAttacker, ABILITY_MAGIC_GUARD) && !BattlerHasTrait(gBattlerAttacker, ABILITY_INDOMITABLE)
          && !BattlerHasTrait(gBattlerAttacker, ABILITY_THICK_FAT))
             SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
 

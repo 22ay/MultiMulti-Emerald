@@ -2928,7 +2928,7 @@ static enum MoveCanceler CancelerPowderStatus(struct BattleContext *ctx)
     if (TryActivatePowderStatus(ctx->currentMove))
     {
         if (!IsAbilityAndRecord(ctx->battlerAtk, ABILITY_MAGIC_GUARD)
-        && !IsAbilityAndRecord(ctx->battlerAtk, ABILITY_IMPASSABLE)
+        && !IsAbilityAndRecord(ctx->battlerAtk, ABILITY_INDOMITABLE)
         && !IsAbilityAndRecord(ctx->battlerAtk, ABILITY_THICK_FAT))
             SetPassiveDamageAmount(ctx->battlerAtk, GetNonDynamaxMaxHP(ctx->battlerAtk) / 4);
 
@@ -5675,7 +5675,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         {
             PushTraitStack(battler, ABILITY_GULP_MISSILE);
             if (!IsAbilityAndRecord(gBattlerAttacker, ABILITY_MAGIC_GUARD)
-            && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_IMPASSABLE)
+            && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_INDOMITABLE)
             && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_THICK_FAT))
                 SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
 
