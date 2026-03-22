@@ -5681,6 +5681,26 @@ BattleScript_AngerShellTrySpeed:
 BattleScript_AngerShellRet:
 	return
 
+BattleScript_LastStandActivates::
+	call BattleScript_AbilityPopUp
+	jumpifstat BS_EFFECT_BATTLER, CMP_LESS_THAN, STAT_ATK, MAX_STAT_STAGE, BattleScript_LastStandTryDef
+	jumpifstat BS_EFFECT_BATTLER, CMP_LESS_THAN, STAT_SPATK, MAX_STAT_STAGE, BattleScript_LastStandTryDef
+	jumpifstat BS_EFFECT_BATTLER, CMP_LESS_THAN, STAT_SPEED, MAX_STAT_STAGE, BattleScript_LastStandTryDef
+	jumpifstat BS_EFFECT_BATTLER, CMP_GREATER_THAN, STAT_DEF, MIN_STAT_STAGE, BattleScript_LastStandTryDef
+	jumpifstat BS_EFFECT_BATTLER, CMP_EQUAL, STAT_SPDEF, MIN_STAT_STAGE, BattleScript_RestoreAttackerButItFailed
+BattleScript_LastStandTryDef::
+	modifybattlerstatstage BS_EFFECT_BATTLER, STAT_DEF, DECREASE, 1, BattleScript_LastStandTrySpDef, ANIM_ON
+BattleScript_LastStandTrySpDef:
+	modifybattlerstatstage BS_EFFECT_BATTLER, STAT_SPDEF, DECREASE, 1, BattleScript_LastStandTryAttack, ANIM_ON
+BattleScript_LastStandTryAttack:
+	modifybattlerstatstage BS_EFFECT_BATTLER, STAT_ATK, INCREASE, 1, BattleScript_LastStandTrySpAtk, ANIM_ON
+BattleScript_LastStandTrySpAtk:
+	modifybattlerstatstage BS_EFFECT_BATTLER, STAT_SPATK, INCREASE, 1, BattleScript_LastStandTrySpeed, ANIM_ON
+BattleScript_LastStandTrySpeed:
+	modifybattlerstatstage BS_EFFECT_BATTLER, STAT_SPEED, INCREASE, 1, BattleScript_LastStandRet, ANIM_ON
+BattleScript_LastStandRet:
+	return
+
 BattleScript_WindPowerActivates::
 	call BattleScript_AbilityPopUp
 	setvolatile BS_TARGET, VOLATILE_CHARGE_TIMER, 1

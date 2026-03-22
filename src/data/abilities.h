@@ -2630,4 +2630,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_LAST_STAND] =
+    {
+        .name = _("Last Stand"),
+        .description = COMPOUND_STRING("Stats raise at half HP"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_ARROGANCE] =
+    {
+        .name = _("Arrogance"),
+        .description = COMPOUND_STRING("Stronger at full HP"),
+        .aiRating = 6,
+    },
+
 };

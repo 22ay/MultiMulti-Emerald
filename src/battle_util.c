@@ -5206,6 +5206,15 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_AngerShellActivates);
             effect++;
         }
+        if (SearchTraits(battlerTraits, ABILITY_LAST_STAND)
+         && IsBattlerTurnDamaged(battler)
+         && IsBattlerAlive(battler)
+         && HadMoreThanHalfHpNowDoesnt(battler))
+        {
+            PushTraitStack(gBattlerTarget, ABILITY_LAST_STAND);
+            BattleScriptCall(BattleScript_LastStandActivates);
+            effect++;
+        }
         break;
     case ABILITYEFFECT_MOVE_END: // Think contact abilities.
         if (SearchTraits(battlerTraits, ABILITY_JUSTIFIED)
@@ -7932,6 +7941,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     STORE_BATTLER_TRAITS(battlerAtk);
 
     if (SearchTraits(battlerTraits, ABILITY_TECHNICIAN) && basePower <= 60)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
+    if (SearchTraits(battlerTraits, ABILITY_ARROGANCE) && IsBattlerAtMaxHp(battlerAtk))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
     if (SearchTraits(battlerTraits, ABILITY_FLARE_BOOST) && gBattleMons[battlerAtk].status1 & STATUS1_BURN && IsBattleMoveSpecial(move))
