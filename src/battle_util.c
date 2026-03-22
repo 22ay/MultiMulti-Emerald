@@ -10448,8 +10448,7 @@ u32 TryImmunityAbilityHealStatus(u32 battler, enum AbilityEffect caseID)
         StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
         effect = 2;
     }
-    else if (SearchTraits(battlerTraits, ABILITY_OBLIVIOUS)
-     && gBattleMons[battler].volatiles.infatuation > 0)
+    else if (SearchTraits(battlerTraits, ABILITY_OBLIVIOUS))
     {
         PushTraitStack(battler, ABILITY_OBLIVIOUS);
         if (gBattleMons[battler].volatiles.infatuation)
