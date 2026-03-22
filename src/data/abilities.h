@@ -2609,4 +2609,25 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_HUBRIS] =
+    {
+        .name = _("Hubris"),
+        .description = COMPOUND_STRING("KOs raise Sp.Attack"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_HORRIFY] =
+    {
+        .name = _("Horrify"),
+        .description = COMPOUND_STRING("Lowers the foe's Sp.Attack"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_STRIKER] =
+    {
+        .name = _("Striker"),
+        .description = COMPOUND_STRING("Boosts kicking moves"),
+        .aiRating = 6,
+    },
+
 };

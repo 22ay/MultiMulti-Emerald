@@ -6202,7 +6202,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
             }
         }
     }
-if (SearchTraits(battlerTraits, ABILITY_MOXIE))
+    if (SearchTraits(battlerTraits, ABILITY_MOXIE))
     {
         if (IsBattlerAlive(battlerAtk) && !NoAliveMonsForEitherParty())
         {
@@ -6216,6 +6216,25 @@ if (SearchTraits(battlerTraits, ABILITY_MOXIE))
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
                 gBattleScripting.animArg1 = GET_STAT_BUFF_ID(stat) + (numMonsFainted > 1 ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1);
                 PushTraitStack(battlerAtk, ABILITY_MOXIE);
+                BattleScriptCall(BattleScript_RaiseStatOnFaintingTargetMoxie);
+                effect = TRUE;
+            }
+        }
+    }
+    if (SearchTraits(battlerTraits, ABILITY_HUBRIS))
+    {
+        if (IsBattlerAlive(battlerAtk) && !NoAliveMonsForEitherParty())
+        {
+            u32 stat = STAT_SPATK;
+            u32 numMonsFainted = NumFaintedBattlersByAttacker(battlerAtk);
+
+            if (numMonsFainted && CompareStat(battlerAtk, stat, MAX_STAT_STAGE, CMP_LESS_THAN))
+            {
+                gLastUsedAbility = ABILITY_HUBRIS;
+                SET_STATCHANGER(stat, numMonsFainted, FALSE);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
+                gBattleScripting.animArg1 = GET_STAT_BUFF_ID(stat) + (numMonsFainted > 1 ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1);
+                PushTraitStack(battlerAtk, ABILITY_HUBRIS);
                 BattleScriptCall(BattleScript_RaiseStatOnFaintingTargetMoxie);
                 effect = TRUE;
             }
@@ -17391,6 +17410,45 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
         gBattlerAbility = gBattlerTarget;
         PushTraitStack(gBattlerTarget, ABILITY_GUARD_DOG);
         gBattlescriptCurrInstr = BattleScript_IntimidateInReverse;
+        RecordAbilityBattle(gBattlerTarget, ABILITY_GUARD_DOG);
+    }
+    else if (ability != ABILITY_NONE && GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8)
+    {
+        gLastUsedAbility = ability;
+        gBattlerAbility = gBattlerTarget;
+        PushTraitStack(gBattlerTarget, ability);
+        gBattlescriptCurrInstr = BattleScript_IntimidatePrevented;
+        RecordAbilityBattle(gBattlerTarget, ability);
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
+void BS_JumpIfHorrifyAbilityPrevented(void)
+{
+    NATIVE_ARGS();
+
+    enum Ability ability = ABILITY_NONE;
+    enum Ability battlerTraits[MAX_MON_TRAITS];
+    STORE_BATTLER_TRAITS(gBattlerTarget);
+
+    if (SearchTraits(battlerTraits, ABILITY_INNER_FOCUS))
+        ability = ABILITY_INNER_FOCUS;
+    else if (SearchTraits(battlerTraits, ABILITY_SCRAPPY))
+        ability = ABILITY_SCRAPPY;
+    else if (SearchTraits(battlerTraits, ABILITY_OWN_TEMPO))
+        ability = ABILITY_OWN_TEMPO;
+    else if (SearchTraits(battlerTraits, ABILITY_OBLIVIOUS))
+        ability = ABILITY_OBLIVIOUS;
+
+    if (SearchTraits(battlerTraits, ABILITY_GUARD_DOG))
+    {
+        gLastUsedAbility = ability = ABILITY_GUARD_DOG;
+        gBattlerAbility = gBattlerTarget;
+        PushTraitStack(gBattlerTarget, ABILITY_GUARD_DOG);
+        gBattlescriptCurrInstr = BattleScript_HorrifyInReverse;
         RecordAbilityBattle(gBattlerTarget, ABILITY_GUARD_DOG);
     }
     else if (ability != ABILITY_NONE && GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8)
