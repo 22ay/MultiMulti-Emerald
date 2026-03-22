@@ -14029,7 +14029,7 @@ static void Cmd_switchoutabilities(void)
                                          &gBattleMons[battler].status1);
             MarkBattlerForControllerExec(battler);
         }
-    if (BattlerHasTrait(battler, ABILITY_REGENERATOR))
+    if (BattlerHasTrait(battler, ABILITY_REGENERATOR) || BattlerHasTrait(battler, ABILITY_TRUANT))
     {
         {
             u32 regenerate = GetNonDynamaxMaxHP(battler) / 3;

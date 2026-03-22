@@ -9060,6 +9060,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_PRISM_ARMOR);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
     }
+    if (SearchTraits(battlerTraits, ABILITY_STALL))
+    {
+        RecordAbilityBattle(ctx->battlerAtk, ABILITY_STALL);
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+    }
     if (SearchTraits(battlerTraits, ABILITY_BATTLE_ARMOR))
     {
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_BATTLE_ARMOR);
