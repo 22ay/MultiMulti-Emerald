@@ -8536,6 +8536,20 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         if (ctx->updateFlags)
             RecordAbilityBattle(battlerDef, ABILITY_PURIFYING_SALT);
     }
+    if (BattlerHasTrait(battlerDef, ABILITY_IMMUNITY)
+     && moveType == TYPE_POISON)
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
+        if (ctx->updateFlags)
+            RecordAbilityBattle(battlerDef, ABILITY_IMMUNITY);
+    }
+    if (BattlerHasTrait(battlerDef, ABILITY_DAZZLING)
+     && moveType == TYPE_DARK)
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
+        if (ctx->updateFlags)
+            RecordAbilityBattle(battlerDef, ABILITY_DAZZLING);
+    }
 
     // ally's abilities
     if (IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
@@ -9001,6 +9015,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_SHADOW_SHIELD);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
     }
+    if (SearchTraits(battlerTraits, ABILITY_SHELL_ARMOR) && IsBattlerAtMaxHp(ctx->battlerDef))
+    {
+        RecordAbilityBattle(ctx->battlerAtk, ABILITY_SHELL_ARMOR);
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
+    }
     if (SearchTraits(battlerTraits, ABILITY_FILTER) && ctx->typeEffectivenessModifier >= UQ_4_12(2.0))
     {
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_FILTER);
@@ -9015,6 +9034,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
     {
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_PRISM_ARMOR);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_BATTLE_ARMOR))
+    {
+        RecordAbilityBattle(ctx->battlerAtk, ABILITY_BATTLE_ARMOR);
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
     }
     if (SearchTraits(battlerTraits, ABILITY_FLUFFY))
     {
