@@ -4842,14 +4842,22 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     // other abilities
     if (SearchTraits(battlerTraits, ABILITY_QUICK_FEET) && gBattleMons[battler].status1 & STATUS1_ANY)
         speed += baseSpeed / 2;
+
     if (SearchTraits(battlerTraits, ABILITY_VIOLENT_RUSH) && gDisableStructs[battler].isFirstTurn)
         speed += baseSpeed / 2;
+
+    if (SearchTraits(battlerTraits, ABILITY_LIGHT_METAL))
+        speed += baseSpeed / 4;
+
     if (SearchTraits(battlerTraits, ABILITY_SURGE_SURFER) && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
         speed += baseSpeed;
+
     if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS) && !(gBattleMons[battler].volatiles.transformed) && ((gBattleWeather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
+
     if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE) && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
+
     if (SearchTraits(battlerTraits, ABILITY_UNBURDEN) && gDisableStructs[battler].unburdenActive)
     {
         u8 occupiedSlots = MAX_MON_ITEMS;
@@ -5231,7 +5239,7 @@ static void SetActionsAndBattlersTurnOrder(void)
                     gActionsByTurnOrder[turnOrderId] = gChosenActionByBattler[battler];
                     gBattlerByTurnOrder[turnOrderId] = battler;
                     quickClawRandom[battler] = RandomPercentage(RNG_QUICK_CLAW, quickChance);
-                    quickDrawRandom[battler] = RandomPercentage(RNG_QUICK_DRAW, 30);
+                    quickDrawRandom[battler] = RandomPercentage(RNG_QUICK_DRAW, 40);
                     turnOrderId++;
                 }
             }

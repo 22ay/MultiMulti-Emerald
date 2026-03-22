@@ -5091,7 +5091,18 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             {
                 gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                 PushTraitStack(battler, ABILITY_REGENERATOR);
-                BattleScriptExecute(BattleScript_IceBodyHeal);
+                BattleScriptExecute(BattleScript_RegeneratorHeal);
+                SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                effect++;
+                break;
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HONEY_GATHER)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+            && !IsBattlerAtMaxHp(battler)
+            && !gBattleMons[battler].volatiles.healBlock)
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_HONEY_GATHER);
+                BattleScriptExecute(BattleScript_HoneyGatherHeal);
                 SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
                 effect++;
                 break;
@@ -7981,6 +7992,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_TOUGH_CLAWS) && IsMoveMakingContact(battlerAtk, battlerDef, ctx->move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
 
+    if (SearchTraits(battlerTraits, ABILITY_BIG_PECKS) && IsMoveMakingContact(battlerAtk, battlerDef, ctx->move))
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+
     if (SearchTraits(battlerTraits, ABILITY_STRONG_JAW) && IsBitingMove(move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
@@ -9064,6 +9078,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
     {
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_STALL);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_HEAVY_METAL))
+    {
+        RecordAbilityBattle(ctx->battlerAtk, ABILITY_HEAVY_METAL);
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
     }
     if (SearchTraits(battlerTraits, ABILITY_BATTLE_ARMOR))
     {
