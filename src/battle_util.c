@@ -7981,6 +7981,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_STEELWORKER) && moveType == TYPE_STEEL)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
+    if (SearchTraits(battlerTraits, ABILITY_LEVITATE) && moveType == TYPE_FLYING)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_PIXILATE) && moveType == TYPE_FAIRY && gBattleStruct->battlerState[battlerAtk].ateBoost)
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
 
@@ -9038,6 +9041,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_BATTLE_ARMOR))
     {
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_BATTLE_ARMOR);
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_MAGMA_ARMOR))
+    {
+        RecordAbilityBattle(ctx->battlerAtk, ABILITY_MAGMA_ARMOR);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
     }
     if (SearchTraits(battlerTraits, ABILITY_FLUFFY))
@@ -10441,7 +10449,7 @@ u32 TryImmunityAbilityHealStatus(u32 battler, enum AbilityEffect caseID)
         effect = 2;
     }
     else if (SearchTraits(battlerTraits, ABILITY_OBLIVIOUS)
-     && gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+     && gBattleMons[battler].volatiles.infatuation > 0)
     {
         PushTraitStack(battler, ABILITY_OBLIVIOUS);
         if (gBattleMons[battler].volatiles.infatuation)
@@ -11814,11 +11822,14 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
     // Attacker's ability
     if (SearchTraits(battlerTraits, ABILITY_COMPOUND_EYES))
         calc = (calc * 130) / 100; // 1.3 compound eyes boost
+    if (SearchTraits(battlerTraits, ABILITY_ILLUMINATE))
+        calc = (calc * 130) / 100; // 1.3 illuminate boost
+    if (SearchTraits(battlerTraits, ABILITY_KEEN_EYE))
+        calc = (calc * 130) / 100; // 1.3 keen eye boost
     if (SearchTraits(battlerTraits, ABILITY_VICTORY_STAR))
         calc = (calc * 110) / 100; // 1.1 victory star boost
     if (SearchTraits(battlerTraits, ABILITY_HUSTLE))
-        if (IsBattleMovePhysical(move))
-            calc = (calc * 80) / 100; // 1.2 hustle loss
+        calc = (calc * 80) / 100; // 1.2 hustle loss
 
     // Target's ability
     STORE_BATTLER_TRAITS(battlerDef);
