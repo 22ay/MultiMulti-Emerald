@@ -2644,4 +2644,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_BRUTE_FORCE] =
+    {
+        .name = _("Brute Force"),
+        .description = COMPOUND_STRING("All attacks use Attack"),
+        .aiRating = 6,
+    },
+
+    [ABILITY_ARCANA] =
+    {
+        .name = _("Arcana"),
+        .description = COMPOUND_STRING("All attacks use Sp.Attack"),
+        .aiRating = 6,
+    },
+
 };

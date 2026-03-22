@@ -8322,6 +8322,16 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
 		atkStat  = gBattleMons[battlerAtk].speed;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
     }
+    else if (BattlerHasTrait(battlerAtk, ABILITY_BRUTE_FORCE))
+    {
+		atkStat  = gBattleMons[battlerAtk].attack;
+        atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+    }
+    else if (BattlerHasTrait(battlerAtk, ABILITY_ARCANA))
+    {
+		atkStat  = gBattleMons[battlerAtk].spAttack;
+        atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+    }
     else if (entry)
     {
         switch (entry->attackStatMode)

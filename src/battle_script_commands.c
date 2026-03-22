@@ -1719,6 +1719,8 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
                         + GetHoldEffectCritChanceIncrease(battlerAtk)
                         + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
                         + ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_SUPER_LUCK) : BattlerHasTrait(battlerAtk, ABILITY_SUPER_LUCK)) ? 1 : 0)
+                        + ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_INFILTRATOR) : BattlerHasTrait(battlerAtk, ABILITY_INFILTRATOR)) ? 1 : 0)
+                        + ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_HYPER_CUTTER) : BattlerHasTrait(battlerAtk, ABILITY_HYPER_CUTTER)) ? 1 : 0)
                         + gBattleMons[battlerAtk].volatiles.bonusCritStages;
             if (critChance >= ARRAY_COUNT(sCriticalHitOdds))
                 critChance = ARRAY_COUNT(sCriticalHitOdds) - 1;
