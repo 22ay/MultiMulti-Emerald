@@ -5833,10 +5833,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_AbilityStatusEffectAtk);
             effect++;
         }
-        else if (SearchTraits(battlerTraits, ABILITY_STENCH)
+        else if ((SearchTraits(battlerTraits, ABILITY_STENCH) || SearchTraits(battlerTraits, ABILITY_UNNERVE))
          && IsBattlerAlive(gBattlerTarget)
          && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-         && RandomChance(RNG_STENCH, 1, 10)
+         && RandomChance(RNG_STENCH, 1, 15)
          && IsBattlerTurnDamaged(gBattlerTarget)
          && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))
         {
@@ -9092,6 +9092,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_MAGMA_ARMOR))
     {
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_MAGMA_ARMOR);
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_STEADFAST))
+    {
+        RecordAbilityBattle(ctx->battlerAtk, ABILITY_STEADFAST);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
     }
     if (SearchTraits(battlerTraits, ABILITY_FLUFFY))
