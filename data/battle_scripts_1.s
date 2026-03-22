@@ -7113,7 +7113,7 @@ BattleScript_HorrifyEffect:
 	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_HorrifyLoopIncrement
 	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_HorrifyContrary
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_HorrifyWontDecrease
-	printstring STRINGID_PKMNCUTSATTACKWITH
+	printstring STRINGID_PKMNCUTSSPATTACKWITH
 BattleScript_HorrifyEffect_WaitString:
 	waitmessage B_WAIT_TIME_LONG
 	saveattacker
