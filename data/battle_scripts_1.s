@@ -7194,6 +7194,68 @@ BattleScript_HorrifyInReverse::
 	call BattleScript_TryIntimidateHoldEffects
 	goto BattleScript_HorrifyLoopIncrement
 
+BattleScript_PressureActivates::
+	savetarget
+	call BattleScript_AbilityPopUp
+	setbyte gBattlerTarget, 0
+BattleScript_PressureLoop:
+	sethword gDisplayAbility ABILITY_PRESSURE
+	jumpiftargetally BattleScript_PressureLoopIncrement
+	jumpifabsent BS_TARGET, BattleScript_PressureLoopIncrement
+	jumpifvolatile BS_TARGET, VOLATILE_SUBSTITUTE, BattleScript_PressureLoopIncrement
+	jumpifpressureabilityprevented
+BattleScript_PressureEffect:
+	copybyte sBATTLER, gBattlerAttacker
+	setstatchanger STAT_ATK, 1, TRUE
+	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_PressureLoopIncrement
+	setstatchanger STAT_SPATK, 1, TRUE
+	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_PressureLoopIncrement
+	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_PressureContrary
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_PressureWontDecrease
+	printstring STRINGID_PRESSUREENTERS
+BattleScript_PressureEffect_WaitString:
+	waitmessage B_WAIT_TIME_LONG
+	saveattacker
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_TryIntimidateHoldEffects
+	restoreattacker
+	restoretarget
+BattleScript_PressureLoopIncrement:
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_PressureLoop
+	copybyte sBATTLER, gBattlerAttacker
+	destroyabilitypopup
+	restoretarget
+	restoreattacker
+	pause B_WAIT_TIME_MED
+	tryintimidateejectpack
+	end3
+
+BattleScript_PressurePrevented::
+	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNPREVENTSSTATLOSSWITH
+	goto BattleScript_PressureEffect_WaitString
+
+BattleScript_PressureWontDecrease:
+	printstring STRINGID_STATSWONTDECREASE
+	goto BattleScript_PressureEffect_WaitString
+
+BattleScript_PressureContrary:
+	pushtraitstack BS_TARGET ABILITY_CONTRARY
+	printstring STRINGID_PKMNINTIMIDATECONTRARYRATTLED
+	goto BattleScript_PressureEffect_WaitString
+
+BattleScript_PressureInReverse::
+	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_AbilityPopUpTarget
+	pause B_WAIT_TIME_SHORT
+	modifybattlerstatstage BS_TARGET, STAT_ATK, INCREASE, 1, BattleScript_PressureLoopIncrement, ANIM_ON
+	modifybattlerstatstage BS_TARGET, STAT_SPATK, INCREASE, 1, BattleScript_PressureLoopIncrement, ANIM_ON
+	call BattleScript_TryIntimidateHoldEffects
+	goto BattleScript_PressureLoopIncrement
+
 BattleScript_SupersweetSyrupActivates::
  	savetarget
 	call BattleScript_AbilityPopUp
@@ -8093,12 +8155,6 @@ BattleScript_UnnerveActivates::
 BattleScript_ForewarnActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_FOREWARNACTIVATES
-	waitmessage B_WAIT_TIME_LONG
-	end3
-
-BattleScript_PressureActivates::
-	call BattleScript_AbilityPopUp
-	printstring STRINGID_PRESSUREENTERS
 	waitmessage B_WAIT_TIME_LONG
 	end3
 

@@ -4276,6 +4276,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             gBattlerAttacker = battler;
             effect += CommonSwitchInAbilities(battler, ABILITY_HORRIFY, traitCheck, BattleScript_HorrifyActivates);
         }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PRESSURE)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+         && !IsOpposingSideEmpty(battler))
+        {
+            PushTraitStack(battler, ABILITY_PRESSURE);
+            SaveBattlerAttacker(gBattlerAttacker);
+            gBattlerAttacker = battler;
+            effect += CommonSwitchInAbilities(battler, ABILITY_PRESSURE, traitCheck, BattleScript_PressureActivates);
+        }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SUPERSWEET_SYRUP)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && !GetBattlerPartyState(battler)->supersweetSyrup
          && !IsOpposingSideEmpty(battler))

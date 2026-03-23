@@ -183,6 +183,8 @@ extern const u8 BattleScript_IntimidateInReverse[];
 extern const u8 BattleScript_HorrifyActivates[];
 extern const u8 BattleScript_HorrifyPrevented[];
 extern const u8 BattleScript_HorrifyInReverse[];
+extern const u8 BattleScript_PressurePrevented[];
+extern const u8 BattleScript_PressureInReverse[];
 extern const u8 BattleScript_DroughtActivates[];
 extern const u8 BattleScript_SignatureSun[];
 extern const u8 BattleScript_TookAttack[];

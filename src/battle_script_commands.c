@@ -17458,7 +17458,46 @@ void BS_JumpIfHorrifyAbilityPrevented(void)
         gLastUsedAbility = ability;
         gBattlerAbility = gBattlerTarget;
         PushTraitStack(gBattlerTarget, ability);
-        gBattlescriptCurrInstr = BattleScript_IntimidatePrevented;
+        gBattlescriptCurrInstr = BattleScript_HorrifyPrevented;
+        RecordAbilityBattle(gBattlerTarget, ability);
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
+void BS_JumpIfPressureAbilityPrevented(void)
+{
+    NATIVE_ARGS();
+
+    enum Ability ability = ABILITY_NONE;
+    enum Ability battlerTraits[MAX_MON_TRAITS];
+    STORE_BATTLER_TRAITS(gBattlerTarget);
+
+    if (SearchTraits(battlerTraits, ABILITY_INNER_FOCUS))
+        ability = ABILITY_INNER_FOCUS;
+    else if (SearchTraits(battlerTraits, ABILITY_SCRAPPY))
+        ability = ABILITY_SCRAPPY;
+    else if (SearchTraits(battlerTraits, ABILITY_OWN_TEMPO))
+        ability = ABILITY_OWN_TEMPO;
+    else if (SearchTraits(battlerTraits, ABILITY_OBLIVIOUS))
+        ability = ABILITY_OBLIVIOUS;
+
+    if (SearchTraits(battlerTraits, ABILITY_GUARD_DOG))
+    {
+        gLastUsedAbility = ability = ABILITY_GUARD_DOG;
+        gBattlerAbility = gBattlerTarget;
+        PushTraitStack(gBattlerTarget, ABILITY_GUARD_DOG);
+        gBattlescriptCurrInstr = BattleScript_PressureInReverse;
+        RecordAbilityBattle(gBattlerTarget, ABILITY_GUARD_DOG);
+    }
+    else if (ability != ABILITY_NONE && GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8)
+    {
+        gLastUsedAbility = ability;
+        gBattlerAbility = gBattlerTarget;
+        PushTraitStack(gBattlerTarget, ability);
+        gBattlescriptCurrInstr = BattleScript_PressurePrevented;
         RecordAbilityBattle(gBattlerTarget, ability);
     }
     else

@@ -1379,6 +1379,10 @@
 	callnative BS_JumpIfHorrifyAbilityPrevented
 	.endm
 
+	.macro jumpifpressureabilityprevented
+	callnative BS_JumpIfPressureAbilityPrevented
+	.endm
+
 	.macro metalburstdamagecalculator failInstr:req
 	callnative BS_CalcMetalBurstDmg
 	.4byte \failInstr
