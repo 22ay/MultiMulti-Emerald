@@ -2658,4 +2658,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_LIQUID_BODY] =
+    {
+        .name = _("Liquid Body"),
+        .description = COMPOUND_STRING("Tougher but weak to Water"),
+        .aiRating = 6,
+    },
+
 };

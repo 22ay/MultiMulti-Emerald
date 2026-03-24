@@ -9107,6 +9107,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_STEADFAST);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
     }
+    if (SearchTraits(battlerTraits, ABILITY_ANTICIPATION))
+    {
+        RecordAbilityBattle(ctx->battlerAtk, ABILITY_ANTICIPATION);
+        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
+    }
     if (SearchTraits(battlerTraits, ABILITY_FLUFFY))
     {
         if (ctx->moveType == TYPE_FIRE && !IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->move))
@@ -9117,6 +9122,19 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
         if (ctx->moveType != TYPE_FIRE && IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->move))
         {
             RecordAbilityBattle(ctx->battlerAtk, ABILITY_FLUFFY);    
+            modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));  
+        }
+    }
+    if (SearchTraits(battlerTraits, ABILITY_LIQUID_BODY))
+    {
+        if (ctx->moveType == TYPE_WATER && !IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->move))
+        {
+            RecordAbilityBattle(ctx->battlerAtk, ABILITY_LIQUID_BODY);    
+            modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
+        }
+        if (ctx->moveType != TYPE_WATER && IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->move))
+        {
+            RecordAbilityBattle(ctx->battlerAtk, ABILITY_LIQUID_BODY);    
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));  
         }
     }
