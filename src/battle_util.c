@@ -8344,15 +8344,17 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
 		atkStat  = gBattleMons[battlerAtk].speed;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
     }
-    else if (BattlerHasTrait(battlerAtk, ABILITY_BRUTE_FORCE))
+    else if (BattlerHasTrait(battlerAtk, ABILITY_BRUTE_FORCE) && IsBattleMoveSpecial(move))
     {
-		atkStat  = gBattleMons[battlerAtk].attack;
+        atkStat  = gBattleMons[battlerAtk].attack;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+        gBattleStruct->swapDamageCategory = TRUE;
     }
-    else if (BattlerHasTrait(battlerAtk, ABILITY_ARCANA))
+    else if (BattlerHasTrait(battlerAtk, ABILITY_ARCANA) && IsBattleMovePhysical(move))
     {
 		atkStat  = gBattleMons[battlerAtk].spAttack;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+        gBattleStruct->swapDamageCategory = TRUE;
     }
     else if (entry)
     {
