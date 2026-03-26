@@ -1,40 +1,140 @@
 const u32 gBattleEnvironmentTiles_TallGrass[] = INCBIN_U32("graphics/battle_environment/tall_grass/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_TallGrass[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_TallGrass_Morning[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_TallGrass_Day[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_TallGrass_Evening[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette_night.gbapal");
+const u16 gBattleEnvironmentPalette_TallGrass_Night[] = INCBIN_U16("graphics/battle_environment/tall_grass/palette_night.gbapal");
 const u32 gBattleEnvironmentTilemap_TallGrass[] = INCBIN_U32("graphics/battle_environment/tall_grass/map.bin.smolTM");
 
 const u32 gBattleEnvironmentTiles_LongGrass[] = INCBIN_U32("graphics/battle_environment/long_grass/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_LongGrass[] = INCBIN_U16("graphics/battle_environment/long_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_LongGrass_Morning[] = INCBIN_U16("graphics/battle_environment/long_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_LongGrass_Day[] = INCBIN_U16("graphics/battle_environment/long_grass/palette.gbapal");
+const u16 gBattleEnvironmentPalette_LongGrass_Evening[] = INCBIN_U16("graphics/battle_environment/long_grass/palette_night.gbapal");
+const u16 gBattleEnvironmentPalette_LongGrass_Night[] = INCBIN_U16("graphics/battle_environment/long_grass/palette_night.gbapal");
 const u32 gBattleEnvironmentTilemap_LongGrass[] = INCBIN_U32("graphics/battle_environment/long_grass/map.bin.smolTM");
 
 const u32 gBattleEnvironmentTiles_Sand[] = INCBIN_U32("graphics/battle_environment/sand/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_Sand[] = INCBIN_U16("graphics/battle_environment/sand/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Sand_Morning[] = INCBIN_U16("graphics/battle_environment/sand/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Sand_Day[] = INCBIN_U16("graphics/battle_environment/sand/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Sand_Evening[] = INCBIN_U16("graphics/battle_environment/sand/palette_night.gbapal");
+const u16 gBattleEnvironmentPalette_Sand_Night[] = INCBIN_U16("graphics/battle_environment/sand/palette_night.gbapal");
 const u32 gBattleEnvironmentTilemap_Sand[] = INCBIN_U32("graphics/battle_environment/sand/map.bin.smolTM");
 
 const u32 gBattleEnvironmentTiles_Underwater[] = INCBIN_U32("graphics/battle_environment/underwater/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_Underwater[] = INCBIN_U16("graphics/battle_environment/underwater/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Underwater_Morning[] = INCBIN_U16("graphics/battle_environment/underwater/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Underwater_Day[]     = INCBIN_U16("graphics/battle_environment/underwater/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Underwater_Evening[] = INCBIN_U16("graphics/battle_environment/underwater/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Underwater_Night[]   = INCBIN_U16("graphics/battle_environment/underwater/palette.gbapal");
 const u32 gBattleEnvironmentTilemap_Underwater[] = INCBIN_U32("graphics/battle_environment/underwater/map.bin.smolTM");
 
 const u32 gBattleEnvironmentTiles_Water[] = INCBIN_U32("graphics/battle_environment/water/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_Water[] = INCBIN_U16("graphics/battle_environment/water/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Water_Morning[] = INCBIN_U16("graphics/battle_environment/water/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Water_Day[]     = INCBIN_U16("graphics/battle_environment/water/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Water_Evening[] = INCBIN_U16("graphics/battle_environment/water/palette_night.gbapal");
+const u16 gBattleEnvironmentPalette_Water_Night[]   = INCBIN_U16("graphics/battle_environment/water/palette_night.gbapal");
 const u32 gBattleEnvironmentTilemap_Water[] = INCBIN_U32("graphics/battle_environment/water/map.bin.smolTM");
 
 const u32 gBattleEnvironmentTiles_PondWater[] = INCBIN_U32("graphics/battle_environment/pond_water/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_PondWater[] = INCBIN_U16("graphics/battle_environment/pond_water/palette.gbapal");
+const u16 gBattleEnvironmentPalette_PondWater_Morning[] = INCBIN_U16("graphics/battle_environment/pond_water/palette.gbapal");
+const u16 gBattleEnvironmentPalette_PondWater_Day[]     = INCBIN_U16("graphics/battle_environment/pond_water/palette.gbapal");
+const u16 gBattleEnvironmentPalette_PondWater_Evening[] = INCBIN_U16("graphics/battle_environment/pond_water/palette_night.gbapal");
+const u16 gBattleEnvironmentPalette_PondWater_Night[]   = INCBIN_U16("graphics/battle_environment/pond_water/palette_night.gbapal");
 const u32 gBattleEnvironmentTilemap_PondWater[] = INCBIN_U32("graphics/battle_environment/pond_water/map.bin.smolTM");
 
 const u32 gBattleEnvironmentTiles_Rock[] = INCBIN_U32("graphics/battle_environment/rock/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_Rock[] = INCBIN_U16("graphics/battle_environment/rock/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Rock_Morning[] = INCBIN_U16("graphics/battle_environment/rock/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Rock_Day[]     = INCBIN_U16("graphics/battle_environment/rock/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Rock_Evening[] = INCBIN_U16("graphics/battle_environment/rock/palette_night.gbapal");
+const u16 gBattleEnvironmentPalette_Rock_Night[]   = INCBIN_U16("graphics/battle_environment/rock/palette_night.gbapal");
 const u32 gBattleEnvironmentTilemap_Rock[] = INCBIN_U32("graphics/battle_environment/rock/map.bin.smolTM");
 
 const u32 gBattleEnvironmentTiles_Cave[] = INCBIN_U32("graphics/battle_environment/cave/tiles.4bpp.smol");
-const u16 gBattleEnvironmentPalette_Cave[] = INCBIN_U16("graphics/battle_environment/cave/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Cave_Morning[] = INCBIN_U16("graphics/battle_environment/cave/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Cave_Day[]     = INCBIN_U16("graphics/battle_environment/cave/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Cave_Evening[] = INCBIN_U16("graphics/battle_environment/cave/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Cave_Night[]   = INCBIN_U16("graphics/battle_environment/cave/palette.gbapal");
 const u32 gBattleEnvironmentTilemap_Cave[] = INCBIN_U32("graphics/battle_environment/cave/map.bin.smolTM");
 
-const u16 gBattleEnvironmentPalette_Plain[] = INCBIN_U16("graphics/battle_environment/plain/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Plain_Morning[] = INCBIN_U16("graphics/battle_environment/plain/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Plain_Day[]     = INCBIN_U16("graphics/battle_environment/plain/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Plain_Evening[] = INCBIN_U16("graphics/battle_environment/plain/palette.gbapal");
+const u16 gBattleEnvironmentPalette_Plain_Night[]   = INCBIN_U16("graphics/battle_environment/plain/palette.gbapal");
 
 const u32 gBattleEnvironmentTiles_Building[] = INCBIN_U32("graphics/battle_environment/building/tiles.4bpp.smol");
 const u16 gBattleEnvironmentPalette_Frontier[] = INCBIN_U16("graphics/battle_environment/stadium/battle_frontier.gbapal"); // this is also used for link battles
 const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_environment/building/map.bin.smolTM");
+
+static const u8 *const gTimeOfDayStringsTable[TIMES_OF_DAY_COUNT] = {
+    COMPOUND_STRING("Morning"),
+    COMPOUND_STRING("Day"),
+    COMPOUND_STRING("Evening"),
+    COMPOUND_STRING("Night"),
+};
+
+/* Palette arrays indexed by time of day. These point to the per-time-of-day
+ * palette symbols defined above (e.g. gBattleEnvironmentPalette_TallGrass_Morning).
+ */
+const void * const gBattleEnvironmentPalette_TallGrass[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_TallGrass_Morning,
+    gBattleEnvironmentPalette_TallGrass_Day,
+    gBattleEnvironmentPalette_TallGrass_Evening,
+    gBattleEnvironmentPalette_TallGrass_Night,
+};
+
+const void * const gBattleEnvironmentPalette_LongGrass[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_LongGrass_Morning,
+    gBattleEnvironmentPalette_LongGrass_Day,
+    gBattleEnvironmentPalette_LongGrass_Evening,
+    gBattleEnvironmentPalette_LongGrass_Night,
+};
+
+const void * const gBattleEnvironmentPalette_Sand[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_Sand_Morning,
+    gBattleEnvironmentPalette_Sand_Day,
+    gBattleEnvironmentPalette_Sand_Evening,
+    gBattleEnvironmentPalette_Sand_Night,
+};
+
+const void * const gBattleEnvironmentPalette_Underwater[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_Underwater_Morning,
+    gBattleEnvironmentPalette_Underwater_Day,
+    gBattleEnvironmentPalette_Underwater_Evening,
+    gBattleEnvironmentPalette_Underwater_Night,
+};
+
+const void * const gBattleEnvironmentPalette_Water[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_Water_Morning,
+    gBattleEnvironmentPalette_Water_Day,
+    gBattleEnvironmentPalette_Water_Evening,
+    gBattleEnvironmentPalette_Water_Night,
+};
+
+const void * const gBattleEnvironmentPalette_PondWater[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_PondWater_Morning,
+    gBattleEnvironmentPalette_PondWater_Day,
+    gBattleEnvironmentPalette_PondWater_Evening,
+    gBattleEnvironmentPalette_PondWater_Night,
+};
+
+const void * const gBattleEnvironmentPalette_Rock[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_Rock_Morning,
+    gBattleEnvironmentPalette_Rock_Day,
+    gBattleEnvironmentPalette_Rock_Evening,
+    gBattleEnvironmentPalette_Rock_Night,
+};
+
+const void * const gBattleEnvironmentPalette_Cave[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_Cave_Morning,
+    gBattleEnvironmentPalette_Cave_Day,
+    gBattleEnvironmentPalette_Cave_Evening,
+    gBattleEnvironmentPalette_Cave_Night,
+};
+
+const void * const gBattleEnvironmentPalette_Plain[TIMES_OF_DAY_COUNT] = {
+    gBattleEnvironmentPalette_Plain_Morning,
+    gBattleEnvironmentPalette_Plain_Day,
+    gBattleEnvironmentPalette_Plain_Evening,
+    gBattleEnvironmentPalette_Plain_Night,
+};
 
 #define ENVIRONMENT_BACKGROUND(background)                      \
 {                                                               \
