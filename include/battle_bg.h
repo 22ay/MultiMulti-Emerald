@@ -1,6 +1,8 @@
 #ifndef GUARD_BATTLE_BG_H
 #define GUARD_BATTLE_BG_H
 
+#include "rtc.h"
+
 struct BattleBackground
 {
     const void *tileset;
