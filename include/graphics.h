@@ -1801,6 +1801,18 @@ extern const u32 gItemIcon_SwapSnack[];
 extern const u16 gItemIconPalette_SwapSnack[];
 extern const u32 gItemIcon_TwiceSpicedRadish[];
 extern const u16 gItemIconPalette_TwiceSpicedRadish[];
+extern const u32 gItemIcon_Axe[];
+extern const u16 gItemIconPalette_Axe[];
+extern const u32 gItemIcon_Lantern[];
+extern const u16 gItemIconPalette_Lantern[];
+extern const u32 gItemIcon_PickAxe[];
+extern const u16 gItemIconPalette_PickAxe[];
+extern const u32 gItemIcon_PowerGlove[];
+extern const u16 gItemIconPalette_PowerGlove[];
+extern const u32 gItemIcon_ScubaGear[];
+extern const u16 gItemIconPalette_ScubaGear[];
+extern const u32 gItemIcon_SurfBoard[];
+extern const u16 gItemIconPalette_SurfBoard[];
 
 extern const u32 gItemIcon_ReturnToFieldArrow[];
 extern const u16 gItemIconPalette_ReturnToFieldArrow[];
