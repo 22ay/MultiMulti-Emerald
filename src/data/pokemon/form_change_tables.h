@@ -84,6 +84,15 @@ static const struct FormChange sPikachuFormChangeTable[] =
     {FORM_CHANGE_TERMINATOR},
 };
 
+static const struct FormChange sPikachuStarterFormChangeTable[] =
+{
+#if P_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, SPECIES_PIKACHU_STARTER_MEGA, ITEM_LIGHT_BALL},
+#endif
+    {FORM_CHANGE_END_BATTLE,        SPECIES_PIKACHU_STARTER},
+    {FORM_CHANGE_TERMINATOR},
+};
+
 static const struct FormChange sRaichuFormChangeTable[] = {
 #if P_GEN_9_MEGA_EVOLUTIONS
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_RAICHU_MEGA_X, ITEM_RAICHUNITE_X},

@@ -2999,8 +2999,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .teachableLearnset = sPikachuTeachableLearnset,
         .formSpeciesIdTable = sPikachuFormSpeciesIdTable,
         .formChangeTable = sPikachuFormChangeTable,
-        .evolutions = EVOLUTION({EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_RAICHU, CONDITIONS({IF_NOT_REGION, REGION_ALOLA})},
-                                {EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_RAICHU_ALOLA, CONDITIONS({IF_REGION, REGION_ALOLA})}),
+        .evolutions = EVOLUTION({EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_RAICHU},
+                                {EVO_ITEM, ITEM_SHINY_STONE, SPECIES_RAICHU_ALOLA},
+                                {EVO_LEVEL, 25, SPECIES_PIKACHU_STARTER}),
     },
 
 #if P_COSPLAY_PIKACHU_FORMS
@@ -3925,8 +3926,70 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .perfectIVCount = NUM_STATS,
         .levelUpLearnset = sPikachuLevelUpLearnset,
         .teachableLearnset = sPikachuTeachableLearnset,
-        .formSpeciesIdTable = sPikachuFormSpeciesIdTable,
+        .formSpeciesIdTable = sPikachuStarterFormSpeciesIdTable,
+        .formChangeTable = sPikachuStarterFormChangeTable,
     },
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_PIKACHU_STARTER_MEGA] =
+    {
+        .baseHP        = 45,
+        .baseAttack    = 120,
+        .baseDefense   = 50,
+        .baseSpeed     = 140,
+        .baseSpAttack  = 115,
+        .baseSpDefense = 60,
+        .types = MON_TYPES(TYPE_ELECTRIC),
+        .catchRate = 190,
+        .expYield = PIKACHU_EXP_YIELD,
+        .evYield_Speed = 2,
+        .itemRare = ITEM_LIGHT_BALL,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 10,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD, EGG_GROUP_FAIRY),
+        .abilities = { ABILITY_STATIC, ABILITY_NONE, ABILITY_LIGHTNING_ROD },
+        //.innates = { ABILITY_PLUS, ABILITY_BATTERY, ABILITY_TRANSISTOR },
+		.bodyColor = BODY_COLOR_YELLOW,
+        .speciesName = _("Pikachu"),
+        .cryId = CRY_PIKACHU,
+        .natDexNum = NATIONAL_DEX_PIKACHU,
+        .categoryName = _("Mouse"),
+        .height = 8,
+        .weight = 60,
+        .description = COMPOUND_STRING(
+            "When it smashes its opponents with\n"
+            "its bolt-shaped tail, it delivers a\n"
+            "surge of electricity equivalent to a\n"
+            "lightning strike."),
+        .pokemonScale = 479,
+        .pokemonOffset = 19,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_PikachuGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 2,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_PikachuGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_PikachuGmax,
+        .shinyPalette = gMonShinyPalette_PikachuGmax,
+        .iconSprite = gMonIcon_PikachuGmax,
+        .iconPalIndex = 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(-3, 12, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Pikachu)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sPikachuLevelUpLearnset,
+        .teachableLearnset = sPikachuTeachableLearnset,
+        .formSpeciesIdTable = sPikachuStarterFormSpeciesIdTable,
+        .formChangeTable = sPikachuStarterFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTIONS
 
 #if P_UPDATED_EXP_YIELDS >= GEN_8
     #define RAICHU_EXP_YIELD 243

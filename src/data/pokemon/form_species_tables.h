@@ -123,6 +123,14 @@ static const u16 sPikachuFormSpeciesIdTable[] = {
     FORM_SPECIES_END,
 };
 
+static const u16 sPikachuStarterFormSpeciesIdTable[] = {
+    SPECIES_PIKACHU_STARTER,
+#if P_MEGA_EVOLUTIONS
+    SPECIES_PIKACHU_STARTER_MEGA,
+#endif
+    FORM_SPECIES_END,
+};
+
 static const u16 sRaichuFormSpeciesIdTable[] = {
     SPECIES_RAICHU,
 #if P_ALOLAN_FORMS
