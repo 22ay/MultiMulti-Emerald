@@ -26,6 +26,7 @@
 #include "pokemon_sprite_visualizer.h"
 #include "pokemon_icon.h"
 #include "reset_rtc_screen.h"
+#include "rtc.h"
 #include "scanline_effect.h"
 #include "script.h"
 #include "script_pokemon_util.h"
@@ -895,78 +896,80 @@ static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer 
 //Battle background functions
 static void LoadBattleBg(u8 battleBgType, enum BattleEnvironments battleEnvironment)
 {
+    enum TimeOfDay td = GetTimeOfDay();
+
     switch (battleBgType)
     {
     default:
     case MAP_BATTLE_SCENE_NORMAL:
         DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, 0x20, 0x60);
+        LoadPalette(((const u16 * const *)gBattleEnvironmentInfo[battleEnvironment].background.palette)[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GYM:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_BuildingGym, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_BuildingGym[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_MAGMA:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumMagma, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumMagma[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_AQUA:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumAqua, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumAqua[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_SIDNEY:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumSidney, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumSidney[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_PHOEBE:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumPhoebe, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumPhoebe[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GLACIA:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumGlacia, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumGlacia[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_DRAKE:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumDrake, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumDrake[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_FRONTIER:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Frontier, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Frontier[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_LEADER:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_BuildingLeader, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_BuildingLeader[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_WALLACE:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumWallace, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_StadiumWallace[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_GROUDON:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Cave, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Cave, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Groudon, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Groudon[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_KYOGRE:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Water, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Water, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Kyogre, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Kyogre[td], 0x20, 0x60);
         break;
     case MAP_BATTLE_SCENE_RAYQUAZA:
         DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Rayquaza, (void*)(BG_CHAR_ADDR(2)));
         DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Rayquaza, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Rayquaza, 0x20, 0x60);
+        LoadPalette(gBattleEnvironmentPalette_Rayquaza[td], 0x20, 0x60);
         break;
     }
 }

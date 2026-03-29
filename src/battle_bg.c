@@ -16,6 +16,7 @@
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
+#include "rtc.h"
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
@@ -628,12 +629,14 @@ static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
 // Loads the initial battle terrain.
 static void LoadBattleEnvironmentGfx(u16 terrain)
 {
+    enum TimeOfDay td = GetTimeOfDay();
+
     if (terrain >= NELEMS(gBattleEnvironmentInfo))
         terrain = BATTLE_ENVIRONMENT_PLAIN;  // If higher than the number of entries in gBattleEnvironmentInfo, use the default.
     // Copy to bg3
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.tileset, (void *)(BG_CHAR_ADDR(2)));
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
-    LoadPalette(gBattleEnvironmentInfo[terrain].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+    LoadPalette(((const u16 * const *)gBattleEnvironmentInfo[terrain].background.palette)[td], BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
 // Loads the entry associated with the battle terrain.
@@ -1102,6 +1105,8 @@ bool8 LoadChosenBattleElement(u8 caseId)
 {
     bool8 ret = FALSE;
 
+    enum TimeOfDay td = GetTimeOfDay();
+
     switch (caseId)
     {
     case 0:
@@ -1121,7 +1126,7 @@ bool8 LoadChosenBattleElement(u8 caseId)
         DecompressDataWithHeaderVram(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
         break;
     case 5:
-        LoadPalette(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+        LoadPalette(((const u16 * const *)gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.palette)[td], BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
         break;
     case 6:
         LoadBattleMenuWindowGfx();
