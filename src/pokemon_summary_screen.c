@@ -328,6 +328,7 @@ static void SummaryScreen_DestroyAnimDelayTask(void);
 static bool32 ShouldShowMoveRelearner(void);
 static bool32 ShouldShowRename(void);
 static bool32 ShouldShowIvEvPrompt(void);
+static bool32 TryChangeAbility(void);
 static void BufferLeftColumnIvEvStats(void);
 static void CB2_ReturnToSummaryScreenFromNamingScreen(void);
 static void CB2_PssChangePokemonNickname(void);
@@ -1845,6 +1846,14 @@ static void Task_HandleInput(u8 taskId)
                 {
                     ShowMonSkillsInfo(taskId, IncrementSkillsStatsMode(sMonSummaryScreen->skillsPageMode));
                     PlaySE(SE_SELECT);
+                }
+            }
+            if (sMonSummaryScreen->currPageIndex == PSS_PAGE_TRAITS)
+            {
+                if (TryChangeAbility())
+                {
+                    PlaySE(SE_SELECT);
+                    PrintTraits();
                 }
             }
         }
@@ -3982,6 +3991,10 @@ static void PrintMonTraits(u8 innateIndex)
     u16 trait = 0;
     struct PokeSummary* sum = &sMonSummaryScreen->summary;
 
+    u8 windowId = AddWindowFromTemplateList(sPageTraitsTemplate, innateIndex);
+    
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+
     if (innateIndex == 0)
         trait = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
     else if (innateIndex <= MAX_MON_INNATES)
@@ -5068,9 +5081,28 @@ static inline bool32 ShouldShowIvEvPrompt(void)
     return FALSE;
 }
 
+static inline bool32 TryChangeAbility(void)
+{
+    struct Pokemon *mon = &gPlayerParty[sMonSummaryScreen->curMonIndex];
+    u32 abilityNum = sMonSummaryScreen->summary.abilityNum;
+    u32 newAbilityNum;
+
+    newAbilityNum = (abilityNum + 1) % 3;
+
+    if (newAbilityNum == abilityNum)
+        return FALSE;
+
+    SetMonData(mon, MON_DATA_ABILITY_NUM, &newAbilityNum);
+
+    sMonSummaryScreen->summary.abilityNum = newAbilityNum;
+
+    return TRUE;
+}
+
 static inline void ShowUtilityPrompt(s16 mode)
 {
     const u8* promptText = NULL;
+    const u8* gText_ModifyAbility = COMPOUND_STRING("Change");
     const u8* gText_SkillPageIvs = COMPOUND_STRING("IVs");
     const u8* gText_SkillPageEvs = COMPOUND_STRING("EVs");
     const u8* gText_SkillPageStats = COMPOUND_STRING("Stats");
@@ -5081,6 +5113,10 @@ static inline void ShowUtilityPrompt(s16 mode)
             promptText = gText_Rename;
         else
             promptText = gText_Cancel2;
+    }
+    else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_TRAITS)
+    {
+        promptText = gText_ModifyAbility;
     }
     else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
     {
