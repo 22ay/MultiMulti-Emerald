@@ -5089,11 +5089,20 @@ static inline bool32 TryChangeAbility(void)
 
     newAbilityNum = (abilityNum + 1) % 3;
 
-    if (newAbilityNum == abilityNum)
+    if (newAbilityNum == abilityNum
+     || sMonSummaryScreen->lockMovesFlag
+     || sMonSummaryScreen->summary.isEgg
+     || sMonSummaryScreen->isBoxMon
+     || sMonSummaryScreen->mode == SUMMARY_MODE_BOX
+     || sMonSummaryScreen->mode == SUMMARY_MODE_BOX_CURSOR
+     || InBattleFactory()
+     || InSlateportBattleTent()
+     || GetPlayerIDAsU32() != sMonSummaryScreen->summary.OTID)
+    {
         return FALSE;
+    }
 
     SetMonData(mon, MON_DATA_ABILITY_NUM, &newAbilityNum);
-
     sMonSummaryScreen->summary.abilityNum = newAbilityNum;
 
     return TRUE;
