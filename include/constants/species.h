@@ -1689,8 +1689,9 @@
 #define SPECIES_GLIMMORA_MEGA                           1572
 //Gmax Megas
 #define SPECIES_PIKACHU_STARTER_MEGA                    1573
+#define SPECIES_EEVEE_STARTER_MEGA                      1574
 
-#define SPECIES_EGG                                     (SPECIES_PIKACHU_STARTER_MEGA + 1)
+#define SPECIES_EGG                                     (SPECIES_EEVEE_STARTER_MEGA + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

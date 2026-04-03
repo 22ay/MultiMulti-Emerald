@@ -283,6 +283,15 @@ static const struct FormChange sEeveeFormChangeTable[] =
     {FORM_CHANGE_END_BATTLE,        SPECIES_EEVEE},
     {FORM_CHANGE_TERMINATOR},
 };
+
+static const struct FormChange sEeveeStarterFormChangeTable[] =
+{
+#if P_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, SPECIES_EEVEE_STARTER_MEGA, ITEM_SILK_SCARF},
+#endif
+    {FORM_CHANGE_END_BATTLE,        SPECIES_EEVEE_STARTER},
+    {FORM_CHANGE_TERMINATOR},
+};
 #endif //P_FAMILY_EEVEE
 
 #if P_FAMILY_AERODACTYL

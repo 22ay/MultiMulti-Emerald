@@ -18270,7 +18270,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sEeveeFormChangeTable,
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_JOLTEON},
                                 {EVO_ITEM, ITEM_WATER_STONE, SPECIES_VAPOREON},
-                                {EVO_ITEM, ITEM_FIRE_STONE, SPECIES_FLAREON}
+                                {EVO_ITEM, ITEM_FIRE_STONE, SPECIES_FLAREON},
+                                {EVO_LEVEL, 0, SPECIES_EEVEE_STARTER}
                             #if P_GEN_6_CROSS_EVOS
                                 ,{EVO_LEVEL, 0, SPECIES_SYLVEON, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD}, {IF_KNOWS_MOVE_TYPE, TYPE_FAIRY})}
                             #endif
@@ -18422,8 +18423,70 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sEeveeLevelUpLearnset,
         .teachableLearnset = sEeveeTeachableLearnset,
         .eggMoveLearnset = sEeveeEggMoveLearnset,
-        .formSpeciesIdTable = sEeveeFormSpeciesIdTable,
+        .formSpeciesIdTable = sEeveeStarterFormSpeciesIdTable,
+        .formChangeTable = sEeveeStarterFormChangeTable,
     },
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_EEVEE_STARTER_MEGA] =
+    {
+        .baseHP        = 65,
+        .baseAttack    = 75,
+        .baseDefense   = 100,
+        .baseSpeed     = 80,
+        .baseSpAttack  = 100,
+        .baseSpDefense = 115,
+        .types = MON_TYPES(TYPE_NORMAL),
+        .catchRate = 45,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 65 : 92,
+        .evYield_SpDefense = 1,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 35,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = EEVEE_ABILITIES,
+        //.innates = { ABILITY_SCRAPPY, ABILITY_FLUFFY, ABILITY_NORMALIZE },
+		.bodyColor = BODY_COLOR_BROWN,
+        .speciesName = _("Eevee"),
+        .cryId = CRY_EEVEE,
+        .natDexNum = NATIONAL_DEX_EEVEE,
+        .categoryName = _("Evolution"),
+        .height = 180,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "Having gotten even friendlier and\n"
+            "more innocent, Eevee tries to play\n"
+            "with anyone around, only to end up\n"
+            "crushing them with its immense body."),
+        .pokemonScale = 476,
+        .pokemonOffset = 18,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_EeveeGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 8,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_EeveeGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 7,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_EeveeGmax,
+        .shinyPalette = gMonShinyPalette_EeveeGmax,
+        .iconSprite = gMonIcon_EeveeGmax,
+        .iconPalIndex = 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 4, SHADOW_SIZE_L)
+        FOOTPRINT(Eevee)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sEeveeLevelUpLearnset,
+        .teachableLearnset = sEeveeTeachableLearnset,
+        .eggMoveLearnset = sEeveeEggMoveLearnset,
+        .formSpeciesIdTable = sEeveeFormSpeciesIdTable,
+        .formChangeTable = sEeveeFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_VAPOREON] =
     {

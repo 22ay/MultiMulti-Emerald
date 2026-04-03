@@ -560,6 +560,14 @@ static const u16 sEeveeFormSpeciesIdTable[] = {
     SPECIES_EEVEE_STARTER,
     FORM_SPECIES_END,
 };
+
+static const u16 sEeveeStarterFormSpeciesIdTable[] = {
+    SPECIES_EEVEE_STARTER,
+#if P_MEGA_EVOLUTIONS
+    SPECIES_EEVEE_STARTER_MEGA,
+#endif
+    FORM_SPECIES_END,
+};
 #endif //P_FAMILY_EEVEE
 
 #if P_FAMILY_AERODACTYL
