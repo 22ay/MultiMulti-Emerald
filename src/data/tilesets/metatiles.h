@@ -246,3 +246,9 @@ const u16 gMetatileAttributes_SootopolisGym_Expanded[] = INCBIN_U16("data/tilese
 
 const u16 gMetatiles_NewBark[] = INCBIN_U16("data/tilesets/secondary/new_bark/metatiles.bin");
 const u16 gMetatileAttributes_NewBark[] = INCBIN_U16("data/tilesets/secondary/new_bark/metatile_attributes.bin");
+
+const u16 gMetatiles_Sevii4567[] = INCBIN_U16("data/tilesets/secondary/sevii_4567/metatiles.bin");
+const u16 gMetatileAttributes_Sevii4567[] = INCBIN_U16("data/tilesets/secondary/sevii_4567/metatile_attributes.bin");
+
+const u16 gMetatiles_TanobyRuins[] = INCBIN_U16("data/tilesets/secondary/tanoby_ruins/metatiles.bin");
+const u16 gMetatileAttributes_TanobyRuins[] = INCBIN_U16("data/tilesets/secondary/tanoby_ruins/metatile_attributes.bin");
