@@ -44,6 +44,9 @@ static const u16 sButterfreeFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_BUTTERFREE_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_BUTTERFREE_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_CATERPIE
@@ -220,6 +223,9 @@ static const u16 sMeowthFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_MEOWTH_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_MEOWTH_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 
@@ -265,6 +271,9 @@ static const u16 sMachampFormSpeciesIdTable[] = {
     SPECIES_MACHAMP,
 #if P_GIGANTAMAX_FORMS
     SPECIES_MACHAMP_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_MACHAMP_MEGA,
 #endif
     FORM_SPECIES_END,
 };
@@ -414,6 +423,9 @@ static const u16 sKinglerFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_KINGLER_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_KINGLER_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_KRABBY
@@ -547,6 +559,9 @@ static const u16 sLaprasFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_LAPRAS_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_LAPRAS_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_LAPRAS
@@ -585,6 +600,9 @@ static const u16 sSnorlaxFormSpeciesIdTable[] = {
     SPECIES_SNORLAX,
 #if P_GIGANTAMAX_FORMS
     SPECIES_SNORLAX_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_SNORLAX_MEGA,
 #endif
     FORM_SPECIES_END,
 };

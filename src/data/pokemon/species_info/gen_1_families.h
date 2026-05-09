@@ -1460,6 +1460,69 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sButterfreeFormChangeTable,
     },
 #endif //P_GIGANTAMAX_FORMS
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_BUTTERFREE_MEGA] =
+    {
+        .baseHP        = 60,
+        .baseAttack    = 45,
+        .baseDefense   = 50,
+        .baseSpeed     = 90,
+        .baseSpAttack  = 130,
+        .baseSpDefense = 120,
+        .types = MON_TYPES(TYPE_BUG, TYPE_FLYING),
+        .catchRate = 45,
+        .expYield = BUTTERFREE_EXP_YIELD,
+        .evYield_SpAttack = 2,
+        .evYield_SpDefense = 1,
+        .itemRare = ITEM_SILVER_POWDER,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 15,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),
+        .abilities = { ABILITY_COMPOUND_EYES, ABILITY_NONE, ABILITY_TINTED_LENS },
+        //.innates = { ABILITY_SHIELD_DUST, ABILITY_EFFECT_SPORE, ABILITY_DAZZLING },
+		.bodyColor = BODY_COLOR_WHITE,
+        .speciesName = _("Butterfree"),
+        .cryId = CRY_BUTTERFREE,
+        .natDexNum = NATIONAL_DEX_BUTTERFREE,
+        .categoryName = _("Butterfly"),
+        .height = 170,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "Once it has opponents trapped in a\n"
+            "tornado that could blow away a 10-\n"
+            "ton truck, it finishes them off with\n"
+            "its poisonous scales."),
+        .pokemonScale = 312,
+        .pokemonOffset = 2,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_ButterfreeGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 1,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 8,
+        .backPic = gMonBackPic_ButterfreeGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_ButterfreeGmax,
+        .shinyPalette = gMonShinyPalette_ButterfreeGmax,
+        .iconSprite = gMonIcon_ButterfreeGmax,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(-4, 18, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Butterfree)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sButterfreeLevelUpLearnset,
+        .teachableLearnset = sButterfreeTeachableLearnset,
+        .formSpeciesIdTable = sButterfreeFormSpeciesIdTable,
+        .formChangeTable = sButterfreeFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_CATERPIE
 
 #if P_FAMILY_WEEDLE
@@ -7628,6 +7691,68 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sMeowthFormChangeTable,
     },
 #endif //P_GIGANTAMAX_FORMS
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_MEOWTH_MEGA] =
+    {
+        .baseHP        = 40,
+        .baseAttack    = 135,
+        .baseDefense   = 35,
+        .baseSpeed     = 100,
+        .baseSpAttack  = 40,
+        .baseSpDefense = 40,
+        .types = MON_TYPES(TYPE_NORMAL),
+        .catchRate = 255,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 58 : 69,
+        .evYield_Speed = 1,
+        .itemRare = ITEM_QUICK_CLAW,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = MEOWTH_ABILITIES,
+        //.innates = { ABILITY_SUPER_LUCK, ABILITY_SNIPER },
+		.bodyColor = BODY_COLOR_YELLOW,
+        .speciesName = _("Meowth"),
+        .cryId = CRY_MEOWTH,
+        .natDexNum = NATIONAL_DEX_MEOWTH,
+        .categoryName = _("Scratch Cat"),
+        .height = 330,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "The pattern that has appeared on\n"
+            "its giant coin is thought to be the\n"
+            "key to unlocking the secrets of the\n"
+            "Dynamax phenomenon."),
+        .pokemonScale = 480,
+        .pokemonOffset = 19,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_MeowthGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 3,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_MeowthGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 5,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_MeowthGmax,
+        .shinyPalette = gMonShinyPalette_MeowthGmax,
+        .iconSprite = gMonIcon_MeowthGmax,
+        .iconPalIndex = 1,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(4, 10, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Meowth)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sMeowthLevelUpLearnset,
+        .teachableLearnset = sMeowthTeachableLearnset,
+        .eggMoveLearnset = sMeowthEggMoveLearnset,
+        .formSpeciesIdTable = sMeowthFormSpeciesIdTable,
+        .formChangeTable = sMeowthFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_MEOWTH
 
 #if P_FAMILY_PSYDUCK
@@ -9261,6 +9386,71 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sMachampFormChangeTable,
     },
 #endif //P_GIGANTAMAX_FORMS
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_MACHAMP_MEGA] =
+    {
+        .baseHP        = 90,
+        .baseAttack    = 170,
+        .baseDefense   = 100,
+        .baseSpeed     = 75,
+        .baseSpAttack  = 65,
+        .baseSpDefense = 105,
+        .types = MON_TYPES(TYPE_FIGHTING),
+        .catchRate = 45,
+        .expYield = MACHAMP_EXP_YIELD,
+        .evYield_Attack = 3,
+        .itemRare = ITEM_FOCUS_BAND,
+        .genderRatio = PERCENT_FEMALE(25),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_HUMAN_LIKE),
+    #if P_UPDATED_ABILITIES >= GEN_4
+        .abilities = { ABILITY_GUTS, ABILITY_NO_GUARD, ABILITY_STEADFAST },
+    #else
+        .abilities = { ABILITY_GUTS, ABILITY_NONE, ABILITY_STEADFAST },
+    #endif
+        //.innates = { ABILITY_SHEER_FORCE, ABILITY_DEFIANT, ABILITY_MOLD_BREAKER },
+		.bodyColor = BODY_COLOR_GRAY,
+        .speciesName = _("Machamp"),
+        .cryId = CRY_MACHAMP,
+        .natDexNum = NATIONAL_DEX_MACHAMP,
+        .categoryName = _("Superpower"),
+        .height = 250,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "One of these Pokémon once used\n"
+            "its immeasurable strength to lift a\n"
+            "large ship that was in trouble. It\n"
+            "then carried the ship to port."),
+        .pokemonScale = 280,
+        .pokemonOffset = 1,
+        .trainerScale = 269,
+        .trainerOffset = -1,
+        .frontPic = gMonFrontPic_MachampGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_MachampGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_MachampGmax,
+        .shinyPalette = gMonShinyPalette_MachampGmax,
+        .iconSprite = gMonIcon_MachampGmax,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(7, 13, SHADOW_SIZE_L)
+        FOOTPRINT(Machamp)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sMachampLevelUpLearnset,
+        .teachableLearnset = sMachampTeachableLearnset,
+        .formSpeciesIdTable = sMachampFormSpeciesIdTable,
+        .formChangeTable = sMachampFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_MACHOP
 
 #if P_FAMILY_BELLSPROUT
@@ -13142,6 +13332,67 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sKinglerFormChangeTable,
     },
 #endif //P_GIGANTAMAX_FORMS
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_KINGLER_MEGA] =
+    {
+        .baseHP        = 55,
+        .baseAttack    = 160,
+        .baseDefense   = 145,
+        .baseSpeed     = 95,
+        .baseSpAttack  = 50,
+        .baseSpDefense = 70,
+        .types = MON_TYPES(TYPE_WATER),
+        .catchRate = 60,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 166 : 206,
+        .evYield_Attack = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_3),
+        .abilities = { ABILITY_HYPER_CUTTER, ABILITY_SHELL_ARMOR, ABILITY_SHEER_FORCE },
+        //.innates = { ABILITY_SHEER_FORCE, ABILITY_HUSTLE, ABILITY_MOLD_BREAKER },
+		.bodyColor = BODY_COLOR_RED,
+        .noFlip = TRUE,
+        .speciesName = _("Kingler"),
+        .cryId = CRY_KINGLER,
+        .natDexNum = NATIONAL_DEX_KINGLER,
+        .categoryName = _("Pincer"),
+        .height = 190,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "The flow of Gigantamax energy has\n"
+            "spurred this Pokémon's left pincer\n"
+            "to grow to an enormous size. That\n"
+            "claw can pulverize anything."),
+        .pokemonScale = 256,
+        .pokemonOffset = 2,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_KinglerGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_KinglerGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 5,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_KinglerGmax,
+        .shinyPalette = gMonShinyPalette_KinglerGmax,
+        .iconSprite = gMonIcon_KinglerGmax,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(-3, 10, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Kingler)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sKinglerLevelUpLearnset,
+        .teachableLearnset = sKinglerTeachableLearnset,
+        .formSpeciesIdTable = sKinglerFormSpeciesIdTable,
+        .formChangeTable = sKinglerFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTION
 #endif //P_FAMILY_KRABBY
 
 #if P_FAMILY_VOLTORB
@@ -18107,6 +18358,69 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sLaprasFormChangeTable,
     },
 #endif //P_GIGANTAMAX_FORMS
+
+#if P_MEGA_EVOLUTIONS
+    [SPECIES_LAPRAS_MEGA] =
+    {
+        .baseHP        = 130,
+        .baseAttack    = 85,
+        .baseDefense   = 95,
+        .baseSpeed     = 60,
+        .baseSpAttack  = 145,
+        .baseSpDefense = 120,
+        .types = MON_TYPES(TYPE_WATER, TYPE_ICE),
+        .catchRate = 45,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 187 : 219,
+        .evYield_HP = 2,
+        .itemCommon = ITEM_MYSTIC_WATER,
+        .itemRare = ITEM_MYSTIC_WATER,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 40,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
+        .abilities = { ABILITY_WATER_ABSORB, ABILITY_SHELL_ARMOR, ABILITY_HYDRATION },
+        //.innates = { ABILITY_ICE_SCALES, ABILITY_LIQUID_VOICE, ABILITY_HOSPITALITY },
+		.bodyColor = BODY_COLOR_BLUE,
+        .speciesName = _("Lapras"),
+        .cryId = CRY_LAPRAS,
+        .natDexNum = NATIONAL_DEX_LAPRAS,
+        .categoryName = _("Transport"),
+        .height = 240,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "Over 5,000 people can ride on its\n"
+            "shell at once. And it's a very\n"
+            "comfortable ride, without the slightest\n"
+            "shaking or swaying."),
+        .pokemonScale = 257,
+        .pokemonOffset = 10,
+        .trainerScale = 423,
+        .trainerOffset = 8,
+        .frontPic = gMonFrontPic_LaprasGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_LaprasGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 1,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_LaprasGmax,
+        .shinyPalette = gMonShinyPalette_LaprasGmax,
+        .iconSprite = gMonIcon_LaprasGmax,
+        .iconPalIndex = 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(2, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Lapras)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sLaprasLevelUpLearnset,
+        .teachableLearnset = sLaprasTeachableLearnset,
+        .eggMoveLearnset = sLaprasEggMoveLearnset,
+        .formSpeciesIdTable = sLaprasFormSpeciesIdTable,
+        .formChangeTable = sLaprasFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTION
 #endif //P_FAMILY_LAPRAS
 
 #if P_FAMILY_DITTO
@@ -19942,6 +20256,69 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .formChangeTable = sSnorlaxFormChangeTable,
     },
 #endif //P_GIGANTAMAX_FORMS
+
+#if P_GIGANTAMAX_FORMS
+    [SPECIES_SNORLAX_MEGA] =
+    {
+        .baseHP        = 160,
+        .baseAttack    = 150,
+        .baseDefense   = 85,
+        .baseSpeed     = 30,
+        .baseSpAttack  = 65,
+        .baseSpDefense = 150,
+        .types = MON_TYPES(TYPE_NORMAL),
+        .catchRate = 25,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 189 : 154,
+        .evYield_HP = 2,
+        .itemCommon = ITEM_LEFTOVERS,
+        .itemRare = ITEM_LEFTOVERS,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 40,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER),
+        .abilities = { ABILITY_IMMUNITY, ABILITY_THICK_FAT, ABILITY_GLUTTONY },
+        //.innates = { ABILITY_OBLIVIOUS, ABILITY_HARVEST, ABILITY_RIPEN },
+		.bodyColor = BODY_COLOR_BLACK,
+        .speciesName = _("Snorlax"),
+        .cryId = CRY_SNORLAX,
+        .natDexNum = NATIONAL_DEX_SNORLAX,
+        .categoryName = _("Sleeping"),
+        .height = 350,
+        .weight = 0,
+        .description = COMPOUND_STRING(
+            "Gigantamax energy has affected\n"
+            "stray seeds and even pebbles that\n"
+            "got stuck to Snorlax, making them grow\n"
+            "to a huge size."),
+        .pokemonScale = 256,
+        .pokemonOffset = 4,
+        .trainerScale = 423,
+        .trainerOffset = 11,
+        .frontPic = gMonFrontPic_SnorlaxGmax,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_SnorlaxGmax,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 5,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_SnorlaxGmax,
+        .shinyPalette = gMonShinyPalette_SnorlaxGmax,
+        .iconSprite = gMonIcon_SnorlaxGmax,
+        .iconPalIndex = 3,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Snorlax)
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sSnorlaxLevelUpLearnset,
+        .teachableLearnset = sSnorlaxTeachableLearnset,
+        .eggMoveLearnset = sSnorlaxEggMoveLearnset,
+        .formSpeciesIdTable = sSnorlaxFormSpeciesIdTable,
+        .formChangeTable = sSnorlaxFormChangeTable,
+    },
+#endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_SNORLAX
 
 #if P_FAMILY_ARTICUNO
