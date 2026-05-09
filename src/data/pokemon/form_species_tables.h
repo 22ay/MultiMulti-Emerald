@@ -2120,6 +2120,9 @@ static const u16 sMelmetalFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_MELMETAL_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_MELMETAL_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_MELTAN
@@ -2159,6 +2162,9 @@ static const u16 sCorviknightFormSpeciesIdTable[] = {
     SPECIES_CORVIKNIGHT,
 #if P_GIGANTAMAX_FORMS
     SPECIES_CORVIKNIGHT_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_CORVIKNIGHT_MEGA,
 #endif
     FORM_SPECIES_END,
 };
