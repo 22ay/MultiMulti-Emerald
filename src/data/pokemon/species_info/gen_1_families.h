@@ -20257,7 +20257,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     },
 #endif //P_GIGANTAMAX_FORMS
 
-#if P_MEGA_EVOLUTION
+#if P_MEGA_EVOLUTIONS
     [SPECIES_SNORLAX_MEGA] =
     {
         .baseHP        = 160,

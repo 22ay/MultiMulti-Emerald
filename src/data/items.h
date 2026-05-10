@@ -18939,12 +18939,12 @@ const struct Item gItemsInfo[] =
 
     [ITEM_URSHIFUNITE_WICKED] =
     {
-        .name = ITEM_NAME("Urshifunite"),
+        .name = ITEM_NAME("Urshifunite_X"),
         .price = 0,
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = COMPOUND_STRING(
             "This stone enables\n"
-            "Urshifu to Mega\n"
+            "Urshifu-Single to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_MEGA_STONE,
@@ -18957,12 +18957,12 @@ const struct Item gItemsInfo[] =
 
     [ITEM_URSHIFUNITE_SURGING] =
     {
-        .name = ITEM_NAME("Urshifunite"),
+        .name = ITEM_NAME("Urshifunite_Y"),
         .price = 0,
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = COMPOUND_STRING(
             "This stone enables\n"
-            "Urshifu to Mega\n"
+            "Urshifu-Rapid to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_MEGA_STONE,
