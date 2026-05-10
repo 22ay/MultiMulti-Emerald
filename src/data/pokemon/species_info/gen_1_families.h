@@ -1488,8 +1488,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .cryId = CRY_BUTTERFREE,
         .natDexNum = NATIONAL_DEX_BUTTERFREE,
         .categoryName = _("Butterfly"),
-        .height = 170,
-        .weight = 0,
+        .height = 33,
+        .weight = 400,
         .description = COMPOUND_STRING(
             "Once it has opponents trapped in a\n"
             "tornado that could blow away a 10-\n"
@@ -7718,8 +7718,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .cryId = CRY_MEOWTH,
         .natDexNum = NATIONAL_DEX_MEOWTH,
         .categoryName = _("Scratch Cat"),
-        .height = 330,
-        .weight = 0,
+        .height = 40,
+        .weight = 80,
         .description = COMPOUND_STRING(
             "The pattern that has appeared on\n"
             "its giant coin is thought to be the\n"
@@ -9417,8 +9417,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .cryId = CRY_MACHAMP,
         .natDexNum = NATIONAL_DEX_MACHAMP,
         .categoryName = _("Superpower"),
-        .height = 250,
-        .weight = 0,
+        .height = 30,
+        .weight = 1500,
         .description = COMPOUND_STRING(
             "One of these Pokémon once used\n"
             "its immeasurable strength to lift a\n"
@@ -13359,10 +13359,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .cryId = CRY_KINGLER,
         .natDexNum = NATIONAL_DEX_KINGLER,
         .categoryName = _("Pincer"),
-        .height = 190,
-        .weight = 0,
+        .height = 40,
+        .weight = 700,
         .description = COMPOUND_STRING(
-            "The flow of Gigantamax energy has\n"
+            "The flow of Mega energy has\n"
             "spurred this Pokémon's left pincer\n"
             "to grow to an enormous size. That\n"
             "claw can pulverize anything."),
@@ -18386,8 +18386,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .cryId = CRY_LAPRAS,
         .natDexNum = NATIONAL_DEX_LAPRAS,
         .categoryName = _("Transport"),
-        .height = 240,
-        .weight = 0,
+        .height = 50,
+        .weight = 2500,
         .description = COMPOUND_STRING(
             "Over 5,000 people can ride on its\n"
             "shell at once. And it's a very\n"
@@ -18767,8 +18767,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .cryId = CRY_EEVEE,
         .natDexNum = NATIONAL_DEX_EEVEE,
         .categoryName = _("Evolution"),
-        .height = 180,
-        .weight = 0,
+        .height = 6,
+        .weight = 80,
         .description = COMPOUND_STRING(
             "Having gotten even friendlier and\n"
             "more innocent, Eevee tries to play\n"
@@ -20257,7 +20257,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     },
 #endif //P_GIGANTAMAX_FORMS
 
-#if P_GIGANTAMAX_FORMS
+#if P_MEGA_EVOLUTION
     [SPECIES_SNORLAX_MEGA] =
     {
         .baseHP        = 160,
@@ -20284,10 +20284,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .cryId = CRY_SNORLAX,
         .natDexNum = NATIONAL_DEX_SNORLAX,
         .categoryName = _("Sleeping"),
-        .height = 350,
-        .weight = 0,
+        .height = 50,
+        .weight = 5000,
         .description = COMPOUND_STRING(
-            "Gigantamax energy has affected\n"
+            "Mega energy has affected\n"
             "stray seeds and even pebbles that\n"
             "got stuck to Snorlax, making them grow\n"
             "to a huge size."),

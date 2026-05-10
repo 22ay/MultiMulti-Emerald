@@ -2133,6 +2133,9 @@ static const u16 sRillaboomFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_RILLABOOM_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_RILLABOOM_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_GROOKEY
@@ -2143,6 +2146,9 @@ static const u16 sCinderaceFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_CINDERACE_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_CINDERACE_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_SCORBUNNY
@@ -2152,6 +2158,9 @@ static const u16 sInteleonFormSpeciesIdTable[] = {
     SPECIES_INTELEON,
 #if P_GIGANTAMAX_FORMS
     SPECIES_INTELEON_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_INTELEON_MEGA,
 #endif
     FORM_SPECIES_END,
 };
@@ -2175,6 +2184,9 @@ static const u16 sOrbeetleFormSpeciesIdTable[] = {
     SPECIES_ORBEETLE,
 #if P_GIGANTAMAX_FORMS
     SPECIES_ORBEETLE_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_ORBEETLE_MEGA,
 #endif
     FORM_SPECIES_END,
 };
@@ -2247,6 +2259,9 @@ static const u16 sToxtricityFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_TOXTRICITY_LOW_KEY_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_TOXTRICITY_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_TOXEL
@@ -2256,6 +2271,9 @@ static const u16 sCentiskorchFormSpeciesIdTable[] = {
     SPECIES_CENTISKORCH,
 #if P_GIGANTAMAX_FORMS
     SPECIES_CENTISKORCH_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_CENTISKORCH_MEGA,
 #endif
     FORM_SPECIES_END,
 };
@@ -2281,6 +2299,9 @@ static const u16 sHattereneFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_HATTERENE_GMAX,
 #endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_HATTERENE_MEGA,
+#endif
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_HATENNA
@@ -2290,6 +2311,9 @@ static const u16 sGrimmsnarlFormSpeciesIdTable[] = {
     SPECIES_GRIMMSNARL,
 #if P_GIGANTAMAX_FORMS
     SPECIES_GRIMMSNARL_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_GRIMMSNARL_MEGA,
 #endif
     FORM_SPECIES_END,
 };
@@ -2452,6 +2476,10 @@ static const u16 sUrshifuFormSpeciesIdTable[] = {
 #if P_GIGANTAMAX_FORMS
     SPECIES_URSHIFU_SINGLE_STRIKE_GMAX,
     SPECIES_URSHIFU_RAPID_STRIKE_GMAX,
+#endif
+#if P_MEGA_EVOLUTIONS
+    SPECIES_URSHIFU_WICKED_MEGA,
+    SPECIES_URSHIFU_SURGING_MEGA,
 #endif
     FORM_SPECIES_END,
 };

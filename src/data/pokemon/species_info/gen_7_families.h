@@ -7994,13 +7994,13 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .cryId = CRY_MELMETAL,
         .natDexNum = NATIONAL_DEX_MELMETAL,
         .categoryName = _("Hex Nut"),
-        .height = 250,
-        .weight = 0,
+        .height = 100,
+        .weight = 9000,
         .description = COMPOUND_STRING(
             "In a distant land, there are\n"
             "legends about a cyclopean giant. In fact,\n"
             "the giant was a Melmetal that was\n"
-            "flooded with Gigantamax energy."),
+            "flooded with Mega energy."),
         .pokemonScale = 257,
         .pokemonOffset = 10,
         .trainerScale = 423,
