@@ -54,6 +54,13 @@ enum SignatureEffect
     SIG_EFFECT_RESTORE_HP,
 };
 
+enum SignatureMultiHitMode {
+    SIG_MULTI_NONE,
+    SIG_MULTI_ALWAYS_2,
+    SIG_MULTI_ALWAYS_3,
+    SIG_MULTI_ALWAYS_5,
+};
+
 struct SignatureMoveEntry
 {
     u16 species;
@@ -65,9 +72,9 @@ struct SignatureMoveEntry
     enum SignaturePowerFormula powerFormula;
     enum SignatureAttackStatMode attackStatMode;
     enum SignatureEffect addedEffect;
+    enum SignatureMultiHitMode multiHit;
 };
 
-// Existing public APIs
 u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower);
 s8 GetSignaturePriority(u16 species, u16 move);
 bool8 IsSignatureMove(u16 species, u16 move);

@@ -425,8 +425,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_0x48
-	.byte B_SCR_OP_UNUSED_0x48
+	.macro signatureeffect
+	.byte B_SCR_OP_SIGNATUREEFFECT
 	.endm
 
 	.macro moveend endMode:req, endState:req

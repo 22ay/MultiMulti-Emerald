@@ -431,7 +431,7 @@ static void Cmd_endselectionscript(void);
 static void Cmd_playanimation(void);
 static void Cmd_playanimation_var(void);
 static void Cmd_jumpfifsemiinvulnerable(void);
-static void Cmd_unused_0x48(void);
+static void Cmd_signatureeffect(void);
 static void Cmd_moveend(void);
 static void Cmd_sethealblock(void);
 static void Cmd_returnatktoball(void);
@@ -690,7 +690,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_PLAYANIMATION] = Cmd_playanimation,
     [B_SCR_OP_PLAYANIMATION_VAR] = Cmd_playanimation_var,
     [B_SCR_OP_JUMPFIFSEMIINVULNERABLE] = Cmd_jumpfifsemiinvulnerable,
-    [B_SCR_OP_UNUSED_0x48] = Cmd_unused_0x48,
+    [B_SCR_OP_SIGNATUREEFFECT] = Cmd_signatureeffect,
     [B_SCR_OP_MOVEEND] = Cmd_moveend,
     [B_SCR_OP_SETHEALBLOCK] = Cmd_sethealblock,
     [B_SCR_OP_RETURNATKTOBALL] = Cmd_returnatktoball,
@@ -4424,321 +4424,6 @@ static void Cmd_setadditionaleffects(void)
         gBattleScripting.moveEffect = 0;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-    
-    if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)) //signature
-    {
-        
-        const struct SignatureMoveEntry *entry =
-            GetSignatureMoveEntry(
-                GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
-                gCurrentMove
-            );
-        
-            // Skip signature effects if the target fainted AND the battle is ending
-        if (gBattleMons[gBattlerTarget].hp == 0)
-        {
-            // Wild battle: last mon → battle ends
-            if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-                return;
-
-            // Trainer battle: check if the opposing side has any mons left
-            if (GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT
-                && NoAliveMonsForBattlerSide(gBattlerTarget))
-            {
-                return;
-            }
-        }
-        
-        if (entry && entry->addedEffect != SIG_EFFECT_NONE)
-        {
-            switch (entry->addedEffect)
-            {
-            case SIG_EFFECT_SUN:
-                if (!(gBattleWeather & B_WEATHER_SUN) 
-                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
-                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
-                {
-                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SUN, FALSE);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureSun;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_RAIN:
-                if (!(gBattleWeather & B_WEATHER_RAIN)
-                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
-                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
-                {
-                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_RAIN, FALSE);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureRain;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_SAND:
-                if (!(gBattleWeather & B_WEATHER_SANDSTORM)
-                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
-                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
-                {
-                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SANDSTORM, FALSE);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureSandstorm;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_SNOW:
-                if (!(gBattleWeather & B_WEATHER_SNOW)
-                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
-                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
-                {
-                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SNOW, FALSE);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureSnow;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_FOG:
-                if (!(gBattleWeather & B_WEATHER_FOG)
-                && !(gBattleWeather & B_WEATHER_SUN_PRIMAL) 
-                && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
-                {
-                    TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_FOG, FALSE);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureFog;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_MISTY_TERRAIN:
-                if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
-                {
-                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_MISTY_TERRAIN);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureMistyTerrain;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_GRASSY_TERRAIN:
-                if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
-                {
-                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_GRASSY_TERRAIN);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureGrassyTerrain;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_ELECTRIC_TERRAIN:
-                if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
-                {
-                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_ELECTRIC_TERRAIN);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureElectricTerrain;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_PSYCHIC_TERRAIN:
-                if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
-                {
-                    TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_PSYCHIC_TERRAIN);
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignaturePsychicTerrain;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_GRAVITY:
-                if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
-                {
-                    gFieldStatuses |= STATUS_FIELD_GRAVITY;
-                    gFieldTimers.gravityTimer = 5;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureGravity;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_TRICK_ROOM:
-                if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM))
-                {
-                    gFieldStatuses |= STATUS_FIELD_TRICK_ROOM;
-                    gFieldTimers.trickRoomTimer = 5;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureTrickRoom;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_INVERSE_ROOM:
-                if (!(gFieldStatuses & STATUS_FIELD_INVERSE_ROOM))
-                {
-                    gFieldStatuses |= STATUS_FIELD_INVERSE_ROOM;
-                    gFieldTimers.inverseRoomTimer = 5;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureInverseRoom;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_TAILWIND:
-                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_TAILWIND))
-                {
-                    u8 side = GetBattlerSide(gBattlerAttacker);
-                    gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
-                    gSideTimers[side].tailwindTimer = 4;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureTailwind;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_RAINBOW:
-                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_RAINBOW))
-                {
-                    u8 side = GetBattlerSide(gBattlerAttacker);
-                    gSideStatuses[side] |= SIDE_STATUS_RAINBOW;
-                    gSideTimers[side].rainbowTimer = 4;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureRainbow;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_SEA_OF_FIRE:
-                if (!(gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SEA_OF_FIRE))
-                {
-                    u8 side = GetBattlerSide(gBattlerTarget);
-                    gSideStatuses[side] |= SIDE_STATUS_SEA_OF_FIRE;
-                    gSideTimers[side].seaOfFireTimer = 4;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureSeaOfFire;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_SWAMP:
-                if (!(gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SWAMP))
-                {
-                    u8 side = GetBattlerSide(gBattlerTarget);
-                    gSideStatuses[side] |= SIDE_STATUS_SWAMP;
-                    gSideTimers[side].swampTimer = 4;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureSwamp;
-                    return;
-                }
-                break;
-            
-            case SIG_EFFECT_REFLECT:
-                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_REFLECT))
-                {
-                    u8 side = GetBattlerSide(gBattlerAttacker);
-                    gSideStatuses[side] |= SIDE_STATUS_REFLECT;
-                    gSideTimers[side].reflectTimer = 5;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureReflect;
-                    return;
-                }
-                break;
-            
-            case SIG_EFFECT_LIGHT_SCREEN:
-                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_LIGHTSCREEN))
-                {
-                    u8 side = GetBattlerSide(gBattlerAttacker);
-                    gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
-                    gSideTimers[side].lightscreenTimer = 5;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureLightScreen;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_AURORA_VEIL:
-                if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_AURORA_VEIL) && (gBattleWeather & B_WEATHER_SNOW))
-                {
-                    u8 side = GetBattlerSide(gBattlerAttacker);
-                    gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
-                    gSideTimers[side].auroraVeilTimer = 5;
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureAuroraVeil;
-                    return;
-                }
-                break;
-
-            case SIG_EFFECT_ATK_PLUS_1:
-            case SIG_EFFECT_DEF_PLUS_1:
-            case SIG_EFFECT_SPD_PLUS_1:
-            case SIG_EFFECT_SPATK_PLUS_1:
-            case SIG_EFFECT_SPDEF_PLUS_1:
-            {
-                u8 statId = 0;
-
-                switch (entry->addedEffect)
-                {
-                case SIG_EFFECT_ATK_PLUS_1:   statId = STAT_ATK; break;
-                case SIG_EFFECT_DEF_PLUS_1:   statId = STAT_DEF; break;
-                case SIG_EFFECT_SPD_PLUS_1:   statId = STAT_SPEED; break;
-                case SIG_EFFECT_SPATK_PLUS_1: statId = STAT_SPATK; break;
-                case SIG_EFFECT_SPDEF_PLUS_1: statId = STAT_SPDEF; break;
-                default: break;
-                }
-
-                if (statId != 0)
-                {
-                    gBattleScripting.statChanger = SET_STAT_BUFF_VALUE(1) | statId;
-                    gBattleScripting.battler = gBattlerAttacker;
-
-                    BattleScriptPush(cmd->nextInstr);
-                    gBattlescriptCurrInstr = BattleScript_SignatureStatUp;
-                    return;
-                }
-                break;
-            }
-
-            case SIG_EFFECT_RESTORE_HP:
-                if (IsBattlerAlive(gBattlerAttacker)
-                    && !gBattleMons[gBattlerAttacker].volatiles.healBlock
-                    && gBattleStruct->moveDamage[gBattlerTarget] > 0)
-                {
-                    s32 healAmount =
-                        (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
-
-                    healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
-
-                    BattleScriptPush(cmd->nextInstr);
-
-                    if (!BattlerHasTrait(gBattlerTarget, ABILITY_LIQUID_OOZE))
-                    {
-                        SetHealAmount(gBattlerAttacker, healAmount);
-                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
-                        gBattlescriptCurrInstr = BattleScript_EffectAbsorb;
-                    }
-                    else
-                    {
-                        SetPassiveDamageAmount(gBattlerAttacker, healAmount);
-                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
-                        gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
-                    }
-
-                    return;
-                }
-                break;
-
-            default:
-                break;
-            }
-        }
-    }
-    else
-    {
-        gBattleScripting.moveEffect = 0;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 static void Cmd_seteffectprimary(void)
@@ -6060,9 +5745,331 @@ static void Cmd_jumpfifsemiinvulnerable(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_unused_0x48(void)
+static void Cmd_signatureeffect(void)
 {
+    const u8 *nextInstr = gBattlescriptCurrInstr + 1;
+
+    if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+    {
+        gBattleScripting.moveEffect = 0;
+        gBattlescriptCurrInstr = nextInstr;
+        return;
+    }
+
+    const struct SignatureMoveEntry *entry =
+        GetSignatureMoveEntry(
+            GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
+            gCurrentMove
+        );
+
+    // KO guard: skip signature effects if target fainted and battle is ending.
+    if (gBattleMons[gBattlerTarget].hp == 0)
+    {
+        // Wild battle: last mon → battle ends
+        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+        {
+            gBattlescriptCurrInstr = nextInstr;
+            return;
+        }
+
+        // Trainer battle: last mon on that side → battle ends
+        if (GetBattlerSide(gBattlerTarget) == B_SIDE_OPPONENT
+            && NoAliveMonsForBattlerSide(gBattlerTarget))
+        {
+            gBattlescriptCurrInstr = nextInstr;
+            return;
+        }
+    }
+
+    if (entry && entry->addedEffect != SIG_EFFECT_NONE)
+    {
+        switch (entry->addedEffect)
+        {
+        case SIG_EFFECT_SUN:
+            if (!(gBattleWeather & B_WEATHER_SUN)
+             && !(gBattleWeather & B_WEATHER_SUN_PRIMAL)
+             && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
+            {
+                TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SUN, FALSE);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureSun;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_RAIN:
+            if (!(gBattleWeather & B_WEATHER_RAIN)
+             && !(gBattleWeather & B_WEATHER_SUN_PRIMAL)
+             && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
+            {
+                TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_RAIN, FALSE);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureRain;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_SAND:
+            if (!(gBattleWeather & B_WEATHER_SANDSTORM)
+             && !(gBattleWeather & B_WEATHER_SUN_PRIMAL)
+             && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
+            {
+                TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SANDSTORM, FALSE);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureSandstorm;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_SNOW:
+            if (!(gBattleWeather & B_WEATHER_SNOW)
+             && !(gBattleWeather & B_WEATHER_SUN_PRIMAL)
+             && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
+            {
+                TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SNOW, FALSE);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureSnow;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_FOG:
+            if (!(gBattleWeather & B_WEATHER_FOG)
+             && !(gBattleWeather & B_WEATHER_SUN_PRIMAL)
+             && !(gBattleWeather & B_WEATHER_RAIN_PRIMAL))
+            {
+                TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_FOG, FALSE);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureFog;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_MISTY_TERRAIN:
+            if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+            {
+                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_MISTY_TERRAIN);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureMistyTerrain;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_GRASSY_TERRAIN:
+            if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
+            {
+                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_GRASSY_TERRAIN);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureGrassyTerrain;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_ELECTRIC_TERRAIN:
+            if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
+            {
+                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_ELECTRIC_TERRAIN);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureElectricTerrain;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_PSYCHIC_TERRAIN:
+            if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+            {
+                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_PSYCHIC_TERRAIN);
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignaturePsychicTerrain;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_GRAVITY:
+            if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
+            {
+                gFieldStatuses |= STATUS_FIELD_GRAVITY;
+                gFieldTimers.gravityTimer = 5;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureGravity;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_TRICK_ROOM:
+            if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM))
+            {
+                gFieldStatuses |= STATUS_FIELD_TRICK_ROOM;
+                gFieldTimers.trickRoomTimer = 5;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureTrickRoom;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_INVERSE_ROOM:
+            if (!(gFieldStatuses & STATUS_FIELD_INVERSE_ROOM))
+            {
+                gFieldStatuses |= STATUS_FIELD_INVERSE_ROOM;
+                gFieldTimers.inverseRoomTimer = 5;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureInverseRoom;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_TAILWIND:
+            if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_TAILWIND))
+            {
+                u8 side = GetBattlerSide(gBattlerAttacker);
+                gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
+                gSideTimers[side].tailwindTimer = 4;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureTailwind;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_RAINBOW:
+            if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_RAINBOW))
+            {
+                u8 side = GetBattlerSide(gBattlerAttacker);
+                gSideStatuses[side] |= SIDE_STATUS_RAINBOW;
+                gSideTimers[side].rainbowTimer = 4;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureRainbow;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_SEA_OF_FIRE:
+            if (!(gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SEA_OF_FIRE))
+            {
+                u8 side = GetBattlerSide(gBattlerTarget);
+                gSideStatuses[side] |= SIDE_STATUS_SEA_OF_FIRE;
+                gSideTimers[side].seaOfFireTimer = 4;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureSeaOfFire;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_SWAMP:
+            if (!(gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SWAMP))
+            {
+                u8 side = GetBattlerSide(gBattlerTarget);
+                gSideStatuses[side] |= SIDE_STATUS_SWAMP;
+                gSideTimers[side].swampTimer = 4;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureSwamp;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_REFLECT:
+            if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_REFLECT))
+            {
+                u8 side = GetBattlerSide(gBattlerAttacker);
+                gSideStatuses[side] |= SIDE_STATUS_REFLECT;
+                gSideTimers[side].reflectTimer = 5;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureReflect;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_LIGHT_SCREEN:
+            if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_LIGHTSCREEN))
+            {
+                u8 side = GetBattlerSide(gBattlerAttacker);
+                gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
+                gSideTimers[side].lightscreenTimer = 5;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureLightScreen;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_AURORA_VEIL:
+            if (!(gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_AURORA_VEIL)
+                && (gBattleWeather & B_WEATHER_SNOW))
+            {
+                u8 side = GetBattlerSide(gBattlerAttacker);
+                gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
+                gSideTimers[side].auroraVeilTimer = 5;
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureAuroraVeil;
+                return;
+            }
+            break;
+
+        case SIG_EFFECT_ATK_PLUS_1:
+        case SIG_EFFECT_DEF_PLUS_1:
+        case SIG_EFFECT_SPD_PLUS_1:
+        case SIG_EFFECT_SPATK_PLUS_1:
+        case SIG_EFFECT_SPDEF_PLUS_1:
+        {
+            u8 statId = 0;
+
+            switch (entry->addedEffect)
+            {
+            case SIG_EFFECT_ATK_PLUS_1:   statId = STAT_ATK;   break;
+            case SIG_EFFECT_DEF_PLUS_1:   statId = STAT_DEF;   break;
+            case SIG_EFFECT_SPD_PLUS_1:   statId = STAT_SPEED; break;
+            case SIG_EFFECT_SPATK_PLUS_1: statId = STAT_SPATK; break;
+            case SIG_EFFECT_SPDEF_PLUS_1: statId = STAT_SPDEF; break;
+            default: break;
+            }
+
+            if (statId != 0)
+            {
+                gBattleScripting.statChanger = SET_STAT_BUFF_VALUE(1) | statId;
+                gBattleScripting.battler = gBattlerAttacker;
+
+                BattleScriptPush(nextInstr);
+                gBattlescriptCurrInstr = BattleScript_SignatureStatUp;
+                return;
+            }
+            break;
+        }
+
+        case SIG_EFFECT_RESTORE_HP:
+            if (IsBattlerAlive(gBattlerAttacker)
+                && !gBattleMons[gBattlerAttacker].volatiles.healBlock
+                && gBattleStruct->moveDamage[gBattlerTarget] > 0)
+            {
+                s32 healAmount =
+                    (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
+
+                healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
+
+                BattleScriptPush(nextInstr);
+
+                if (!BattlerHasTrait(gBattlerTarget, ABILITY_LIQUID_OOZE))
+                {
+                    SetHealAmount(gBattlerAttacker, healAmount);
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
+                    gBattlescriptCurrInstr = BattleScript_EffectAbsorb;
+                }
+                else
+                {
+                    SetPassiveDamageAmount(gBattlerAttacker, healAmount);
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+                    gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
+                }
+
+                return;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    gBattlescriptCurrInstr = nextInstr;
 }
+
 
 static inline bool32 TryTriggerSymbiosis(u32 battler, u32 ally)
 {

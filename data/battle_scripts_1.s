@@ -2684,6 +2684,7 @@ BattleScript_Hit_RetFromAtkAnimation::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	setadditionaleffects
+	signatureeffect
 	return
 
 BattleScript_EffectNaturalGift::

@@ -3037,6 +3037,12 @@ static enum MoveCanceler CancelerExplodingDamp(struct BattleContext *ctx)
 
 static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
 {
+    const struct SignatureMoveEntry *entry =
+    GetSignatureMoveEntry(
+        GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species),
+        gCurrentMove
+    );
+
     if (GetMoveEffect(ctx->currentMove) == EFFECT_MULTI_HIT)
     {
         if (BattlerHasTrait(gBattlerAttacker, ABILITY_SKILL_LINK))
@@ -3097,6 +3103,28 @@ static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
                     gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
                 gMultiHitCounter++;
             }
+        }
+
+        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+    }
+    else if (entry && entry->multiHit != SIG_MULTI_NONE)
+    {
+        switch (entry->multiHit)
+        {
+        case SIG_MULTI_ALWAYS_2:
+            gMultiHitCounter = 2;
+            break;
+
+        case SIG_MULTI_ALWAYS_3:
+            gMultiHitCounter = 3;
+            break;
+
+        case SIG_MULTI_ALWAYS_5:
+            gMultiHitCounter = 5;
+            break;
+        
+        default:
+            break;
         }
 
         PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
