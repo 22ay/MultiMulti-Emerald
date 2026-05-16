@@ -28,10 +28,18 @@ enum MapPopUp_Themes
 {
     MAPPOPUP_THEME_WOOD,
     MAPPOPUP_THEME_MARBLE,
-    MAPPOPUP_THEME_STONE,
     MAPPOPUP_THEME_BRICK,
-    MAPPOPUP_THEME_UNDERWATER,
+    MAPPOPUP_THEME_CHERRY,
+    MAPPOPUP_THEME_FALL,
+    MAPPOPUP_THEME_STONE,
     MAPPOPUP_THEME_STONE2,
+    MAPPOPUP_THEME_UNDERWATER,
+    MAPPOPUP_THEME_CLIFF,
+    MAPPOPUP_THEME_JOHTO_ROUTE,
+    MAPPOPUP_THEME_KANTO_ROUTE,
+    MAPPOPUP_THEME_HISTORIC,
+    MAPPOPUP_THEME_CITY,
+    MAPPOPUP_THEME_TOWN,
 };
 
 enum MapPopUp_Themes_BW
@@ -53,30 +61,54 @@ static const u8 sMapPopUp_Table[][960] =
 {
     [MAPPOPUP_THEME_WOOD]       = INCBIN_U8("graphics/map_popup/wood.4bpp"),
     [MAPPOPUP_THEME_MARBLE]     = INCBIN_U8("graphics/map_popup/marble.4bpp"),
-    [MAPPOPUP_THEME_STONE]      = INCBIN_U8("graphics/map_popup/stone.4bpp"),
     [MAPPOPUP_THEME_BRICK]      = INCBIN_U8("graphics/map_popup/brick.4bpp"),
-    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U8("graphics/map_popup/underwater.4bpp"),
+    [MAPPOPUP_THEME_CHERRY]     = INCBIN_U8("graphics/map_popup/cherry.4bpp"),
+    [MAPPOPUP_THEME_FALL]      = INCBIN_U8("graphics/map_popup/fall.4bpp"),
+    [MAPPOPUP_THEME_STONE]      = INCBIN_U8("graphics/map_popup/stone.4bpp"),
     [MAPPOPUP_THEME_STONE2]     = INCBIN_U8("graphics/map_popup/stone2.4bpp"),
+    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U8("graphics/map_popup/ocean.4bpp"),
+    [MAPPOPUP_THEME_CLIFF]     = INCBIN_U8("graphics/map_popup/cliff.4bpp"),
+    [MAPPOPUP_THEME_JOHTO_ROUTE]     = INCBIN_U8("graphics/map_popup/johto.4bpp"),
+    [MAPPOPUP_THEME_KANTO_ROUTE]     = INCBIN_U8("graphics/map_popup/kanto.4bpp"),
+    [MAPPOPUP_THEME_HISTORIC]     = INCBIN_U8("graphics/map_popup/historic.4bpp"),
+    [MAPPOPUP_THEME_CITY]     = INCBIN_U8("graphics/map_popup/city.4bpp"),
+    [MAPPOPUP_THEME_TOWN]     = INCBIN_U8("graphics/map_popup/town.4bpp"),
 };
 
 static const u8 sMapPopUp_OutlineTable[][960] =
 {
     [MAPPOPUP_THEME_WOOD]       = INCBIN_U8("graphics/map_popup/wood_outline.4bpp"),
     [MAPPOPUP_THEME_MARBLE]     = INCBIN_U8("graphics/map_popup/marble_outline.4bpp"),
-    [MAPPOPUP_THEME_STONE]      = INCBIN_U8("graphics/map_popup/stone_outline.4bpp"),
     [MAPPOPUP_THEME_BRICK]      = INCBIN_U8("graphics/map_popup/brick_outline.4bpp"),
-    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U8("graphics/map_popup/underwater_outline.4bpp"),
+    [MAPPOPUP_THEME_CHERRY]     = INCBIN_U8("graphics/map_popup/cherry_outline.4bpp"),
+    [MAPPOPUP_THEME_FALL]      = INCBIN_U8("graphics/map_popup/fall_outline.4bpp"),
+    [MAPPOPUP_THEME_STONE]      = INCBIN_U8("graphics/map_popup/stone_outline.4bpp"),
     [MAPPOPUP_THEME_STONE2]     = INCBIN_U8("graphics/map_popup/stone2_outline.4bpp"),
+    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U8("graphics/map_popup/ocean_outline.4bpp"),
+    [MAPPOPUP_THEME_CLIFF]     = INCBIN_U8("graphics/map_popup/cliff_outline.4bpp"),
+    [MAPPOPUP_THEME_JOHTO_ROUTE]     = INCBIN_U8("graphics/map_popup/johto_outline.4bpp"),
+    [MAPPOPUP_THEME_KANTO_ROUTE]     = INCBIN_U8("graphics/map_popup/kanto_outline.4bpp"),
+    [MAPPOPUP_THEME_HISTORIC]     = INCBIN_U8("graphics/map_popup/historic_outline.4bpp"),
+    [MAPPOPUP_THEME_CITY]     = INCBIN_U8("graphics/map_popup/city_outline.4bpp"),
+    [MAPPOPUP_THEME_TOWN]     = INCBIN_U8("graphics/map_popup/town_outline.4bpp"),
 };
 
 static const u16 sMapPopUp_PaletteTable[][16] =
 {
     [MAPPOPUP_THEME_WOOD]       = INCBIN_U16("graphics/map_popup/wood.gbapal"),
     [MAPPOPUP_THEME_MARBLE]     = INCBIN_U16("graphics/map_popup/marble_outline.gbapal"),
-    [MAPPOPUP_THEME_STONE]      = INCBIN_U16("graphics/map_popup/stone_outline.gbapal"),
     [MAPPOPUP_THEME_BRICK]      = INCBIN_U16("graphics/map_popup/brick_outline.gbapal"),
-    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U16("graphics/map_popup/underwater_outline.gbapal"),
+    [MAPPOPUP_THEME_CHERRY]     = INCBIN_U16("graphics/map_popup/cherry_outline.gbapal"),
+    [MAPPOPUP_THEME_FALL]      = INCBIN_U16("graphics/map_popup/fall_outline.gbapal"),    
+    [MAPPOPUP_THEME_STONE]      = INCBIN_U16("graphics/map_popup/stone_outline.gbapal"),
     [MAPPOPUP_THEME_STONE2]     = INCBIN_U16("graphics/map_popup/stone2_outline.gbapal"),
+    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U16("graphics/map_popup/ocean_outline.gbapal"),
+    [MAPPOPUP_THEME_CLIFF]     = INCBIN_U16("graphics/map_popup/cliff_outline.gbapal"),
+    [MAPPOPUP_THEME_JOHTO_ROUTE]     = INCBIN_U16("graphics/map_popup/johto_outline.gbapal"),
+    [MAPPOPUP_THEME_KANTO_ROUTE]     = INCBIN_U16("graphics/map_popup/kanto_outline.gbapal"),
+    [MAPPOPUP_THEME_HISTORIC]     = INCBIN_U16("graphics/map_popup/historic_outline.gbapal"),
+    [MAPPOPUP_THEME_CITY]     = INCBIN_U16("graphics/map_popup/city_outline.gbapal"),
+    [MAPPOPUP_THEME_TOWN]     = INCBIN_U16("graphics/map_popup/town_outline.gbapal"),
 };
 
 static const u16 sMapPopUp_Palette_Underwater[16] = INCBIN_U16("graphics/map_popup/underwater.gbapal");
