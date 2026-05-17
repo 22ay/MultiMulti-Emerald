@@ -8,6 +8,7 @@
 #include "battle_scripts.h"
 #include "battle_environment.h"
 #include "battle_z_move.h"
+#include "battle_damage_numbers.h"
 #include "item.h"
 #include "util.h"
 #include "pokemon.h"
@@ -2425,6 +2426,9 @@ static void Cmd_healthbarupdate(void)
 
     if (gBattleControllerExecFlags)
         return;
+
+    if (!DN_CONFIG_ONLY_ATTACK_DAMAGE)
+		ShowDamageNumbers(battler); //lol
 
     switch (cmd->updateState)
     {
@@ -9185,6 +9189,12 @@ static void Cmd_hitanimation(void)
                 BtlController_EmitHitAnimation(battler, B_COMM_TO_CONTROLLER);
                 MarkBattlerForControllerExec(battler);
             }
+        }
+        if(DN_CONFIG_ONLY_ATTACK_DAMAGE)
+        {
+            ShowDamageNumbers(battler);
+            BtlController_EmitHitAnimation(battler, B_COMM_TO_CONTROLLER);
+            MarkBattlerForControllerExec(battler); //lol
         }
     }
     else if (!gBattleStruct->doneDoublesSpreadHit)
