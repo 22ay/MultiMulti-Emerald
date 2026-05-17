@@ -6059,6 +6059,7 @@ static void Cmd_signatureeffect(void)
                 {
                     SetPassiveDamageAmount(gBattlerAttacker, healAmount);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+                    PushTraitStack(gBattlerTarget, ABILITY_LIQUID_OOZE);
                     gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
                 }
 
@@ -6870,6 +6871,7 @@ static void Cmd_moveend(void)
                     {
                         SetPassiveDamageAmount(gBattlerAttacker, healAmount);
                         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+                        PushTraitStack(gBattlerTarget, ABILITY_LIQUID_OOZE);
                         BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
                     }
                 }
