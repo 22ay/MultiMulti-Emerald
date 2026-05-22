@@ -2672,4 +2672,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_MEGA_SOL] =
+    {
+        .name = _("Mega Sol"),
+        .description = COMPOUND_STRING("Always under Sun"),
+        .aiRating = 6,
+    },
+
 };

@@ -1831,6 +1831,7 @@ BattleScript_GrowthDoMoveAnim::
 	attackanimation
 	waitanimation
 	jumpifweatheraffected B_WEATHER_SUN, BattleScript_GrowthAtk2
+	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_GrowthAtk2
 	setstatchanger STAT_ATK, 1, FALSE
 	goto BattleScript_GrowthAtk
 BattleScript_GrowthAtk2:
