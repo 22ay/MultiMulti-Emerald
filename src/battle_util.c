@@ -7991,7 +7991,13 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
     if (SearchTraits(battlerTraits, ABILITY_ARROGANCE) && IsBattlerAtMaxHp(battlerAtk))
-        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
+
+    if (SearchTraits(battlerTraits, ABILITY_BRUTE_FORCE) && IsBattleMovePhysical(move))
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+
+    if ((SearchTraits(battlerTraits, ABILITY_ARCANA) || SearchTraits(battlerTraits, ABILITY_DOWN_RANGE)) && IsBattleMoveSpecial(move))
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
 
     if (SearchTraits(battlerTraits, ABILITY_FLARE_BOOST) && gBattleMons[battlerAtk].status1 & STATUS1_BURN && IsBattleMoveSpecial(move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
@@ -8378,7 +8384,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
         gBattleStruct->swapDamageCategory = TRUE;
     }
-    else if (BattlerHasTrait(battlerAtk, ABILITY_ARCANA) && IsBattleMovePhysical(move))
+    else if ((BattlerHasTrait(battlerAtk, ABILITY_ARCANA) || BattlerHasTrait(battlerAtk, ABILITY_DOWN_RANGE)) && IsBattleMovePhysical(move))
     {
 		atkStat  = gBattleMons[battlerAtk].spAttack;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];

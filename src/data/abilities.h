@@ -2665,4 +2665,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_DOWN_RANGE] =
+    {
+        .name = _("Down Range"),
+        .description = COMPOUND_STRING("All attacks use Sp.Attack"),
+        .aiRating = 6,
+    },
+
 };
