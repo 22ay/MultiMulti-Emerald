@@ -4853,7 +4853,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             {
                 for (i = 0; i < MAX_MON_ITEMS; i++)
                 {
-                    if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
+                    if (((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)) || RandomPercentage(RNG_HARVEST, 50))
                      && gBattleMons[battler].items[i] == ITEM_NONE
                      && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
                      && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)

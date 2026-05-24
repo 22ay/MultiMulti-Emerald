@@ -183,7 +183,8 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     default:
         if (SearchTraits(battlerTraits, ABILITY_MEGA_SOL)
         && (SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)
-        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN)))
+        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN) 
+        || SearchTraits(battlerTraits, ABILITY_HARVEST)))
         {
             AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE);
             effect = TRUE;
