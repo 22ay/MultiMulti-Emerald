@@ -10275,7 +10275,7 @@ u32 IsFlowerVeilProtected(u32 battler)
 
 u32 IsLeafGuardProtected(u32 battler)
 {
-    if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN)
+    if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || BattlerHasTrait(battler, ABILITY_MEGA_SOL))
      && (gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battler, ABILITY_LEAF_GUARD) : BattlerHasTrait(battler, ABILITY_LEAF_GUARD)))
     {
         PushTraitStack(battler, ABILITY_LEAF_GUARD);

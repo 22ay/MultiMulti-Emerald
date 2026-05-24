@@ -8489,7 +8489,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
 
     if (SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)
-     && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN))
+     && (IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
 
     if (SearchTraits(battlerTraits, ABILITY_DEFEATIST)
@@ -8930,7 +8930,7 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
 static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
 {
-    if (ctx->weather == B_WEATHER_NONE)
+    if ((ctx->weather == B_WEATHER_NONE) && !BattlerHasTrait(ctx->battlerAtk, ABILITY_MEGA_SOL))
         return UQ_4_12(1.0);
     if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && !BattlerHasHeldItemEffect(ctx->battlerAtk, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
         return UQ_4_12(1.5);
@@ -8943,7 +8943,7 @@ static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
             return UQ_4_12(1.0);
         return (ctx->moveType == TYPE_FIRE) ? UQ_4_12(0.5) : UQ_4_12(1.5);
     }
-    if (ctx->weather & B_WEATHER_SUN)
+    if ((ctx->weather & B_WEATHER_SUN) || BattlerHasTrait(ctx->battlerAtk, ABILITY_MEGA_SOL))
     {
         if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
             return UQ_4_12(1.0);
