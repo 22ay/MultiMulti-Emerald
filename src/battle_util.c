@@ -4964,7 +4964,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 break;
             }
              else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-             && IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
+             && (IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
             {
                 gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                 PushTraitStack(battler, ABILITY_SOLAR_POWER);
@@ -4981,7 +4981,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             }
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_DRY_SKIN)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
             {
-                if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN) && !SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)) // Damage stacking handled in Solar Power
+                if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)) && !SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)) // Damage stacking handled in Solar Power
                 {
                     gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                     PushTraitStack(battler, ABILITY_DRY_SKIN);

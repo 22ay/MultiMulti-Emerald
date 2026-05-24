@@ -100,7 +100,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
 
-    if (currBattleWeather == 0xFF)
+    if ((currBattleWeather == 0xFF) && (!SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
     {
         // If there is no weather on the field, no need to check other battlers so go to next state
         gBattleStruct->eventState.endTurnBattler = 0;
@@ -110,9 +110,8 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (!IsBattlerAlive(battler) || !HasWeatherEffect())
+    if (!IsBattlerAlive(battler) || (!HasWeatherEffect() && !SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
         return effect;
-
 
     switch (currBattleWeather)
     {
@@ -179,6 +178,15 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
                 BattleScriptExecute(BattleScript_DamagingWeather);
                 effect = TRUE;
             }
+        }
+        break;
+    default:
+        if (SearchTraits(battlerTraits, ABILITY_MEGA_SOL)
+        && (SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)
+        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN)))
+        {
+            AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE);
+            effect = TRUE;
         }
         break;
     }
