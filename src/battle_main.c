@@ -4827,11 +4827,11 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     STORE_BATTLER_ITEMS(battler);
 
     // weather abilities
-    if (HasWeatherEffect())
+    if (HasWeatherEffect() || SearchTraits(battlerTraits, ABILITY_MEGA_SOL))
     {
         if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && gBattleWeather & B_WEATHER_RAIN)
             speed += baseSpeed;
-        if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && gBattleWeather & B_WEATHER_SUN)
+        if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
             speed += baseSpeed;
         if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH)   && gBattleWeather & B_WEATHER_SANDSTORM)
             speed += baseSpeed;
@@ -4974,7 +4974,7 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_INFERNAL_SOUL)
-          && (gBattleWeather & B_WEATHER_SUN)
+          && ((gBattleWeather & B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL))
           && GetMoveType(move) == TYPE_FIRE)
     {
         priority++;
@@ -6037,13 +6037,13 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
     case EFFECT_WEATHER_BALL:
         if (state == MON_IN_BATTLE)
         {
-            if (HasWeatherEffect())
+            if (HasWeatherEffect() || BattlerHasTrait(battler, ABILITY_MEGA_SOL))
             {
                 if (gBattleWeather & B_WEATHER_RAIN && !utilityUmbrellaAffected)
                     return TYPE_WATER;
                 else if (gBattleWeather & B_WEATHER_SANDSTORM)
                     return TYPE_ROCK;
-                else if (gBattleWeather & B_WEATHER_SUN && !utilityUmbrellaAffected)
+                else if (((gBattleWeather & B_WEATHER_SUN) || BattlerHasTrait(battler, ABILITY_MEGA_SOL)) && !utilityUmbrellaAffected)
                     return TYPE_FIRE;
                 else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
                     return TYPE_ICE;
