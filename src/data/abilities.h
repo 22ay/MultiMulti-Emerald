@@ -2458,224 +2458,224 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_VERSATILE] =
     {
         .name = _("Versatile"),
-        .description = COMPOUND_STRING("Grants STAB on moves"),
+        .description = COMPOUND_STRING("Grants STAB on moves."),
         .aiRating = 8,
     },
 
     [ABILITY_ONSLAUGHT] =
     {
         .name = _("Onslaught"),
-        .description = COMPOUND_STRING("Moves hit twice"),
+        .description = COMPOUND_STRING("Moves hit twice."),
         .aiRating = 10,
     },
 
     [ABILITY_MERRY_RAINBOW] =
     {
         .name = _("Merry Rainbow"),
-        .description = COMPOUND_STRING("Creates a Rainbow"),
+        .description = COMPOUND_STRING("Creates a Rainbow."),
         .aiRating = 6,
     },
 
     [ABILITY_SEA_OF_FLAMES] =
     {
         .name = _("Sea of Flames"),
-        .description = COMPOUND_STRING("Summons Sea of Fire"),
+        .description = COMPOUND_STRING("Summons Sea of Fire."),
         .aiRating = 6,
     },
 
     [ABILITY_SWAMPED] =
     {
         .name = _("Swamped"),
-        .description = COMPOUND_STRING("Swamps the area"),
+        .description = COMPOUND_STRING("Swamps the area."),
         .aiRating = 6,
     },
 
     [ABILITY_EERIE_HAZE] =
     {
         .name = _("Eerie Haze"),
-        .description = COMPOUND_STRING("Summons Eerie Fog"),
+        .description = COMPOUND_STRING("Summons Eerie Fog."),
         .aiRating = 6,
     },
 
     [ABILITY_AVIAN_PROWESS] =
     {
         .name = _("Avian Prowess"),
-        .description = COMPOUND_STRING("Ups Sp.Atk but locks move"),
+        .description = COMPOUND_STRING("Ups Sp.Atk but locks move."),
         .aiRating = 4,
     },
 
     [ABILITY_TECTONIZE] =
     {
         .name = _("Tectonize"),
-        .description = COMPOUND_STRING("Normal moves become Ground"),
+        .description = COMPOUND_STRING("Normal moves become Ground."),
         .aiRating = 8,
     },
 
     [ABILITY_SPECTRALIZE] =
     {
         .name = _("Spectralize"),
-        .description = COMPOUND_STRING("Normal moves become Ghost"),
+        .description = COMPOUND_STRING("Normal moves become Ghost."),
         .aiRating = 8,
     },
 
     [ABILITY_INFERNAL_SOUL] =
     {
         .name = _("Infernal Soul"),
-        .description = COMPOUND_STRING("Fire moves go first"),
+        .description = COMPOUND_STRING("Fire moves go first."),
         .aiRating = 6,
     },
 
     [ABILITY_TIDAL_SOUL] =
     {
         .name = _("Tidal Soul"),
-        .description = COMPOUND_STRING("Water moves go first"),
+        .description = COMPOUND_STRING("Water moves go first."),
         .aiRating = 6,
     },
 
     [ABILITY_NATURE_SOUL] =
     {
         .name = _("Nature Soul"),
-        .description = COMPOUND_STRING("Grass moves go first"),
+        .description = COMPOUND_STRING("Grass moves go first."),
         .aiRating = 6,
     },
 
     [ABILITY_THUNDEROUS_SOUL] =
     {
         .name = _("Thunderous Soul"),
-        .description = COMPOUND_STRING("Electric moves go first"),
+        .description = COMPOUND_STRING("Electric moves go first."),
         .aiRating = 6,
     },
 
     [ABILITY_WARRIOR_SOUL] =
     {
         .name = _("Warrior Soul"),
-        .description = COMPOUND_STRING("Fighting moves go first"),
+        .description = COMPOUND_STRING("Fighting moves go first."),
         .aiRating = 6,
     },
 
     [ABILITY_EQUILIBRIUM] =
     {
         .name = _("Equilibrium"),
-        .description = COMPOUND_STRING("Uses highest attack stat"),
+        .description = COMPOUND_STRING("Uses highest attack stat."),
         .aiRating = 6,
     },
 
     [ABILITY_COLOSSUS] =
     {
         .name = _("Colossus"),
-        .description = COMPOUND_STRING("Defenses used for attacking"),
+        .description = COMPOUND_STRING("Defenses used for attacking."),
         .aiRating = 6,
     },
 
     [ABILITY_BLITZ] =
     {
         .name = _("Blitz"),
-        .description = COMPOUND_STRING("Speed used for attacking"),
+        .description = COMPOUND_STRING("Speed used for attacking."),
         .aiRating = 6,
     },
 
     [ABILITY_RUTHLESS] =
     {
         .name = _("Ruthless"),
-        .description = COMPOUND_STRING("Strong against weak foes"),
+        .description = COMPOUND_STRING("Strong against weak foes."),
         .aiRating = 6,
     },
 
     [ABILITY_VIOLENT_RUSH] =
     {
         .name = _("Violent Rush"),
-        .description = COMPOUND_STRING("Hits hard first turn"),
+        .description = COMPOUND_STRING("Hits hard first turn."),
         .aiRating = 6,
     },
 
     [ABILITY_PHYSICAL_WALL] =
     {
         .name = _("Physical Wall"),
-        .description = COMPOUND_STRING("Sets Reflect"),
+        .description = COMPOUND_STRING("Sets Reflect."),
         .aiRating = 6,
     },
 
     [ABILITY_MAGIC_WALL] =
     {
         .name = _("Magic Wall"),
-        .description = COMPOUND_STRING("Sets Light Screen"),
+        .description = COMPOUND_STRING("Sets Light Screen."),
         .aiRating = 6,
     },
 
     [ABILITY_ARCTIC_WALL] =
     {
         .name = _("Arctic Wall"),
-        .description = COMPOUND_STRING("Sets Aurora Veil"),
+        .description = COMPOUND_STRING("Sets Aurora Veil."),
         .aiRating = 6,
     },
 
     [ABILITY_HUBRIS] =
     {
         .name = _("Hubris"),
-        .description = COMPOUND_STRING("KOs raise Sp.Attack"),
+        .description = COMPOUND_STRING("KOs raise Sp.Attack."),
         .aiRating = 6,
     },
 
     [ABILITY_HORRIFY] =
     {
         .name = _("Horrify"),
-        .description = COMPOUND_STRING("Lowers the foe's Sp.Attack"),
+        .description = COMPOUND_STRING("Lowers the foe's Sp.Attack."),
         .aiRating = 6,
     },
 
     [ABILITY_STRIKER] =
     {
         .name = _("Striker"),
-        .description = COMPOUND_STRING("Boosts kicking moves"),
+        .description = COMPOUND_STRING("Boosts kicking moves."),
         .aiRating = 6,
     },
 
     [ABILITY_LAST_STAND] =
     {
         .name = _("Last Stand"),
-        .description = COMPOUND_STRING("Stats raise at half HP"),
+        .description = COMPOUND_STRING("Stats raise at half HP."),
         .aiRating = 6,
     },
 
     [ABILITY_ARROGANCE] =
     {
         .name = _("Arrogance"),
-        .description = COMPOUND_STRING("Stronger at full HP"),
+        .description = COMPOUND_STRING("Stronger at full HP."),
         .aiRating = 6,
     },
 
     [ABILITY_BRUTE_FORCE] =
     {
         .name = _("Brute Force"),
-        .description = COMPOUND_STRING("All attacks use Attack"),
+        .description = COMPOUND_STRING("All attacks use Attack."),
         .aiRating = 6,
     },
 
     [ABILITY_ARCANA] =
     {
         .name = _("Arcana"),
-        .description = COMPOUND_STRING("All attacks use Sp.Attack"),
+        .description = COMPOUND_STRING("All attacks use Sp.Attack."),
         .aiRating = 6,
     },
 
     [ABILITY_LIQUID_BODY] =
     {
         .name = _("Liquid Body"),
-        .description = COMPOUND_STRING("Tougher but weak to Water"),
+        .description = COMPOUND_STRING("Tougher but weak to Water."),
         .aiRating = 6,
     },
 
     [ABILITY_DOWN_RANGE] =
     {
         .name = _("Down Range"),
-        .description = COMPOUND_STRING("All attacks use Sp.Attack"),
+        .description = COMPOUND_STRING("All attacks use Sp.Attack."),
         .aiRating = 6,
     },
 
     [ABILITY_MEGA_SOL] =
     {
         .name = _("Mega Sol"),
-        .description = COMPOUND_STRING("Always under Sun"),
+        .description = COMPOUND_STRING("Always under Sun."),
         .aiRating = 6,
     },
 
