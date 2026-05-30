@@ -8588,6 +8588,14 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
      && moveType == TYPE_ROCK)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
+    if (SearchTraits(battlerTraits, ABILITY_ROCK_HEAD)
+     && moveType == TYPE_ROCK)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+
+    if (SearchTraits(battlerTraits, ABILITY_JUSTIFIED)
+     && moveType == TYPE_FIGHTING)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS)
      && !(gBattleMons[battlerAtk].volatiles.transformed))
     {
@@ -8825,6 +8833,35 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
          && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
          && !(gBattleMons[battlerDef].volatiles.transformed))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_STALL))
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.3));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_HEAVY_METAL))
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_BATTLE_ARMOR))
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_MAGMA_ARMOR))
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_STEADFAST))
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_ANTICIPATION))
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_MAGIC_GUARD))
+    {
+        if (!usesDefStat)
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
     }
 
     // ally's abilities
@@ -9113,36 +9150,6 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
     {
         RecordAbilityBattle(ctx->battlerAtk, ABILITY_PRISM_ARMOR);
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
-    }
-    if (SearchTraits(battlerTraits, ABILITY_STALL))
-    {
-        RecordAbilityBattle(ctx->battlerAtk, ABILITY_STALL);
-        modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
-    }
-    if (SearchTraits(battlerTraits, ABILITY_HEAVY_METAL))
-    {
-        RecordAbilityBattle(ctx->battlerAtk, ABILITY_HEAVY_METAL);
-        modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
-    }
-    if (SearchTraits(battlerTraits, ABILITY_BATTLE_ARMOR))
-    {
-        RecordAbilityBattle(ctx->battlerAtk, ABILITY_BATTLE_ARMOR);
-        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
-    }
-    if (SearchTraits(battlerTraits, ABILITY_MAGMA_ARMOR))
-    {
-        RecordAbilityBattle(ctx->battlerAtk, ABILITY_MAGMA_ARMOR);
-        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
-    }
-    if (SearchTraits(battlerTraits, ABILITY_STEADFAST))
-    {
-        RecordAbilityBattle(ctx->battlerAtk, ABILITY_STEADFAST);
-        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
-    }
-    if (SearchTraits(battlerTraits, ABILITY_ANTICIPATION))
-    {
-        RecordAbilityBattle(ctx->battlerAtk, ABILITY_ANTICIPATION);
-        modifier = uq4_12_multiply(modifier, UQ_4_12(0.8));
     }
     if (SearchTraits(battlerTraits, ABILITY_FLUFFY))
     {
@@ -11956,6 +11963,8 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
     if (SearchTraits(battlerTraits, ABILITY_TANGLED_FEET))
         if (gBattleMons[battlerDef].volatiles.confusionTurns)
             calc = (calc * 50) / 100; // 1.5 tangled feet loss
+    if (SearchTraits(battlerTraits, ABILITY_TELEPATHY))
+            calc = (calc * 90) / 100; // 1.1 telepathy loss
 
     // Attacker's ally's ability
     u32 atkAlly = BATTLE_PARTNER(battlerAtk);
