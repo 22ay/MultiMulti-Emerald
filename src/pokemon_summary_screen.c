@@ -4035,17 +4035,17 @@ static void PrintMonTraits(u8 innateIndex)
 {
     u16 trait = 0;
     struct PokeSummary* sum = &sMonSummaryScreen->summary;
-    u8 windowId;
+
+    u8 windowId = AddWindowFromTemplateList(sPageTraitsTemplate, innateIndex);
+    
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
     if (innateIndex == 0)
         trait = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
     else if (innateIndex <= MAX_MON_INNATES)
-        trait = sum->innates[innateIndex - 1];
+        trait = gSpeciesInfo[sum->species].innates[innateIndex-1];
         
     int x = GetStringRightAlignXOffset(FONT_NORMAL, gAbilitiesInfo[trait].name, 18*8);
-    windowId = AddWindowFromTemplateList(sPageTraitsTemplate, innateIndex);
-    
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(0)); //so when changing ability, window resets
 
     if (trait == 0)
     {
@@ -4067,7 +4067,7 @@ static u16 GetSummaryTraitByIndex(u8 traitIndex)
     if (traitIndex == 0)
         return GetAbilityBySpecies(sum->species, sum->abilityNum);
     else if (traitIndex <= MAX_MON_INNATES)
-        return sum->innates[traitIndex - 1];
+        return gSpeciesInfo[sum->species].innates[traitIndex-1];
     else
         return ABILITY_NONE;
 }
