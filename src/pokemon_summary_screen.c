@@ -352,7 +352,6 @@ static u8 AddWindowFromTemplateList(const struct WindowTemplate *template, u8 te
 static u8 IncrementSkillsStatsMode(u8 mode);
 static void ClearStatLabel(u32 length, u32 statsCoordX, u32 statsCoordY);
 u32 GetAdjustedIvData(struct Pokemon *mon, u32 stat);
-//static struct BoxPokemon *GetCurrentBoxmon(void);
 static u16 GetSummaryTraitByIndex(u8);
 static void OpenTraitLongDescription(u8);
 static void CloseTraitLongDescription(u8);
