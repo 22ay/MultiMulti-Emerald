@@ -3541,5 +3541,6 @@ extern const u16 gBattleIcons_Pal2[];
 
 //New Summary Pages
 extern const u32 gSummaryPage_Traits_Tilemap[];
+extern const u32 gSummaryLongDescriptionBox_Tilemap[];
 
 #endif //GUARD_GRAPHICS_H
