@@ -12,8 +12,8 @@
 #include "ui_birch_case.h"
 #include "task.h"
 #include "field_weather.h"
-
 #include "dexnav.h"
+
 
 #define RAM_SCRIPT_MAGIC 51
 
@@ -648,4 +648,10 @@ void StartNewPokeballCaseUI(void)
 {
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_OpenBirchCase, 0);
+}
+
+void StartNewPokeballCaseUIForBirchBattle(void)
+{
+    FadeScreen(FADE_TO_BLACK, 0);
+    CreateTask(Task_OpenBirchCaseGotoBattle, 0);
 }

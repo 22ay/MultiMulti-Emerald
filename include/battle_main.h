@@ -98,9 +98,9 @@ u8 IsRunningFromBattleImpossible(u32 battler);
 void SwitchTwoBattlersInParty(u32 battler, u32 battler2);
 void SwitchPartyOrder(u32 battler);
 void SwapTurnOrder(u8 id1, u8 id2);
-u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
-s32 GetChosenMovePriority(u32 battler, enum Ability ability);
-s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move);
+u32 GetBattlerTotalSpeedStat(u32 battler);
+s32 GetChosenMovePriority(u32 battler);
+s32 GetBattleMovePriority(u32 battler, u32 move);
 s32 GetWhichBattlerFasterArgs(struct BattleContext *ctx, bool32 ignoreChosenMoves, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2);
 s32 GetWhichBattlerFasterOrTies(struct BattleContext *ctx, bool32 ignoreChosenMoves);
 s32 GetWhichBattlerFaster(struct BattleContext *ctx, bool32 ignoreChosenMoves);
@@ -109,7 +109,7 @@ void RunBattleScriptCommands(void);
 enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
 void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk);
 bool32 IsWildMonSmart(void);
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
+u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u16 trainerId);
 void ModifyPersonalityForNature(u32 *personality, u32 newNature);
 u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
@@ -134,5 +134,15 @@ extern const u8 gStatusConditionString_ConfusionJpn[8];
 extern const u8 gStatusConditionString_LoveJpn[8];
 
 extern const u8 *const gStatusConditionStringsTable[7][2];
+
+static inline u32 SearchTraits(u16 *battlerTraits, u32 abilityToCheck)
+{
+  for (u32 i = 0; i < MAX_MON_TRAITS; i++)
+  {
+    if (battlerTraits[i] == abilityToCheck)
+      return i + 1;
+  }
+  return 0;
+}
 
 #endif // GUARD_BATTLE_MAIN_H

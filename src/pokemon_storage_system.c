@@ -1,5 +1,6 @@
 #include "global.h"
 #include "malloc.h"
+#include "battle.h"
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
@@ -105,6 +106,7 @@ enum {
     MSG_ITEM_IS_HELD,
     MSG_CHANGED_TO_ITEM,
     MSG_CANT_STORE_MAIL,
+    MSG_CANT_HOLD,
 };
 
 // IDs for how to resolve variables in the above messages
@@ -474,7 +476,7 @@ struct PokemonStorageSystemData
     const u16 *displayMonPalette;
     u32 displayMonPersonality;
     u16 displayMonSpecies;
-    u16 displayMonItemId;
+    u16 displayMonItemId[MAX_MON_ITEMS];
     u16 displayUnusedVar;
     bool8 setMosaic;
     u8 displayMonMarkings;
@@ -657,6 +659,8 @@ static bool8 IsMonBeingMoved(void);
 static void TryRefreshDisplayMon(void);
 static void ReshowDisplayMon(void);
 static void SetDisplayMonData(void *, u8);
+static bool8 HasMail(void);
+static u8 GetNextBoxEmptySlot(u8 boxPosition, u16 item);
 
 // Moving multiple Pokémon at once
 static void MultiMove_Free(void);
@@ -847,20 +851,20 @@ static void TilemapUtil_Draw(u8);
 void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method);
 void UpdateSpeciesSpritePSS(struct BoxPokemon *boxmon);
 
-static const u8 gText_JustOnePkmn[] = _("There is just one POKéMON with you.");
+static const u8 gText_JustOnePkmn[] = _("There is just one Pokémon with you.");
 static const u8 gText_PartyFull[] = _("Your party is full!");
-static const u8 gText_Box[] = _("BOX");
+static const u8 gText_Box[] = _("Box");
 
 struct {
     const u8 *text;
     const u8 *desc;
 } static const sMainMenuTexts[OPTIONS_COUNT] =
 {
-    [OPTION_WITHDRAW]   = {COMPOUND_STRING("WITHDRAW POKéMON"), COMPOUND_STRING("Move POKéMON stored in BOXES to\nyour party.")},
-    [OPTION_DEPOSIT]    = {COMPOUND_STRING("DEPOSIT POKéMON"),  COMPOUND_STRING("Store POKéMON in your party in BOXES.")},
-    [OPTION_MOVE_MONS]  = {COMPOUND_STRING("MOVE POKéMON"),     COMPOUND_STRING("Organize the POKéMON in BOXES and\nin your party.")},
-    [OPTION_MOVE_ITEMS] = {COMPOUND_STRING("MOVE ITEMS"),       COMPOUND_STRING("Move items held by any POKéMON\nin a BOX or your party.")},
-    [OPTION_EXIT]       = {COMPOUND_STRING("SEE YA!"),          COMPOUND_STRING("Return to the previous menu.")}
+    [OPTION_WITHDRAW]   = {COMPOUND_STRING("Withdraw Pokémon"), COMPOUND_STRING("Move Pokémon stored in Boxes to\nyour party.")},
+    [OPTION_DEPOSIT]    = {COMPOUND_STRING("Deposit Pokémon"),  COMPOUND_STRING("Store Pokémon in your party in Boxes.")},
+    [OPTION_MOVE_MONS]  = {COMPOUND_STRING("Move Pokémon"),     COMPOUND_STRING("Organize the Pokémon in Boxes and\nin your party.")},
+    [OPTION_MOVE_ITEMS] = {COMPOUND_STRING("Move Items"),       COMPOUND_STRING("Move items held by any Pokémon\nin a Box or your party.")},
+    [OPTION_EXIT]       = {COMPOUND_STRING("See ya!"),          COMPOUND_STRING("Return to the previous menu.")}
 };
 
 static const struct WindowTemplate sWindowTemplate_MainMenu =
@@ -966,9 +970,9 @@ static const struct WindowTemplate sWindowTemplates[] =
     [WIN_ITEM_DESC] = {
         .bg = 0,
         .tilemapLeft = 0,
-        .tilemapTop = 13,
-        .width = 21,
-        .height = 7,
+        .tilemapTop = 12,
+        .width = 25,
+        .height = 8,
         .paletteNum = 15,
         .baseBlock = 0x14,
     },
@@ -1041,37 +1045,38 @@ static const u8 gText_PkmnIsSelected[] = _("{DYNAMIC 0} is selected.");
 
 static const struct StorageMessage sMessages[] =
 {
-    [MSG_EXIT_BOX]             = {COMPOUND_STRING("Exit from the BOX?"),         MSG_VAR_NONE},
+    [MSG_EXIT_BOX]             = {COMPOUND_STRING("Exit from the Box?"),         MSG_VAR_NONE},
     [MSG_WHAT_YOU_DO]          = {COMPOUND_STRING("What do you want to do?"),    MSG_VAR_NONE},
     [MSG_PICK_A_THEME]         = {COMPOUND_STRING("Please pick a theme."),       MSG_VAR_NONE},
     [MSG_PICK_A_WALLPAPER]     = {COMPOUND_STRING("Pick the wallpaper."),        MSG_VAR_NONE},
     [MSG_IS_SELECTED]          = {gText_PkmnIsSelected,                          MSG_VAR_MON_NAME_1},
-    [MSG_JUMP_TO_WHICH_BOX]    = {COMPOUND_STRING("Jump to which BOX?"),         MSG_VAR_NONE},
-    [MSG_DEPOSIT_IN_WHICH_BOX] = {COMPOUND_STRING("Deposit in which BOX?"),      MSG_VAR_NONE},
+    [MSG_JUMP_TO_WHICH_BOX]    = {COMPOUND_STRING("Jump to which Box?"),         MSG_VAR_NONE},
+    [MSG_DEPOSIT_IN_WHICH_BOX] = {COMPOUND_STRING("Deposit in which Box?"),      MSG_VAR_NONE},
     [MSG_WAS_DEPOSITED]        = {COMPOUND_STRING("{DYNAMIC 0} was deposited."), MSG_VAR_MON_NAME_1},
-    [MSG_BOX_IS_FULL]          = {COMPOUND_STRING("The BOX is full."),           MSG_VAR_NONE},
-    [MSG_RELEASE_POKE]         = {COMPOUND_STRING("Release this POKéMON?"),      MSG_VAR_NONE},
+    [MSG_BOX_IS_FULL]          = {COMPOUND_STRING("The Box is full."),           MSG_VAR_NONE},
+    [MSG_RELEASE_POKE]         = {COMPOUND_STRING("Release this Pokémon?"),      MSG_VAR_NONE},
     [MSG_WAS_RELEASED]         = {COMPOUND_STRING("{DYNAMIC 0} was released."),  MSG_VAR_RELEASE_MON_1},
     [MSG_BYE_BYE]              = {COMPOUND_STRING("Bye-bye, {DYNAMIC 0}!"),      MSG_VAR_RELEASE_MON_3},
-    [MSG_MARK_POKE]            = {COMPOUND_STRING("Mark your POKéMON."),         MSG_VAR_NONE},
-    [MSG_LAST_POKE]            = {COMPOUND_STRING("That's your last POKéMON!"),  MSG_VAR_NONE},
+    [MSG_MARK_POKE]            = {COMPOUND_STRING("Mark your Pokémon."),         MSG_VAR_NONE},
+    [MSG_LAST_POKE]            = {COMPOUND_STRING("That's your last Pokémon!"),  MSG_VAR_NONE},
     [MSG_PARTY_FULL]           = {gText_YourPartysFull,                          MSG_VAR_NONE},
-    [MSG_HOLDING_POKE]         = {COMPOUND_STRING("You're holding a POKéMON!"),  MSG_VAR_NONE},
+    [MSG_HOLDING_POKE]         = {COMPOUND_STRING("You're holding a Pokémon!"),  MSG_VAR_NONE},
     [MSG_WHICH_ONE_WILL_TAKE]  = {COMPOUND_STRING("Which one will you take?"),   MSG_VAR_NONE},
-    [MSG_CANT_RELEASE_EGG]     = {COMPOUND_STRING("You can't release an EGG."),  MSG_VAR_NONE},
-    [MSG_CONTINUE_BOX]         = {COMPOUND_STRING("Continue BOX operations?"),   MSG_VAR_NONE},
+    [MSG_CANT_RELEASE_EGG]     = {COMPOUND_STRING("You can't release an egg."),  MSG_VAR_NONE},
+    [MSG_CONTINUE_BOX]         = {COMPOUND_STRING("Continue Box operations?"),   MSG_VAR_NONE},
     [MSG_CAME_BACK]            = {COMPOUND_STRING("{DYNAMIC 0} came back!"),     MSG_VAR_MON_NAME_1},
     [MSG_WORRIED]              = {COMPOUND_STRING("Was it worried about you?"),  MSG_VAR_NONE},
     [MSG_SURPRISE]             = {COMPOUND_STRING("… … … … !"),                  MSG_VAR_NONE},
-    [MSG_PLEASE_REMOVE_MAIL]   = {COMPOUND_STRING("Please remove the MAIL."),    MSG_VAR_NONE},
+    [MSG_PLEASE_REMOVE_MAIL]   = {COMPOUND_STRING("Please remove the Mail."),    MSG_VAR_NONE},
     [MSG_IS_SELECTED2]         = {gText_PkmnIsSelected,                          MSG_VAR_ITEM_NAME},
-    [MSG_GIVE_TO_MON]          = {COMPOUND_STRING("GIVE to a POKéMON?"),         MSG_VAR_NONE},
-    [MSG_PLACED_IN_BAG]        = {COMPOUND_STRING("Placed item in the BAG."),    MSG_VAR_ITEM_NAME},
-    [MSG_BAG_FULL]             = {COMPOUND_STRING("The BAG is full."),           MSG_VAR_NONE},
-    [MSG_PUT_IN_BAG]           = {COMPOUND_STRING("Put this item in the BAG?"),  MSG_VAR_NONE},
+    [MSG_GIVE_TO_MON]          = {COMPOUND_STRING("Give to a Pokémon?"),         MSG_VAR_NONE},
+    [MSG_PLACED_IN_BAG]        = {COMPOUND_STRING("Placed item in the Bag."),    MSG_VAR_ITEM_NAME},
+    [MSG_BAG_FULL]             = {COMPOUND_STRING("The Bag is full."),           MSG_VAR_NONE},
+    [MSG_PUT_IN_BAG]           = {COMPOUND_STRING("Put this item in the Bag?"),  MSG_VAR_NONE},
     [MSG_ITEM_IS_HELD]         = {COMPOUND_STRING("{DYNAMIC 0} is now held."),   MSG_VAR_ITEM_NAME},
     [MSG_CHANGED_TO_ITEM]      = {COMPOUND_STRING("Changed to {DYNAMIC 0}."),    MSG_VAR_ITEM_NAME},
-    [MSG_CANT_STORE_MAIL]      = {COMPOUND_STRING("MAIL can't be stored!"),      MSG_VAR_NONE},
+    [MSG_CANT_STORE_MAIL]      = {COMPOUND_STRING("Mail can't be stored!"),      MSG_VAR_NONE},
+    [MSG_CANT_HOLD]            = {COMPOUND_STRING("No room to hold that."),      MSG_VAR_NONE},  
 };
 
 static const struct WindowTemplate sYesNoWindowTemplate =
@@ -2271,7 +2276,7 @@ static void Task_PokeStorageMain(u8 taskId)
         case INPUT_HIDE_PARTY:
             if (sStorage->boxOption == OPTION_MOVE_MONS)
             {
-                if (IsMonBeingMoved() && ItemIsMail(sStorage->displayMonItemId))
+                if (IsMonBeingMoved() && HasMail())
                     sStorage->state = MSTATE_ERROR_HAS_MAIL;
                 else
                     SetPokeStorageTask(Task_HidePartyPokemon);
@@ -2329,7 +2334,7 @@ static void Task_PokeStorageMain(u8 taskId)
         case INPUT_DEPOSIT:
             if (!IsRemovingLastPartyMon())
             {
-                if (ItemIsMail(sStorage->displayMonItemId))
+                if (HasMail())
                 {
                     sStorage->state = MSTATE_ERROR_HAS_MAIL;
                 }
@@ -2565,10 +2570,10 @@ static void Task_OnSelectedMon(u8 taskId)
             PlaySE(SE_SELECT);
             if (sStorage->boxOption != OPTION_MOVE_ITEMS)
                 PrintMessage(MSG_IS_SELECTED);
-            else if (IsMovingItem() || sStorage->displayMonItemId != ITEM_NONE)
+            else if (IsMovingItem() || sStorage->displayMonItemId[0] != ITEM_NONE)
                 PrintMessage(MSG_IS_SELECTED2);
             else
-                PrintMessage(MSG_GIVE_TO_MON);
+                PrintMessage(MSG_IS_SELECTED);
 
             AddMenu();
             sStorage->state = 1;
@@ -2625,7 +2630,7 @@ static void Task_OnSelectedMon(u8 taskId)
             {
                 sStorage->state = 3;
             }
-            else if (ItemIsMail(sStorage->displayMonItemId))
+            else if (HasMail())
             {
                 sStorage->state = 4;
             }
@@ -2645,7 +2650,7 @@ static void Task_OnSelectedMon(u8 taskId)
             {
                 sStorage->state = 5; // Cannot release an Egg.
             }
-            else if (ItemIsMail(sStorage->displayMonItemId))
+            else if (HasMail())
             {
                 sStorage->state = 4;
             }
@@ -3046,7 +3051,7 @@ static void Task_TakeItemForMoving(u8 taskId)
     switch (sStorage->state)
     {
     case 0:
-        if (!ItemIsMail(sStorage->displayMonItemId))
+        if (!HasMail())
         {
             ClearBottomWindow();
             sStorage->state++;
@@ -3118,10 +3123,21 @@ static void Task_GiveMovingItemToMon(u8 taskId)
 
 static void Task_ItemToBag(u8 taskId)
 {
+    u16 itemId = ITEM_NONE;
+
+    for (u16 i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (sStorage->displayMonItemId[i] != ITEM_NONE && !ItemIsMail(sStorage->displayMonItemId[i]))
+        {
+            itemId = sStorage->displayMonItemId[i];
+            break;
+        }
+    }
+
     switch (sStorage->state)
     {
     case 0:
-        if (!AddBagItem(sStorage->displayMonItemId, 1))
+        if (!AddBagItem(itemId, 1))
         {
             PlaySE(SE_FAILURE);
             PrintMessage(MSG_BAG_FULL);
@@ -3169,7 +3185,7 @@ static void Task_SwitchSelectedItem(u8 taskId)
     switch (sStorage->state)
     {
     case 0:
-        if (!ItemIsMail(sStorage->displayMonItemId))
+        if (!HasMail())
         {
             ClearBottomWindow();
             sStorage->state++;
@@ -3765,6 +3781,7 @@ static void Task_ChangeScreen(u8 taskId)
 static void GiveChosenBagItem(void)
 {
     u16 itemId = gSpecialVar_ItemId;
+    u8 slot;
 
     if (itemId != ITEM_NONE)
     {
@@ -3772,15 +3789,23 @@ static void GiveChosenBagItem(void)
         if (sInPartyMenu)
         {
             struct Pokemon *mon = &gPlayerParty[pos];
-            SetMonData(&gPlayerParty[pos], MON_DATA_HELD_ITEM, &itemId);
-            SetMonFormPSS(&mon->box, FORM_CHANGE_ITEM_HOLD);
-            UpdateSpeciesSpritePSS(&mon->box);
+            slot = GetMonNextEmptySlot(mon, itemId);
+            if (slot != MAX_MON_ITEMS)
+            {
+                SetMonData(&gPlayerParty[pos], MON_DATA_HELD_ITEM + slot, &itemId);
+                SetMonFormPSS(&mon->box, FORM_CHANGE_ITEM_HOLD);
+                UpdateSpeciesSpritePSS(&mon->box);
+            }
         }
         else
         {
-            SetCurrentBoxMonData(pos, MON_DATA_HELD_ITEM, &itemId);
-            SetMonFormPSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][pos], FORM_CHANGE_ITEM_HOLD);
-            UpdateSpeciesSpritePSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][pos]);
+            slot = GetNextBoxEmptySlot(pos, itemId);
+            if (slot != MAX_MON_ITEMS)
+            {
+                SetCurrentBoxMonData(pos, MON_DATA_HELD_ITEM + slot, &itemId);
+                SetMonFormPSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][pos], FORM_CHANGE_ITEM_HOLD);
+                UpdateSpeciesSpritePSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][pos]);
+            }
         }
 
         RemoveBagItem(itemId, 1);
@@ -4436,6 +4461,7 @@ static void InitBoxMonSprites(u8 boxId)
     u16 i, j, count;
     u16 species;
     u32 personality;
+    bool32 hasItem;
 
     count = 0;
     boxPosition = 0;
@@ -4465,7 +4491,16 @@ static void InitBoxMonSprites(u8 boxId)
     {
         for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
-            if (GetBoxMonDataAt(boxId, boxPosition, MON_DATA_HELD_ITEM) == ITEM_NONE)
+            hasItem = FALSE;
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                if (GetBoxMonDataAt(boxId, boxPosition, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+                {
+                    hasItem = TRUE;
+                    break;
+                }
+            }
+            if (hasItem == FALSE)
                 sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
         }
     }
@@ -4571,6 +4606,7 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
     u8 subpriority = 19 - column;
     u8 iconsCreated = 0;
     u8 boxPosition = column;
+    bool32 hasItem = FALSE;
 
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
     {
@@ -4598,6 +4634,17 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
     {
         // Separate case for Move Items mode is used
         // to create the icons with the proper blend
+
+        hasItem = FALSE;
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetBoxMonDataAt(sStorage->incomingBoxId, boxPosition, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+            {
+                hasItem = TRUE;
+                break;
+            }
+        }
+        
         for (i = 0; i < IN_BOX_ROWS; i++)
         {
             if (sStorage->boxSpecies[boxPosition] != SPECIES_NONE)
@@ -4611,7 +4658,7 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
                     sStorage->boxMonsSprites[boxPosition]->sSpeed = speed;
                     sStorage->boxMonsSprites[boxPosition]->sScrollInDestX = xDest;
                     sStorage->boxMonsSprites[boxPosition]->callback = SpriteCB_BoxMonIconScrollIn;
-                    if (GetBoxMonDataAt(sStorage->incomingBoxId, boxPosition, MON_DATA_HELD_ITEM) == ITEM_NONE)
+                    if (!hasItem)
                         sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
                     iconsCreated++;
                 }
@@ -4733,9 +4780,10 @@ static void SetBoxMonIconObjMode(u8 boxPosition, u8 objMode)
 
 static void CreatePartyMonsSprites(bool8 visible)
 {
-    u16 i, count;
+    u16 i, j, count;
     u16 species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG);
     u32 personality = GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY);
+    bool32 hasItem = FALSE;
 
     sStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12);
     count = 1;
@@ -4767,7 +4815,16 @@ static void CreatePartyMonsSprites(bool8 visible)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (sStorage->partySprites[i] != NULL && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == ITEM_NONE)
+            hasItem = FALSE;
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+            {
+                if (sStorage->partySprites[i] != NULL && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j) != ITEM_NONE)
+                {
+                    hasItem = TRUE;
+                    break;
+                }
+            }
+            if (!hasItem)
                 sStorage->partySprites[i]->oam.objMode = ST_OAM_OBJ_BLEND;
         }
     }
@@ -6489,7 +6546,7 @@ static bool8 TryHideReleaseMon(void)
 static void ReleaseMon(void)
 {
     u8 boxId;
-    u16 item = ITEM_NONE;
+    u16 i, item = ITEM_NONE;
 
     DestroyReleaseMonIcon();
     if (sIsMonBeingMoved)
@@ -6502,18 +6559,30 @@ static void ReleaseMon(void)
         {
             boxId = TOTAL_BOXES_COUNT;
             if (OW_PC_RELEASE_ITEM >= GEN_8)
-                item = GetMonData(&gPlayerParty[sCursorPosition], MON_DATA_HELD_ITEM);
+            {
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    item = GetMonData(&gPlayerParty[sCursorPosition], MON_DATA_HELD_ITEM + i);
+                    if (item != ITEM_NONE)
+                        AddBagItem(item, 1);
+                }
+            }
         }
         else
         {
             boxId = StorageGetCurrentBox();
             if (OW_PC_RELEASE_ITEM >= GEN_8)
-                item = GetBoxMonDataAt(boxId, sCursorPosition, MON_DATA_HELD_ITEM);
+            {
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    item = GetBoxMonDataAt(boxId, sCursorPosition, MON_DATA_HELD_ITEM + i);
+                    if (item != ITEM_NONE)
+                        AddBagItem(item, 1);
+                }
+            }
         }
 
         PurgeMonOrBoxMon(boxId, sCursorPosition);
-        if (item != ITEM_NONE)
-            AddBagItem(item, 1);
     }
     TryRefreshDisplayMon();
 }
@@ -6917,11 +6986,12 @@ void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method)
 
 static void SetDisplayMonData(void *pokemon, u8 mode)
 {
-    u8 *txtPtr;
+    u8 *txtPtr, i;
     u16 gender;
     bool8 sanityIsBadEgg;
 
-    sStorage->displayMonItemId = ITEM_NONE;
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        sStorage->displayMonItemId[i] = ITEM_NONE;
     gender = MON_MALE;
     sanityIsBadEgg = FALSE;
     if (mode == MODE_PARTY)
@@ -6944,7 +7014,8 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
             sStorage->displayMonPersonality = GetMonData(mon, MON_DATA_PERSONALITY);
             sStorage->displayMonPalette = GetMonFrontSpritePal(mon);
             gender = GetMonGender(mon);
-            sStorage->displayMonItemId = GetMonData(mon, MON_DATA_HELD_ITEM);
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+                sStorage->displayMonItemId[i] = GetMonData(mon, MON_DATA_HELD_ITEM + i);
         }
     }
     else if (mode == MODE_BOX)
@@ -6969,13 +7040,15 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
             sStorage->displayMonPersonality = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
             sStorage->displayMonPalette = GetMonSpritePalFromSpeciesAndPersonality(sStorage->displayMonSpecies, isShiny, sStorage->displayMonPersonality);
             gender = GetGenderFromSpeciesAndPersonality(sStorage->displayMonSpecies, sStorage->displayMonPersonality);
-            sStorage->displayMonItemId = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM);
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+                sStorage->displayMonItemId[i] = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM + i);
         }
     }
     else
     {
         sStorage->displayMonSpecies = SPECIES_NONE;
-        sStorage->displayMonItemId = ITEM_NONE;
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+            sStorage->displayMonItemId[i] = ITEM_NONE;
     }
 
     if (sStorage->displayMonSpecies == SPECIES_NONE)
@@ -7046,10 +7119,18 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
         txtPtr[0] = CHAR_SPACE;
         txtPtr[1] = EOS;
 
-        if (sStorage->displayMonItemId != ITEM_NONE)
-            StringCopyPadded(sStorage->displayMonItemName, GetItemName(sStorage->displayMonItemId), CHAR_SPACE, 8);
-        else
-            StringFill(sStorage->displayMonItemName, CHAR_SPACE, 8);
+        bool32 hasItem = FALSE;
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {   
+            if (sStorage->displayMonItemId[i] != ITEM_NONE)
+            {
+                hasItem = TRUE;
+                StringCopyPadded(sStorage->displayMonItemName, GetItemName(sStorage->displayMonItemId[i]), CHAR_SPACE, 8);
+                break;
+            }
+        }
+        if (!hasItem)
+                StringFill(sStorage->displayMonItemName, CHAR_SPACE, 8);
     }
 }
 
@@ -7738,41 +7819,66 @@ static bool8 SetMenuTexts_Mon(void)
 
 static bool8 SetMenuTexts_Item(void)
 {
+    bool32 hasItemNotMail = FALSE;
+    bool32 hasSpace = FALSE;
+    u16 i;
+
     if (sStorage->displayMonSpecies == SPECIES_EGG)
         return FALSE;
 
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (sStorage->displayMonItemId[i] != ITEM_NONE && !ItemIsMail(sStorage->displayMonItemId[i]))
+            {
+                hasItemNotMail = TRUE;
+                break;
+            }
+        }
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (sStorage->displayMonItemId[i] == ITEM_NONE)
+            {
+                hasSpace = TRUE;
+                break;
+            }
+        }
+
     if (!IsMovingItem())
     {
-        if (sStorage->displayMonItemId == ITEM_NONE)
+        if (hasItemNotMail)
+        {
+            SetMenuText(MENU_BAG); //Bag on top for easier removal of items to inventory
+        }
+        if (hasSpace)
         {
             if (sStorage->displayMonSpecies == SPECIES_NONE)
                 return FALSE;
 
             SetMenuText(MENU_GIVE_2);
         }
-        else
+        if (sStorage->displayMonItemId[0] != ITEM_NONE)
         {
-            if (!ItemIsMail(sStorage->displayMonItemId))
-            {
+            if (!ItemIsMail(sStorage->displayMonItemId[0]))
                 SetMenuText(MENU_TAKE);
-                SetMenuText(MENU_BAG);
-            }
             SetMenuText(MENU_INFO);
         }
     }
     else
-    {
-        if (sStorage->displayMonItemId == ITEM_NONE)
+    { //Moving item Give and Switch options only available for first slot for simplicity
+        if (sStorage->displayMonItemId[0] == ITEM_NONE)
         {
             if (sStorage->displayMonSpecies == SPECIES_NONE)
                 return FALSE;
 
             SetMenuText(MENU_GIVE);
         }
-        else
+        else if (sStorage->displayMonItemId[0] != ITEM_NONE)
         {
-            if (ItemIsMail(sStorage->displayMonItemId) == TRUE)
+            if (HasMail() == TRUE)
+            {
+                SetPokeStorageTask(Task_PrintCantStoreMail);
                 return FALSE;
+            }
 
             SetMenuText(MENU_SWITCH);
         }
@@ -7994,49 +8100,49 @@ static void InitMenu(void)
     sStorage->menuWindow.baseBlock = 92;
 }
 
-static const u8 gPCText_Give[] = _("GIVE");
+static const u8 gPCText_Give[] = _("Give");
 
 static const u8 *const sMenuTexts[] =
 {
-    [MENU_CANCEL]     = COMPOUND_STRING("CANCEL"),
-    [MENU_STORE]      = COMPOUND_STRING("STORE"),
-    [MENU_WITHDRAW]   = COMPOUND_STRING("WITHDRAW"),
-    [MENU_MOVE]       = COMPOUND_STRING("MOVE"),
-    [MENU_SHIFT]      = COMPOUND_STRING("SHIFT"),
-    [MENU_PLACE]      = COMPOUND_STRING("PLACE"),
-    [MENU_SUMMARY]    = COMPOUND_STRING("SUMMARY"),
-    [MENU_RELEASE]    = COMPOUND_STRING("RELEASE"),
-    [MENU_MARK]       = COMPOUND_STRING("MARK"),
-    [MENU_JUMP]       = COMPOUND_STRING("JUMP"),
-    [MENU_WALLPAPER]  = COMPOUND_STRING("WALLPAPER"),
-    [MENU_NAME]       = COMPOUND_STRING("NAME"),
-    [MENU_TAKE]       = COMPOUND_STRING("TAKE"),
+    [MENU_CANCEL]     = COMPOUND_STRING("Cancel"),
+    [MENU_STORE]      = COMPOUND_STRING("Store"),
+    [MENU_WITHDRAW]   = COMPOUND_STRING("Withdraw"),
+    [MENU_MOVE]       = COMPOUND_STRING("Move"),
+    [MENU_SHIFT]      = COMPOUND_STRING("Shift"),
+    [MENU_PLACE]      = COMPOUND_STRING("Place"),
+    [MENU_SUMMARY]    = COMPOUND_STRING("Summary"),
+    [MENU_RELEASE]    = COMPOUND_STRING("Release"),
+    [MENU_MARK]       = COMPOUND_STRING("Mark"),
+    [MENU_JUMP]       = COMPOUND_STRING("Jump"),
+    [MENU_WALLPAPER]  = COMPOUND_STRING("Wallpaper"),
+    [MENU_NAME]       = COMPOUND_STRING("Name"),
+    [MENU_TAKE]       = COMPOUND_STRING("Take"),
     [MENU_GIVE]       = gPCText_Give,
     [MENU_GIVE_2]     = gPCText_Give,
-    [MENU_SWITCH]     = COMPOUND_STRING("SWITCH"),
-    [MENU_BAG]        = COMPOUND_STRING("BAG"),
-    [MENU_INFO]       = COMPOUND_STRING("INFO"),
-    [MENU_SCENERY_1]  = COMPOUND_STRING("SCENERY 1"),
-    [MENU_SCENERY_2]  = COMPOUND_STRING("SCENERY 2"),
-    [MENU_SCENERY_3]  = COMPOUND_STRING("SCENERY 3"),
-    [MENU_ETCETERA]   = COMPOUND_STRING("ETCETERA"),
-    [MENU_FRIENDS]    = COMPOUND_STRING("FRIENDS"),
-    [MENU_FOREST]     = COMPOUND_STRING("FOREST"),
-    [MENU_CITY]       = COMPOUND_STRING("CITY"),
-    [MENU_DESERT]     = COMPOUND_STRING("DESERT"),
-    [MENU_SAVANNA]    = COMPOUND_STRING("SAVANNA"),
-    [MENU_CRAG]       = COMPOUND_STRING("CRAG"),
-    [MENU_VOLCANO]    = COMPOUND_STRING("VOLCANO"),
-    [MENU_SNOW]       = COMPOUND_STRING("SNOW"),
-    [MENU_CAVE]       = COMPOUND_STRING("CAVE"),
-    [MENU_BEACH]      = COMPOUND_STRING("BEACH"),
-    [MENU_SEAFLOOR]   = COMPOUND_STRING("SEAFLOOR"),
-    [MENU_RIVER]      = COMPOUND_STRING("RIVER"),
-    [MENU_SKY]        = COMPOUND_STRING("SKY"),
-    [MENU_POLKADOT]   = COMPOUND_STRING("POLKA-DOT"),
-    [MENU_POKECENTER] = COMPOUND_STRING("POKéCENTER"),
-    [MENU_MACHINE]    = COMPOUND_STRING("MACHINE"),
-    [MENU_SIMPLE]     = COMPOUND_STRING("SIMPLE"),
+    [MENU_SWITCH]     = COMPOUND_STRING("Switch"),
+    [MENU_BAG]        = COMPOUND_STRING("Bag"),
+    [MENU_INFO]       = COMPOUND_STRING("Info"),
+    [MENU_SCENERY_1]  = COMPOUND_STRING("Scenery 1"),
+    [MENU_SCENERY_2]  = COMPOUND_STRING("Scenery 2"),
+    [MENU_SCENERY_3]  = COMPOUND_STRING("Scenery 3"),
+    [MENU_ETCETERA]   = COMPOUND_STRING("Misc."),
+    [MENU_FRIENDS]    = COMPOUND_STRING("Friends"),
+    [MENU_FOREST]     = COMPOUND_STRING("Forest"),
+    [MENU_CITY]       = COMPOUND_STRING("City"),
+    [MENU_DESERT]     = COMPOUND_STRING("Desert"),
+    [MENU_SAVANNA]    = COMPOUND_STRING("Savannah"),
+    [MENU_CRAG]       = COMPOUND_STRING("Crag"),
+    [MENU_VOLCANO]    = COMPOUND_STRING("Volcano"),
+    [MENU_SNOW]       = COMPOUND_STRING("Snow"),
+    [MENU_CAVE]       = COMPOUND_STRING("Cave"),
+    [MENU_BEACH]      = COMPOUND_STRING("Beach"),
+    [MENU_SEAFLOOR]   = COMPOUND_STRING("Seafloor"),
+    [MENU_RIVER]      = COMPOUND_STRING("River"),
+    [MENU_SKY]        = COMPOUND_STRING("Sky"),
+    [MENU_POLKADOT]   = COMPOUND_STRING("Polka-Dot"),
+    [MENU_POKECENTER] = COMPOUND_STRING("PokéCenter"),
+    [MENU_MACHINE]    = COMPOUND_STRING("Machine"),
+    [MENU_SIMPLE]     = COMPOUND_STRING("Simple"),
 };
 
 static void SetMenuText(u8 textId)
@@ -8875,7 +8981,7 @@ static void TryHideItemIconAtPos(u8 cursorArea, u8 cursorPos)
 
 static void TakeItemFromMon(u8 cursorArea, u8 cursorPos)
 {
-    u8 id;
+    u8 id, i;
     u16 itemId;
 
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
@@ -8889,7 +8995,13 @@ static void TakeItemFromMon(u8 cursorArea, u8 cursorPos)
     if (cursorArea == CURSOR_AREA_IN_BOX)
     {
         SetCurrentBoxMonData(cursorPos, MON_DATA_HELD_ITEM, &itemId);
-        SetBoxMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetCurrentBoxMonData(cursorPos, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+                break;
+            if (i == MAX_MON_ITEMS - 1 || MAX_MON_ITEMS == 0)
+                SetBoxMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
+        }
         SetMonFormPSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][cursorPos], FORM_CHANGE_ITEM_HOLD);
         UpdateSpeciesSpritePSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][cursorPos]);
     }
@@ -8897,12 +9009,18 @@ static void TakeItemFromMon(u8 cursorArea, u8 cursorPos)
     {
         struct Pokemon *mon = &gPlayerParty[cursorPos];
         SetMonData(&gPlayerParty[cursorPos], MON_DATA_HELD_ITEM, &itemId);
-        SetPartyMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetMonData(&gPlayerParty[cursorPos], MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+                break;
+            if (i == MAX_MON_ITEMS - 1 || MAX_MON_ITEMS == 0)
+                SetBoxMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
+        }
         SetMonFormPSS(&mon->box, FORM_CHANGE_ITEM_HOLD);
         UpdateSpeciesSpritePSS(&mon->box);
     }
 
-    sStorage->movingItemId = sStorage->displayMonItemId;
+    sStorage->movingItemId = sStorage->displayMonItemId[0];
 }
 
 static void InitItemIconInCursor(u16 itemId)
@@ -8981,19 +9099,31 @@ static void GiveItemToMon(u8 cursorArea, u8 cursorPos)
 
 static void MoveItemFromMonToBag(u8 cursorArea, u8 cursorPos)
 {
-    u8 id;
+    u8 id, slot = 0;
     u16 itemId;
 
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
         return;
 
+    for (u16 i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (sStorage->displayMonItemId[i] != ITEM_NONE && !ItemIsMail(sStorage->displayMonItemId[i]))
+        {
+            slot = i;
+            break;
+        }
+    }
+
     itemId = ITEM_NONE;
     id = GetItemIconIdxByPosition(cursorArea, cursorPos);
-    SetItemIconAffineAnim(id, ITEM_ANIM_DISAPPEAR);
-    SetItemIconCallback(id, ITEM_CB_WAIT_ANIM, cursorArea, cursorPos);
+    if (!ItemIsMail(sStorage->displayMonItemId[0]))
+    {
+        SetItemIconAffineAnim(id, ITEM_ANIM_DISAPPEAR);
+        SetItemIconCallback(id, ITEM_CB_WAIT_ANIM, cursorArea, cursorPos);
+    }
     if (cursorArea == CURSOR_AREA_IN_BOX)
     {
-        SetCurrentBoxMonData(cursorPos, MON_DATA_HELD_ITEM, &itemId);
+        SetCurrentBoxMonData(cursorPos, MON_DATA_HELD_ITEM + slot, &itemId);
         SetBoxMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
         SetMonFormPSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][cursorPos], FORM_CHANGE_ITEM_HOLD);
         UpdateSpeciesSpritePSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][cursorPos]);
@@ -9001,7 +9131,7 @@ static void MoveItemFromMonToBag(u8 cursorArea, u8 cursorPos)
     else
     {
         struct Pokemon *mon = &gPlayerParty[cursorPos];
-        SetMonData(&gPlayerParty[cursorPos], MON_DATA_HELD_ITEM, &itemId);
+        SetMonData(&gPlayerParty[cursorPos], MON_DATA_HELD_ITEM + slot, &itemId);
         SetPartyMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
         SetMonFormPSS(&mon->box, FORM_CHANGE_ITEM_HOLD);
         UpdateSpeciesSpritePSS(&mon->box);
@@ -9259,10 +9389,10 @@ static void PrintItemDescription(void)
     if (IsMovingItem())
         description = GetItemDescription(sStorage->movingItemId);
     else
-        description = GetItemDescription(sStorage->displayMonItemId);
+        description = GetItemDescription(sStorage->displayMonItemId[0]);
 
     FillWindowPixelBuffer(WIN_ITEM_DESC, PIXEL_FILL(1));
-    AddTextPrinterParameterized5(WIN_ITEM_DESC, FONT_NORMAL, description, 4, 0, 0, NULL, 0, 1);
+    AddTextPrinterParameterized5(WIN_ITEM_DESC, FONT_NORMAL, description, 2, 0, 0, NULL, 0, 1);
 }
 
 static void InitItemInfoWindow(void)
@@ -9280,9 +9410,9 @@ static bool8 UpdateItemInfoWindowSlideIn(void)
         return FALSE;
 
     sStorage->itemInfoWindowOffset--;
-    pos = 21 - sStorage->itemInfoWindowOffset;
+    pos = 25 - sStorage->itemInfoWindowOffset;
     for (i = 0; i < pos; i++)
-        WriteSequenceToBgTilemapBuffer(0, GetBgAttribute(0, BG_ATTR_BASETILE) + 0x14 + sStorage->itemInfoWindowOffset + i, i, 13, 1, 7, 15, 21);
+        WriteSequenceToBgTilemapBuffer(0, GetBgAttribute(0, BG_ATTR_BASETILE) + 0x14 + sStorage->itemInfoWindowOffset + i, i, 12, 1, 8, 15, 25);
 
     DrawItemInfoWindow(pos);
     return (sStorage->itemInfoWindowOffset != 0);
@@ -9292,23 +9422,23 @@ static bool8 UpdateItemInfoWindowSlideOut(void)
 {
     s32 i, pos;
 
-    if (sStorage->itemInfoWindowOffset == 22)
+    if (sStorage->itemInfoWindowOffset == 26)
         return FALSE;
 
     if (sStorage->itemInfoWindowOffset == 0)
-        FillBgTilemapBufferRect(0, 0, 21, 12, 1, 9, 17);
+        FillBgTilemapBufferRect(0, 0, 25, 11, 1, 10, 17);
 
     sStorage->itemInfoWindowOffset++;
     pos = 21 - sStorage->itemInfoWindowOffset;
     for (i = 0; i < pos; i++)
     {
-        WriteSequenceToBgTilemapBuffer(0, GetBgAttribute(0, BG_ATTR_BASETILE) + 0x14 + sStorage->itemInfoWindowOffset + i, i, 13, 1, 7, 15, 21);
+        WriteSequenceToBgTilemapBuffer(0, GetBgAttribute(0, BG_ATTR_BASETILE) + 0x14 + sStorage->itemInfoWindowOffset + i, i, 12, 1, 8, 15, 25);
     }
 
     if (pos >= 0)
         DrawItemInfoWindow(pos);
 
-    FillBgTilemapBufferRect(0, 0, pos + 1, 12, 1, 9, 17);
+    FillBgTilemapBufferRect(0, 0, pos + 1, 11, 1, 10, 17);
     ScheduleBgCopyTilemapToVram(0);
     return TRUE;
 }
@@ -9317,11 +9447,11 @@ static void DrawItemInfoWindow(u32 x)
 {
     if (x != 0)
     {
-        FillBgTilemapBufferRect(0, 0x13A, 0, 0xC, x, 1, 15);
+        FillBgTilemapBufferRect(0, 0x13A, 0, 0xB, x, 1, 15);
         FillBgTilemapBufferRect(0, 0x93A, 0, 0x14, x, 1, 15);
     }
-    FillBgTilemapBufferRect(0, 0x13B, x, 0xD, 1, 7, 15);
-    FillBgTilemapBufferRect(0, 0x13C, x, 0xC, 1, 1, 15);
+    FillBgTilemapBufferRect(0, 0x13B, x, 0xC, 1, 8, 15);
+    FillBgTilemapBufferRect(0, 0x13C, x, 0xB, 1, 1, 15);
     FillBgTilemapBufferRect(0, 0x13D, x, 0x14, 1, 1, 15);
     ScheduleBgCopyTilemapToVram(0);
 }
@@ -10056,6 +10186,8 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
 {
     u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     bool8 isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
+    bool32 hasItem = FALSE;
+    u8 i;
     u32 pid = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
 
     // Update front sprite
@@ -10081,8 +10213,92 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
             DestroyBoxMonIconAtPosition(sCursorPosition);
             CreateBoxMonIconAtPos(sCursorPosition);
             if (sStorage->boxOption == OPTION_MOVE_ITEMS)
-                SetBoxMonIconObjMode(sCursorPosition, (GetBoxMonData(boxMon, MON_DATA_HELD_ITEM) == ITEM_NONE ? ST_OAM_OBJ_BLEND : ST_OAM_OBJ_NORMAL));
+                {
+                    hasItem = FALSE;
+                    for (i = 0; i < MAX_MON_ITEMS; i++)
+                    {
+                        if (GetBoxMonData(boxMon, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+                        {
+                            hasItem = TRUE;
+                            break;
+                        }
+                    }
+                    SetBoxMonIconObjMode(sCursorPosition, (hasItem ? ST_OAM_OBJ_BLEND : ST_OAM_OBJ_NORMAL));
+                }
         }
     }
     sJustOpenedBag = FALSE;
+}
+
+static bool8 HasMail()
+{
+    for (u8 i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        switch (sStorage->displayMonItemId[i])
+        {
+        case ITEM_ORANGE_MAIL:
+        case ITEM_HARBOR_MAIL:
+        case ITEM_GLITTER_MAIL:
+        case ITEM_MECH_MAIL:
+        case ITEM_WOOD_MAIL:
+        case ITEM_WAVE_MAIL:
+        case ITEM_BEAD_MAIL:
+        case ITEM_SHADOW_MAIL:
+        case ITEM_TROPIC_MAIL:
+        case ITEM_DREAM_MAIL:
+        case ITEM_FAB_MAIL:
+        case ITEM_RETRO_MAIL:
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+//Gets next valid slot to add an item to based categorization flag and item's heldSlot value
+static u8 GetNextBoxEmptySlot(u8 boxPosition, u16 item)
+{
+    u8 i, slot = 0;
+
+    //If categorization flag is enabled, items can only be sent to their assigned slots based on their heldSlot value.
+    //Otherwise, items are first sent to empty available slots and if none are found, target the first item slot
+    if (B_HELD_ITEM_CATEGORIZATION)
+    {
+        i = gItemsInfo[item].heldSlot;
+        if (GetBoxMonDataAt(gPokemonStoragePtr->currentBox, boxPosition, MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+            slot = i;
+    }
+    else
+    {
+        for (int i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetBoxMonDataAt(gPokemonStoragePtr->currentBox, boxPosition, MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+            {
+                slot = i;
+                break;
+            }
+        }
+    }
+
+    //Example Block for hybrid categorization where first two slots are free but third slot (2) only takes items marked
+    // else
+    // {
+    //     if (gItemsInfo[item].heldSlot == 2)
+    //     {
+    //          if (GetBoxMonDataAt(gPokemonStoragePtr->currentBox, boxPosition, MON_DATA_HELD_ITEM + 2) == ITEM_NONE)
+    //              slot = 2;
+    //     }
+    //     else
+    //     {
+    //         for (int i = 0; i < MAX_MON_ITEMS; i++)
+    //         {
+    //             if (i != gItemsInfo[item].heldSlot && GetBoxMonDataAt(gPokemonStoragePtr->currentBox, boxPosition, MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+    //             {
+    //                 slot = i;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
+
+    return slot;
 }

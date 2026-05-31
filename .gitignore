@@ -58,3 +58,10 @@ tools/aif2pcm/aif2pcm
 *.fastSmol
 *.smolTM
 __pycache__
+notes/
+tools/poryscript/poryscript
+data/maps/**/scripts.inc
+/.vs
+*.xlsx
+*.bak
+*.xcf

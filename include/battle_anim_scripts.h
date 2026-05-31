@@ -994,6 +994,7 @@ extern const u8 gBattleAnimGeneral_DynamaxGrowth[];
 extern const u8 gBattleAnimGeneral_SetWeather[];
 extern const u8 gBattleAnimGeneral_SyrupBombSpeedDrop[];
 extern const u8 gBattleAnimGeneral_Rainbow[];
+extern const u8 gBattleAnimGeneral_NewRainbow[];
 extern const u8 gBattleAnimGeneral_SeaOfFire[];
 extern const u8 gBattleAnimGeneral_Swamp[];
 extern const u8 gBattleAnimGeneral_TrickRoom[];

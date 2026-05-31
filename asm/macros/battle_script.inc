@@ -425,8 +425,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_0x48
-	.byte B_SCR_OP_UNUSED_0x48
+	.macro signatureeffect
+	.byte B_SCR_OP_SIGNATUREEFFECT
 	.endm
 
 	.macro moveend endMode:req, endState:req
@@ -625,9 +625,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro removeitem battler:req
+	.macro removeitemwitheffect battler:req, effect:req
 	.byte 0x6a
 	.byte \battler
+	.4byte \effect
 	.endm
 
 	.macro atknameinbuff1
@@ -1252,8 +1253,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryrecycleitem failInstr:req
+	.macro tryrecycleitem type:req, failInstr:req
 	.byte 0xea
+	.byte \type
 	.4byte \failInstr
 	.endm
 
@@ -1373,9 +1375,21 @@
 	callnative BS_JumpIfIntimidateAbilityPrevented
 	.endm
 
+	.macro jumpifhorrifyabilityprevented
+	callnative BS_JumpIfHorrifyAbilityPrevented
+	.endm
+
+	.macro jumpifpressureabilityprevented
+	callnative BS_JumpIfPressureAbilityPrevented
+	.endm
+
 	.macro metalburstdamagecalculator failInstr:req
 	callnative BS_CalcMetalBurstDmg
 	.4byte \failInstr
+	.endm
+
+	.macro tryintimidateejectpack
+	callnative BS_TryIntimidateEjectPack
 	.endm
 
 	.macro allyswitchswapbattlers
@@ -1920,7 +1934,7 @@
 	jumpifholdeffect \battler, \holdEffect, \jumpInstr, FALSE
 	.endm
 
-	.macro jumpifholdeffect battler:req, holdEffect:req, jumpInstr:req, equal:req
+	.macro jumpifholdeffect battler:req, holdEffect:req, jumpInstr:req, equal=TRUE
 	callnative BS_JumpIfHoldEffect
 	.byte \battler
 	.byte \holdEffect
@@ -1934,9 +1948,16 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro setlastuseditem battler:req
+	.macro setlastuseditem battler:req, holdEffect:req
 	callnative BS_SetLastUsedItem
 	.byte \battler
+	.4byte \holdEffect
+	.endm
+
+	.macro setlastuseditemcorrosivefling battler:req, type:req
+	callnative BS_SetLastUsedItemCorrosiveFling
+	.byte \battler
+	.byte \type
 	.endm
 
 	.macro trysetfairylock failInstr:req
@@ -2389,6 +2410,11 @@
 	callnative BS_BattlerItemToLastUsedItem
 	.endm
 
+	.macro lastuseditemtobattlerberry battler:req
+	callnative BS_LastUsedItemToBattlerBerry
+	.byte \battler
+	.endm
+
 	.macro setallytonexttarget jumpInstr:req
 	jumpifbyte CMP_GREATER_THAN, gBattlerTarget, 0x1, 1f
 	addbyte gBattlerTarget, 0x2
@@ -2468,4 +2494,10 @@
 	@ Absorbs Toxic Spikes when a grounded Poison-type faints to entry hazards.
 	.macro tryabsorbtoxicspikesonfaint
 	callnative BS_TryAbsorbToxicSpikesOnFaint
+	.endm
+	
+	.macro pushtraitstack battler:req, ability:req
+	callnative BS_PushTraitStack
+	.byte \battler
+	.2byte \ability
 	.endm

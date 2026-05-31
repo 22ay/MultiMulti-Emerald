@@ -18,11 +18,11 @@ Pic: Brendan
 Gender: Male
 Music: Male
 
-Buffie (Wobbuffet)
-Brave Nature
+Buffie (Mewtwo)
+Modest Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
+EVs: 4 Atk / 252 SpA / 252 Spe
 - Earthquake
 - Flamethrower
 - Celebrate
@@ -37,15 +37,15 @@ Pic: Steven
 Gender: Male
 Music: Male
 
-Metang
+Metagross
 Brave Nature
-Level: 42
+Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 Atk / 252 Def / 6 SpA
-- Light Screen
-- Psychic
-- Reflect
-- Metal Claw
+- Sky Uppercut
+- Thunder Punch
+- Earthquake
+- Dragon Claw
 
 Skarmory
 Impish Nature

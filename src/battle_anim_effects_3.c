@@ -5775,10 +5775,11 @@ static void AnimRecycle_Step(struct Sprite *sprite)
 
 void AnimTask_GetWeather(u8 taskId)
 {
-    bool32 utilityUmbrellaAffected = GetBattlerHoldEffect(gBattleAnimAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA;
+    bool32 utilityUmbrellaAffected = BattlerHasHeldItemEffect(gBattleAnimAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE);
+    bool32 isMegaSol = BattlerHasTrait(gBattleAnimAttacker, ABILITY_MEGA_SOL);
 
     gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_NONE;
-    if (gWeatherMoveAnim & B_WEATHER_SUN && !utilityUmbrellaAffected)
+    if (((gWeatherMoveAnim & B_WEATHER_SUN) || isMegaSol) && !utilityUmbrellaAffected)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SUN;
     else if (gWeatherMoveAnim & B_WEATHER_RAIN && !utilityUmbrellaAffected)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_RAIN;

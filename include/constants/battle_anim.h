@@ -594,7 +594,12 @@
 #define B_ANIM_POWER_CONSTRUCT          53
 #define B_ANIM_SWAP_TO_SUBSTITUTE       54
 #define B_ANIM_SWAP_FROM_SUBSTITUTE     55
-#define NUM_B_ANIMS_GENERAL             56
+#define B_ANIM_GRAVITY                  56
+#define B_ANIM_NEWRAINBOW               57
+#define B_ANIM_REFLECT                  58
+#define B_ANIM_LIGHTSCREEN              59
+#define B_ANIM_AURORAVEIL               60
+#define NUM_B_ANIMS_GENERAL             61
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

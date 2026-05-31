@@ -7,6 +7,7 @@ enum {
     REQUEST_ALL_BATTLE,
     REQUEST_SPECIES_BATTLE,
     REQUEST_HELDITEM_BATTLE,
+    REQUEST_HELDITEM_BATTLE_TWO,
     REQUEST_MOVES_PP_BATTLE,
     REQUEST_MOVE1_BATTLE,
     REQUEST_MOVE2_BATTLE,
@@ -355,6 +356,10 @@ void BtlController_HandleHealthBarUpdate(u32 battler);
 void DoStatusIconUpdate(u32 battler);
 void BtlController_HandleStatusIconUpdate(u32 battler);
 void BtlController_HandleStatusAnimation(u32 battler);
+void BtlController_HandleClearUnkVar(u32 battler);
+void BtlController_HandleSetUnkVar(u32 battler);
+void BtlController_HandleClearUnkFlag(u32 battler);
+void BtlController_HandleToggleUnkFlag(u32 battler);
 void BtlController_HandleHitAnimation(u32 battler);
 void BtlController_HandlePlaySE(u32 battler);
 void BtlController_HandlePlayFanfareOrBGM(u32 battler);

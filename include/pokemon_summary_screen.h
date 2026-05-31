@@ -27,6 +27,7 @@ enum PokemonSummaryScreenMode
 {
     SUMMARY_MODE_NORMAL,
     SUMMARY_MODE_LOCK_MOVES,
+    SUMMARY_MODE_LOCK_ENEMY,
     SUMMARY_MODE_BOX,
     SUMMARY_MODE_BOX_CURSOR, // mon is being moved in PC
     SUMMARY_MODE_SELECT_MOVE,
@@ -37,6 +38,7 @@ enum PokemonSummaryScreenMode
 enum PokemonSummaryScreenPage
 {
     PSS_PAGE_INFO,
+    PSS_PAGE_TRAITS,
     PSS_PAGE_SKILLS,
     PSS_PAGE_BATTLE_MOVES,
     PSS_PAGE_CONTEST_MOVES,

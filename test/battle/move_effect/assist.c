@@ -57,24 +57,28 @@ SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry")
     }
 }
 
-DOUBLE_BATTLE_TEST("Assist can only call the current moves of a Transformed partner (Gen5+)")
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry (Multi)")
 {
+    u16 item;
+    PARAMETRIZE { item = ITEM_CHILAN_BERRY; }
+    PARAMETRIZE { item = ITEM_PASSHO_BERRY; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TRANSFORM) == EFFECT_TRANSFORM);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_ASSIST); }
-        PLAYER(SPECIES_DITTO) { Speed(4); Moves(MOVE_TRANSFORM); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ASSIST, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
+        OPPONENT(SPECIES_ARON) { Items(ITEM_GREAT_BALL, item); }
     } WHEN {
-        TURN {
-            MOVE(playerRight, MOVE_TRANSFORM, target: opponentLeft);
-            MOVE(playerLeft, MOVE_ASSIST);
-            MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight);
-        }
+        TURN { MOVE(player, MOVE_ASSIST); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, playerRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSIST, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        MESSAGE("Wobbuffet used Assist!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSIST, player);
+        MESSAGE("Wobbuffet used Surf!");
+        if (item == ITEM_PASSHO_BERRY) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, player);
     }
 }
+#endif

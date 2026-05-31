@@ -42,6 +42,7 @@ enum MonData {
     MON_DATA_NICKNAME10,
     MON_DATA_SPECIES,
     MON_DATA_HELD_ITEM,
+    MON_DATA_HELD_ITEM_TWO,
     MON_DATA_MOVE1,
     MON_DATA_MOVE2,
     MON_DATA_MOVE3,
@@ -126,6 +127,9 @@ enum MonData {
     MON_DATA_GIGANTAMAX_FACTOR,
     MON_DATA_TERA_TYPE,
     MON_DATA_EVOLUTION_TRACKER,
+    MON_DATA_INNATE1,
+    MON_DATA_INNATE2,
+    MON_DATA_INNATE3,
 };
 
 struct PokemonSubstruct0
@@ -133,15 +137,14 @@ struct PokemonSubstruct0
     u16 species:11; // 2047 species.
     enum Type teraType:5; // 30 types.
     u16 heldItem:10; // 1023 items.
-    u16 unused_02:6;
+    u16 pokeball:6; // 63 balls.
     u32 experience:21;
-    u32 nickname11:8; // 11th character of nickname.
-    u32 unused_04:3;
+    u32 heldItem2:10; // 1023 items.
+    u32 unused_04:1;
     u8 ppBonuses;
     u8 friendship;
-    u16 pokeball:6; // 63 balls.
+    u16 nickname11:8; // 11th character of nickname.
     u16 nickname12:8; // 12th character of nickname.
-    u16 unused_0A:2;
 };
 
 struct PokemonSubstruct1
@@ -380,7 +383,7 @@ struct BattlePokemon
     /*0x2B*/ u8 level;
     /*0x2C*/ u8 friendship;
     /*0x2D*/ u16 maxHP;
-    /*0x2F*/ u16 item;
+    /*0x2F*/ u16 items[MAX_MON_ITEMS]; //Set to at least 2 for this standalone mod branch
     /*0x31*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x3C*/ u8 ppBonuses;
     /*0x3D*/ u8 otName[PLAYER_NAME_LENGTH + 1];
@@ -391,6 +394,7 @@ struct BattlePokemon
     /*0x5D*/ u32 otId;
     /*0x61*/ u8 metLevel;
     /*0x62*/ bool8 isShiny;
+    /*0x64*/ enum Ability innates[MAX_MON_INNATES_INTERNAL];
 };
 
 struct EvolutionParam
@@ -437,6 +441,7 @@ struct SpeciesInfo /*0xC4*/
     u8 eggGroups[2];
     enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
     u8 safariZoneFleeRate;
+    enum Ability innates[MAX_MON_INNATES_INTERNAL];
 
     // Pokédex data
     u8 categoryName[13];
@@ -543,6 +548,7 @@ struct AbilityInfo
 {
     u8 name[ABILITY_NAME_LENGTH + 1];
     const u8 *description;
+    const u8 *longDescription;
     s8 aiRating;
     u8 cantBeCopied:1; // cannot be copied by Role Play or Doodle
     u8 cantBeSwapped:1; // cannot be swapped with Skill Swap or Wandering Spirit
@@ -830,7 +836,7 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
-u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 void RandomlyGivePartyPokerus(struct Pokemon *party);
@@ -918,5 +924,15 @@ struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 bool32 IsSpeciesOfType(u32 species, enum Type type);
+// Multi Items
+u8 MonHasItem(struct Pokemon *mon, u16 item);
+u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect);
+u8 BoxMonHasItem(struct BoxPokemon *mon, u16 item);
+u8 BoxMonHasItemHoldEffect(struct BoxPokemon *mon, u16 holdEffect);
+u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u16 holdEffect);
 
+u8 SpeciesHasInnate(u16 species, u16 ability);
+enum Ability GetSpeciesInnate(u16 species, u8 traitNum);
+bool8 BoxMonHasInnate(struct BoxPokemon* boxmon, u16 ability);
+bool8 MonHasTrait(struct Pokemon* mon, u16 ability);
 #endif // GUARD_POKEMON_H
