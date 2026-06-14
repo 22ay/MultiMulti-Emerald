@@ -4009,4 +4009,40 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_MEGA_HARENA] =
+    {
+        .name = _("Mega Harena"),
+        .description = COMPOUND_STRING("Always under Sand."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MEGA_NIX] =
+    {
+        .name = _("Mega Nix"),
+        .description = COMPOUND_STRING("Always under Snow."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MEGA_CALIGO] =
+    {
+        .name = _("Mega Caligo"),
+        .description = COMPOUND_STRING("Always under Fog."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };
