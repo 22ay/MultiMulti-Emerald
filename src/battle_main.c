@@ -4840,11 +4840,13 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     STORE_BATTLER_ITEMS(battler);
 
     // weather abilities
-    if (HasWeatherEffect() || SearchTraits(battlerTraits, ABILITY_MEGA_SOL))
+    if (HasWeatherEffect() || SearchTraits(battlerTraits, ABILITY_MEGA_SOL) || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA))
     {
-        if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && gBattleWeather & B_WEATHER_RAIN)
+        if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_RAIN) 
+        || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)))
             speed += baseSpeed;
-        if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
+        if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_SUN) 
+        || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
             speed += baseSpeed;
         if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH)   && gBattleWeather & B_WEATHER_SANDSTORM)
             speed += baseSpeed;
@@ -4993,7 +4995,7 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_TIDAL_SOUL)
-          && (gBattleWeather & B_WEATHER_RAIN)
+          && ((gBattleWeather & B_WEATHER_RAIN) || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA))
           && GetMoveType(move) == TYPE_WATER)
     {
         priority++;
@@ -6052,11 +6054,13 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
         {
             if (HasWeatherEffect() || BattlerHasTrait(battler, ABILITY_MEGA_SOL))
             {
-                if (gBattleWeather & B_WEATHER_RAIN && !utilityUmbrellaAffected)
+                if (((gBattleWeather & B_WEATHER_RAIN) || BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)) && !utilityUmbrellaAffected 
+                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL))
                     return TYPE_WATER;
                 else if (gBattleWeather & B_WEATHER_SANDSTORM)
                     return TYPE_ROCK;
-                else if (((gBattleWeather & B_WEATHER_SUN) || BattlerHasTrait(battler, ABILITY_MEGA_SOL)) && !utilityUmbrellaAffected)
+                else if (((gBattleWeather & B_WEATHER_SUN) || BattlerHasTrait(battler, ABILITY_MEGA_SOL)) && !utilityUmbrellaAffected 
+                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA))
                     return TYPE_FIRE;
                 else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
                     return TYPE_ICE;

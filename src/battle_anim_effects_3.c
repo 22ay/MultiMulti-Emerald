@@ -5777,11 +5777,12 @@ void AnimTask_GetWeather(u8 taskId)
 {
     bool32 utilityUmbrellaAffected = BattlerHasHeldItemEffect(gBattleAnimAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE);
     bool32 isMegaSol = BattlerHasTrait(gBattleAnimAttacker, ABILITY_MEGA_SOL);
+    bool32 isMegaPluvia = BattlerHasTrait(gBattleAnimAttacker, ABILITY_MEGA_PLUVIA);
 
     gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_NONE;
-    if (((gWeatherMoveAnim & B_WEATHER_SUN) || isMegaSol) && !utilityUmbrellaAffected)
+    if (((gWeatherMoveAnim & B_WEATHER_SUN) || isMegaSol) && !utilityUmbrellaAffected && !isMegaPluvia)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SUN;
-    else if (gWeatherMoveAnim & B_WEATHER_RAIN && !utilityUmbrellaAffected)
+    else if (((gWeatherMoveAnim & B_WEATHER_RAIN) || isMegaPluvia) && !utilityUmbrellaAffected && !isMegaSol)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_RAIN;
     else if (gWeatherMoveAnim & B_WEATHER_SANDSTORM)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SANDSTORM;

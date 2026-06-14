@@ -3997,4 +3997,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_MEGA_PLUVIA] =
+    {
+        .name = _("Mega Pluvia"),
+        .description = COMPOUND_STRING("Always under Rain."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };

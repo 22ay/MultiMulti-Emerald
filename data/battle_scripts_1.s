@@ -3304,8 +3304,9 @@ BattleScript_PowerHerbActivation:
 	return
 
 BattleScript_EffectTwoTurnsAttack::
-	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_TwoTurnMovesSecondTurn
 	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_MegaSolCheck
+	jumpifability BS_ATTACKER, ABILITY_MEGA_PLUVIA, BattleScript_MegaPluviaCheck
+	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_TwoTurnMovesSecondTurn
 	tryfiretwoturnmovewithoutcharging BS_ATTACKER, BattleScript_EffectHit @ e.g. Solar Beam
 	call BattleScript_FirstChargingTurn
 	tryfiretwoturnmoveaftercharging BS_ATTACKER, BattleScript_TwoTurnMovesSecondTurn @ e.g. Electro Shot
@@ -3316,6 +3317,14 @@ BattleScript_MegaSolCheck:
 	jumpifmove MOVE_SOLAR_BEAM, BattleScript_TwoTurnMovesSecondTurn
 	jumpifmove MOVE_SOLAR_BLADE, BattleScript_TwoTurnMovesSecondTurn
     goto BattleScript_EffectTwoTurnsAttack_Return
+
+BattleScript_MegaPluviaCheck:
+    jumpifmove MOVE_ELECTRO_SHOT, BattleScript_MegaPluviaElectroShot
+    goto BattleScript_EffectTwoTurnsAttack_Return
+
+BattleScript_MegaPluviaElectroShot:
+    call BattleScript_FirstChargingTurn
+    goto BattleScript_TwoTurnMovesSecondTurn
 
 BattleScript_EffectTwoTurnsAttack_Return:
     tryfiretwoturnmovewithoutcharging BS_ATTACKER, BattleScript_EffectHit @ e.g. Solar Beam
