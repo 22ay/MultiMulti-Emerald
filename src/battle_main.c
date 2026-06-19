@@ -4840,7 +4840,12 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     STORE_BATTLER_ITEMS(battler);
 
     // weather abilities
-    if (HasWeatherEffect() || SearchTraits(battlerTraits, ABILITY_MEGA_SOL) || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA))
+    if (HasWeatherEffect() 
+    || SearchTraits(battlerTraits, ABILITY_MEGA_SOL) 
+    || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
+    || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)
+    || SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
+    || SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO))
     {
         if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_RAIN) 
         || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)))
@@ -4848,9 +4853,11 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
         if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_SUN) 
         || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
             speed += baseSpeed;
-        if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH)   && gBattleWeather & B_WEATHER_SANDSTORM)
+        if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH) && ((gBattleWeather & B_WEATHER_SANDSTORM) 
+        || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)))
             speed += baseSpeed;
-        if (SearchTraits(battlerTraits, ABILITY_SLUSH_RUSH)  && (gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
+        if (SearchTraits(battlerTraits, ABILITY_SLUSH_RUSH) && ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+        || SearchTraits(battlerTraits, ABILITY_MEGA_NIX)))
             speed += baseSpeed;
     }
 
@@ -6052,17 +6059,30 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
     case EFFECT_WEATHER_BALL:
         if (state == MON_IN_BATTLE)
         {
-            if (HasWeatherEffect() || BattlerHasTrait(battler, ABILITY_MEGA_SOL))
+            if (HasWeatherEffect() || BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+            || BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+            || BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+            || BattlerHasTrait(battler, ABILITY_MEGA_NIX))
             {
                 if (((gBattleWeather & B_WEATHER_RAIN) || BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)) && !utilityUmbrellaAffected 
-                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL))
+                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_NIX))
                     return TYPE_WATER;
-                else if (gBattleWeather & B_WEATHER_SANDSTORM)
+                else if (((gBattleWeather & B_WEATHER_SANDSTORM) || BattlerHasTrait(battler, ABILITY_MEGA_HARENA))
+                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_NIX))
                     return TYPE_ROCK;
                 else if (((gBattleWeather & B_WEATHER_SUN) || BattlerHasTrait(battler, ABILITY_MEGA_SOL)) && !utilityUmbrellaAffected 
-                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA))
+                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_NIX))
                     return TYPE_FIRE;
-                else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+                else if (((gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL)) || BattlerHasTrait(battler, ABILITY_MEGA_NIX))
+                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL))
                     return TYPE_ICE;
                 else
                     return moveType;

@@ -2792,7 +2792,8 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_PokemonCantUseTheMove;
         break;
     case EFFECT_AURORA_VEIL:
-        if (!(gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW) && HasWeatherEffect()))
+        if ((!(gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW) && HasWeatherEffect()))
+        && !BattlerHasTrait(ctx->battlerAtk, ABILITY_MEGA_NIX))
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_CLANGOROUS_SOUL:
@@ -4650,7 +4651,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ARCTIC_WALL)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
         {
-            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_AURORA_VEIL) && (gBattleWeather & B_WEATHER_SNOW))
+            if (!(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_AURORA_VEIL) 
+            && ((gBattleWeather & B_WEATHER_SNOW) || SearchTraits(battlerTraits, ABILITY_MEGA_NIX)))
             {
                 gSideStatuses[GetBattlerSide(battler)] |= SIDE_STATUS_AURORA_VEIL;
                 gSideTimers[GetBattlerSide(battler)].auroraVeilTimer = 5;
@@ -4958,7 +4960,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 }
             }
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-            && IsBattlerWeatherAffected(battler, B_WEATHER_HAIL | B_WEATHER_SNOW)
+            && IsBattlerWeatherAffected(battler, B_WEATHER_HAIL | B_WEATHER_SNOW) //|| SearchTraits(battlerTraits, ABILITY_MEGA_NIX))
             && !IsBattlerAtMaxHp(battler)
             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
@@ -7723,7 +7725,9 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         break;
     case EFFECT_WEATHER_BALL:
         if ((ctx->weather & B_WEATHER_ANY) || BattlerHasTrait(battlerAtk, ABILITY_MEGA_SOL) 
-        || BattlerHasTrait(battlerAtk, ABILITY_MEGA_PLUVIA))
+        || BattlerHasTrait(battlerAtk, ABILITY_MEGA_PLUVIA)
+        || BattlerHasTrait(battlerAtk, ABILITY_MEGA_HARENA)
+        || BattlerHasTrait(battlerAtk, ABILITY_MEGA_NIX))
             basePower *= 2;
         break;
     case EFFECT_PURSUIT:
@@ -7979,7 +7983,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case EFFECT_SOLAR_BEAM:
         if ((IsBattlerWeatherAffected(battlerAtk, (B_WEATHER_HAIL | B_WEATHER_SANDSTORM | B_WEATHER_RAIN | B_WEATHER_SNOW | B_WEATHER_FOG)))
-        || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA))
+        || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
+        || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)
+        || SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
+        || SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO))
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_STOMPING_TANTRUM:
@@ -8069,7 +8076,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         {modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));}
 
     if (SearchTraits(battlerTraits, ABILITY_SAND_FORCE) && (moveType == TYPE_STEEL || moveType == TYPE_ROCK || moveType == TYPE_GROUND)
-        && ctx->weather & B_WEATHER_SANDSTORM)
+        && ((ctx->weather & B_WEATHER_SANDSTORM) || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
 
     if (SearchTraits(battlerTraits, ABILITY_RIVALRY))
@@ -8951,10 +8958,12 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     }
 
     // sandstorm sp.def boost for rock types
-    if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM) && !usesDefStat)
+    if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) 
+    && (IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM) || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)) && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     // snow def boost for ice types
-    if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SNOW) && usesDefStat)
+    if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE) 
+    && (IsBattlerWeatherAffected(battlerDef, B_WEATHER_SNOW) ||SearchTraits(battlerTraits, ABILITY_MEGA_NIX)) && usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
 
     modifier = ApplyDefensiveBadgeBoost(modifier, battlerDef, move);
@@ -11923,11 +11932,17 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, u32 move, enum Fu
         effect = TRUE;
     }
 
-    if (!effect && (HasWeatherEffect() || BattlerHasTrait(battlerAtk, ABILITY_MEGA_PLUVIA)))
+    if (!effect && (HasWeatherEffect() 
+    || BattlerHasTrait(battlerAtk, ABILITY_MEGA_PLUVIA)
+    || BattlerHasTrait(battlerAtk, ABILITY_MEGA_NIX)))
     {
-        if (MoveAlwaysHitsInRain(move) && (IsBattlerWeatherAffected(battlerDef, B_WEATHER_RAIN) || BattlerHasTrait(battlerAtk, ABILITY_MEGA_PLUVIA)))
+        if (MoveAlwaysHitsInRain(move) 
+        && (IsBattlerWeatherAffected(battlerDef, B_WEATHER_RAIN) || BattlerHasTrait(battlerAtk, ABILITY_MEGA_PLUVIA))
+        && !BattlerHasTrait(battlerAtk, ABILITY_MEGA_NIX))
             effect = TRUE;
-        else if ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && MoveAlwaysHitsInHailSnow(move))
+        else if (((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) || BattlerHasTrait(battlerAtk, ABILITY_MEGA_NIX)) 
+        && MoveAlwaysHitsInHailSnow(move)
+        && !BattlerHasTrait(battlerAtk, ABILITY_MEGA_PLUVIA))
             effect = TRUE;
 
         if (effect)
@@ -11999,10 +12014,10 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
     STORE_BATTLER_TRAITS(battlerDef);
 
     if (SearchTraits(battlerTraits, ABILITY_SAND_VEIL))
-        if (gBattleWeather & B_WEATHER_SANDSTORM && HasWeatherEffect())
+        if ((gBattleWeather & B_WEATHER_SANDSTORM && HasWeatherEffect()) || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA))
             calc = (calc * 80) / 100; // 1.2 sand veil loss
     if (SearchTraits(battlerTraits, ABILITY_SNOW_CLOAK))
-        if ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && HasWeatherEffect())
+        if (((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && HasWeatherEffect()) || SearchTraits(battlerTraits, ABILITY_MEGA_NIX))
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
     if (SearchTraits(battlerTraits, ABILITY_TANGLED_FEET))
         if (gBattleMons[battlerDef].volatiles.confusionTurns)

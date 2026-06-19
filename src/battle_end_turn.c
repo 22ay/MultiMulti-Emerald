@@ -100,7 +100,12 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
 
-    if ((currBattleWeather == 0xFF) && !SearchTraits(battlerTraits, ABILITY_MEGA_SOL) && !SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA))
+    if ((currBattleWeather == 0xFF) 
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_SOL) 
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO))
     {
         // If there is no weather on the field, no need to check other battlers so go to next state
         gBattleStruct->eventState.endTurnBattler = 0;
@@ -111,7 +116,10 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     gBattleStruct->eventState.endTurnBattler++;
 
     if (!IsBattlerAlive(battler) || (!HasWeatherEffect() && !SearchTraits(battlerTraits, ABILITY_MEGA_SOL) 
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)))
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
+    && !SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO)))
         return effect;
 
     switch (currBattleWeather)
@@ -147,7 +155,8 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
          && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
          && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
-         && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
+         && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT)
+         && !IsAbilityAndRecord(battler, ABILITY_MEGA_HARENA))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SANDSTORM;
@@ -172,7 +181,8 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
              && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
              && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
-             && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
+             && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT)
+             && !IsAbilityAndRecord(battler, ABILITY_MEGA_NIX))
             {
                 SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HAIL;
@@ -194,6 +204,12 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
         && (SearchTraits(battlerTraits, ABILITY_RAIN_DISH)
         || SearchTraits(battlerTraits, ABILITY_DRY_SKIN)
         || SearchTraits(battlerTraits, ABILITY_HYDRATION)))
+        {
+            AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE);
+            effect = TRUE;
+        }
+        else if (SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
+        && SearchTraits(battlerTraits, ABILITY_ICE_BODY))
         {
             AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE);
             effect = TRUE;
