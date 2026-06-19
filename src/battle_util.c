@@ -4960,7 +4960,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 }
             }
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-            && IsBattlerWeatherAffected(battler, B_WEATHER_HAIL | B_WEATHER_SNOW) //|| SearchTraits(battlerTraits, ABILITY_MEGA_NIX))
+            && (IsBattlerWeatherAffected(battler, B_WEATHER_HAIL | B_WEATHER_SNOW) || SearchTraits(battlerTraits, ABILITY_MEGA_NIX))
             && !IsBattlerAtMaxHp(battler)
             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
