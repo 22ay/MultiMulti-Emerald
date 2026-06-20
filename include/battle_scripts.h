@@ -813,6 +813,7 @@ extern const u8 BattleScript_AbilityLightScreen[];
 extern const u8 BattleScript_AbilityAuroraVeil[];
 extern const u8 BattleScript_EffectMiracleEye[];
 extern const u8 BattleScript_EffectTailwind[];
+extern const u8 BattleScript_TryZephyrWindPower_Loop[];
 extern const u8 BattleScript_EffectEmbargo[];
 extern const u8 BattleScript_EffectAquaRing[];
 extern const u8 BattleScript_EffectTrickRoom[];

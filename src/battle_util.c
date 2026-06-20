@@ -4701,7 +4701,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_WIND_RIDER)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN)
-         && gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND)
+         && ((gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND) || SearchTraits(battlerTraits, ABILITY_ZEPHYR)))
         {
             effect += CommonSwitchInAbilities(battler, ABILITY_WIND_RIDER, traitCheck, BattleScript_BattlerAbilityStatRaiseOnSwitchInWindRider);
         }
@@ -4863,6 +4863,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             gBattleScripting.battler = battler;
             effect += CommonSwitchInAbilities(battler, ABILITY_PROTOSYNTHESIS, traitCheck, BattleScript_ProtosynthesisActivates);
        }
+       if ((traitCheck = SearchTraits(battlerTraits, ABILITY_WIND_POWER)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+         && SearchTraits(battlerTraits, ABILITY_ZEPHYR))
+        {
+            effect += CommonSwitchInAbilities(battler, ABILITY_WIND_POWER, traitCheck, BattleScript_TryZephyrWindPower_Loop);
+        }
        break;
     case ABILITYEFFECT_ENDTURN:
         if (IsBattlerAlive(battler))

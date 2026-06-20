@@ -2473,6 +2473,13 @@ BattleScript_TryTailwindAbilitiesLoop_WindPower:
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_TryTailwindAbilitiesLoop_Increment
 
+BattleScript_TryZephyrWindPower_Loop::
+	call BattleScript_AbilityPopUp
+	setvolatile BS_TARGET, VOLATILE_CHARGE_TIMER, 2
+	printstring STRINGID_ZEPHYRWINDPOWER
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
 BattleScript_AbilityTailwind::
 	call BattleScript_AbilityPopUp
     printstring STRINGID_TAILWINDBLEW

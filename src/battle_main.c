@@ -4862,6 +4862,9 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     }
 
     // other abilities
+    if (SearchTraits(battlerTraits, ABILITY_ZEPHYR))
+        speed += baseSpeed;
+
     if (SearchTraits(battlerTraits, ABILITY_QUICK_FEET) && gBattleMons[battler].status1 & STATUS1_ANY)
         speed += baseSpeed / 2;
 
