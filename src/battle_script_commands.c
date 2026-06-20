@@ -13270,7 +13270,7 @@ static void Cmd_recoverbasedonsunlight(void)
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
             if ((HasWeatherEffect() && gBattleWeather & B_WEATHER_SANDSTORM) 
-            ||SearchTraits(battlerTraits, ABILITY_MEGA_HARENA))
+            || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA))
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
             else
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;

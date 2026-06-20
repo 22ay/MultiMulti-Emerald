@@ -4045,4 +4045,52 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_SLOW_AND_STEADY] =
+    {
+        .name = _("Slow and Steady"),
+        .description = COMPOUND_STRING("If slower, moves first"),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_ATLAS] =
+    {
+        .name = _("Atlas"),
+        .description = COMPOUND_STRING("Always under Gravity."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_GLITCHED] =
+    {
+        .name = _("Glitched"),
+        .description = COMPOUND_STRING("Effectiveness is reversed."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_ZEPHYR] =
+    {
+        .name = _("Zephyr"),
+        .description = COMPOUND_STRING("Always under Tailwind."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };

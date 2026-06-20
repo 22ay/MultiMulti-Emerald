@@ -5053,6 +5053,8 @@ s32 GetWhichBattlerFasterArgs(struct BattleContext *ctx, bool32 ignoreChosenMove
         bool32 battler2HasQuickEffect = gProtectStructs[ctx->battlerDef].quickDraw || gProtectStructs[ctx->battlerDef].usedCustapBerry;
         bool32 battler1HasStallingAbility = BattlerHasTrait(ctx->battlerAtk, ABILITY_STALL) || gProtectStructs[ctx->battlerAtk].myceliumMight;
         bool32 battler2HasStallingAbility = BattlerHasTrait(ctx->battlerDef, ABILITY_STALL) || gProtectStructs[ctx->battlerDef].myceliumMight;
+        bool32 atkHas = BattlerHasTrait(ctx->battlerAtk, ABILITY_SLOW_AND_STEADY);
+        bool32 defHas = BattlerHasTrait(ctx->battlerDef, ABILITY_SLOW_AND_STEADY);
 
         if (battler1HasQuickEffect && !battler2HasQuickEffect)
             strikesFirst = 1;
@@ -5089,6 +5091,9 @@ s32 GetWhichBattlerFasterArgs(struct BattleContext *ctx, bool32 ignoreChosenMove
                 else
                     strikesFirst = 1;
             }
+            
+            if (atkHas ^ defHas) // Flip the result only if exactly one battler has Slow and Steady
+                strikesFirst = -strikesFirst;
         }
     }
     else if (priority1 < priority2)
