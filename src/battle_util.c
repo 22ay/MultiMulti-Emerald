@@ -7369,6 +7369,8 @@ static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck
         return TRUE;
     if (gFieldStatuses & STATUS_FIELD_GRAVITY && isAnticipation == FALSE)
         return TRUE;
+    if (BattlerHasTrait(gBattlerAttacker, ABILITY_ATLAS))
+        return TRUE;
     if (B_ROOTED_GROUNDING >= GEN_4 && gBattleMons[battler].volatiles.root)
         return TRUE;
     if (gBattleMons[battler].volatiles.smackDown)
@@ -7892,7 +7894,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         break;
     }
     case EFFECT_GRAV_APPLE:
-        if (gFieldStatuses & STATUS_FIELD_GRAVITY)
+        if ((gFieldStatuses & STATUS_FIELD_GRAVITY) || BattlerHasTrait(battlerAtk, ABILITY_ATLAS))
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_TERRAIN_PULSE:
@@ -9822,27 +9824,6 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         }
     }
 
-    // Inverse Room: reverse type effectiveness
-    if (gFieldStatuses & STATUS_FIELD_INVERSE_ROOM)
-    {
-    // 0× (immune) becomes 2× (super effective)
-        if (modifier == UQ_4_12(0.0))
-        {
-            modifier = UQ_4_12(2.0);
-        }
-    // 0.5× becomes 2×
-        else if (modifier == UQ_4_12(0.5))
-        {
-            modifier = UQ_4_12(2.0);
-        }
-    // 2× becomes 0.5×
-        else if (modifier == UQ_4_12(2.0))
-        {
-            modifier = UQ_4_12(0.5);
-        }
-    // 1× stays 1×
-    }
-
     return modifier;
 }
 
@@ -9883,14 +9864,16 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, struc
 
         if (mon == 0) //catch for non Pokemon struct entries, only checks Ability
         {
-            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
+            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(gFieldStatuses & STATUS_FIELD_GRAVITY)
+            && !BattlerHasTrait(gBattlerAttacker, ABILITY_ATLAS))
                 modifier = UQ_4_12(0.0);
             if (MonHasTrait(mon, ABILITY_WONDER_GUARD) && modifier <= UQ_4_12(1.0) && GetMovePower(move) != 0)
                 modifier = UQ_4_12(0.0);
         }
         else
         {
-            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
+            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(gFieldStatuses & STATUS_FIELD_GRAVITY)
+            && !BattlerHasTrait(gBattlerAttacker, ABILITY_ATLAS))
                 modifier = UQ_4_12(0.0);
             if (MonHasTrait(mon, ABILITY_WONDER_GUARD) && modifier <= UQ_4_12(1.0) && GetMovePower(move) != 0)
                 modifier = UQ_4_12(0.0);
@@ -9943,7 +9926,9 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
 
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType)
 {
-    if (B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE))
+    if ((B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE)) || (gFieldStatuses & STATUS_FIELD_INVERSE_ROOM) 
+    || BattlerHasTrait(gBattlerAttacker, ABILITY_GLITCHED)
+    || BattlerHasTrait(gBattlerTarget, ABILITY_GLITCHED))
         return GetInverseTypeMultiplier(gTypeEffectivenessTable[atkType][defType]);
     return gTypeEffectivenessTable[atkType][defType];
 }
@@ -12009,6 +11994,8 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
         calc = (calc * 110) / 100; // 1.1 victory star boost
     if (SearchTraits(battlerTraits, ABILITY_HUSTLE))
         calc = (calc * 80) / 100; // 1.2 hustle loss
+    if (SearchTraits(battlerTraits, ABILITY_ATLAS))
+        calc = (calc * 5) / 3; // 1.66 Atlas boost
 
     // Target's ability
     STORE_BATTLER_TRAITS(battlerDef);
