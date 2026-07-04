@@ -5052,7 +5052,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                     effect++;
                     break;
                 }
-                else if ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN) && !SearchTraits(battlerTraits, ABILITY_RAIN_DISH) 
+                else if ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN) && !IsBattlerAtMaxHp(battler) && !SearchTraits(battlerTraits, ABILITY_RAIN_DISH) 
                 && !SearchTraits(battlerTraits, ABILITY_MEGA_SOL)) // Healing stacking handled in Rain Dish
                 {
                     gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
@@ -12038,7 +12038,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
 
     moveAcc = GetMoveAccuracy(move);
     // Check Thunder and Hurricane on sunny weather.
-    if ((IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)) && MoveHas50AccuracyInSun(move))
+    if ((GetAttackerWeather(battlerDef, GetWeather()) & B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
         moveAcc = 50;
     // Check Wonder Skin.
     if ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_WONDER_SKIN) : BattlerHasTrait(battlerDef, ABILITY_WONDER_SKIN)) && IsBattleMoveStatus(move) && moveAcc > 50)
