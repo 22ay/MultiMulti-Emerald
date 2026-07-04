@@ -8106,7 +8106,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         {modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));}
 
     if (SearchTraits(battlerTraits, ABILITY_SAND_FORCE) && (moveType == TYPE_STEEL || moveType == TYPE_ROCK || moveType == TYPE_GROUND)
-        && ((ctx->weather & B_WEATHER_SANDSTORM) || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)))
+        && GetAttackerWeather(ctx->battlerAtk, ctx->weather) & B_WEATHER_SANDSTORM)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
 
     if (SearchTraits(battlerTraits, ABILITY_RIVALRY))
