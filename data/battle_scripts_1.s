@@ -1831,8 +1831,8 @@ BattleScript_EffectGrowth::
 BattleScript_GrowthDoMoveAnim::
 	attackanimation
 	waitanimation
-	jumpifweatheraffected B_WEATHER_SUN, BattleScript_GrowthAtk2
 	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_GrowthAtk2
+	jumpifweatheraffected B_WEATHER_SUN, BattleScript_GrowthAtk2
 	setstatchanger STAT_ATK, 1, FALSE
 	goto BattleScript_GrowthAtk
 BattleScript_GrowthAtk2:
@@ -1843,6 +1843,7 @@ BattleScript_GrowthAtk:
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_GrowthTrySpAtk::
+	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_GrowthSpAtk2
 	jumpifweatheraffected B_WEATHER_SUN, BattleScript_GrowthSpAtk2
 	setstatchanger STAT_SPATK, 1, FALSE
 	goto BattleScript_GrowthSpAtk
