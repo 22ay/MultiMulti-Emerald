@@ -100,12 +100,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
 
-    if ((currBattleWeather == 0xFF) 
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_SOL) 
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO))
+    if ((currBattleWeather == 0xFF) && !HasAbilityWeatherEffect())
     {
         // If there is no weather on the field, no need to check other battlers so go to next state
         gBattleStruct->eventState.endTurnBattler = 0;
@@ -115,12 +110,35 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (!IsBattlerAlive(battler) || (!HasWeatherEffect() && !SearchTraits(battlerTraits, ABILITY_MEGA_SOL) 
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
-    && !SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO)))
+    if (!IsBattlerAlive(battler) || (!HasWeatherEffect() && !HasAbilityWeatherEffect()))
         return effect;
+
+    if (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN)
+    {
+        if (SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)
+        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN))
+        {
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
+                effect = TRUE;
+        }
+    }
+    if (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN)
+    {
+        if (SearchTraits(battlerTraits, ABILITY_RAIN_DISH)
+        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN))
+        {
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
+                effect = TRUE;
+        }
+    }
+    if (GetAttackerWeather(battler, GetWeather()) & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+    {
+        if (SearchTraits(battlerTraits, ABILITY_ICE_BODY))
+        {
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
+                effect = TRUE;
+        }
+    }
 
     switch (currBattleWeather)
     {
@@ -189,30 +207,6 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
                 BattleScriptExecute(BattleScript_DamagingWeather);
                 effect = TRUE;
             }
-        }
-        break;
-    default:
-        if (SearchTraits(battlerTraits, ABILITY_MEGA_SOL)
-        && (SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)
-        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN) 
-        || SearchTraits(battlerTraits, ABILITY_HARVEST)))
-        {
-            AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE);
-            effect = TRUE;
-        }
-        else if (SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
-        && (SearchTraits(battlerTraits, ABILITY_RAIN_DISH)
-        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN)
-        || SearchTraits(battlerTraits, ABILITY_HYDRATION)))
-        {
-            AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE);
-            effect = TRUE;
-        }
-        else if (SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
-        && SearchTraits(battlerTraits, ABILITY_ICE_BODY))
-        {
-            AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE);
-            effect = TRUE;
         }
         break;
     }

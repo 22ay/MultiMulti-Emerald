@@ -10350,7 +10350,7 @@ u32 IsFlowerVeilProtected(u32 battler)
 
 u32 IsLeafGuardProtected(u32 battler)
 {
-    if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || BattlerHasTrait(battler, ABILITY_MEGA_SOL))
+    if ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN)
      && (gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battler, ABILITY_LEAF_GUARD) : BattlerHasTrait(battler, ABILITY_LEAF_GUARD)))
     {
         PushTraitStack(battler, ABILITY_LEAF_GUARD);
@@ -13260,29 +13260,26 @@ static void Cmd_unused_0xBF(void)
 static void Cmd_recoverbasedonsunlight(void)
 {
     CMD_ARGS(const u8 *failInstr);
-    enum Ability battlerTraits[MAX_MON_TRAITS];
-    STORE_BATTLER_TRAITS(gBattlerAttacker);
 
     gBattlerTarget = gBattlerAttacker;
     if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
     {
         s32 recoverAmount = 0;
+        u32 weather = GetAttackerWeather(gBattlerAttacker, GetWeather());
+
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
-            if ((HasWeatherEffect() && gBattleWeather & B_WEATHER_SANDSTORM) 
-            || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA))
+            if (weather & B_WEATHER_SANDSTORM)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
             else
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
         }
         else if (GetConfig(B_TIME_OF_DAY_HEALING_MOVES) != GEN_2)
         {
-            if ((!(gBattleWeather & B_WEATHER_ANY) && !(SearchTraits(battlerTraits, ABILITY_MEGA_SOL))) 
-            || (!HasWeatherEffect() && !(SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
-            || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
-                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else if ((gBattleWeather & B_WEATHER_SUN) || (SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
+            else if (!(gBattleWeather & B_WEATHER_ANY) || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
+                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else // not sunny weather
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
         }
@@ -13311,12 +13308,10 @@ static void Cmd_recoverbasedonsunlight(void)
                 break;
             }
 
-            if ((!(gBattleWeather & B_WEATHER_ANY) && !(SearchTraits(battlerTraits, ABILITY_MEGA_SOL))) 
-            || (!HasWeatherEffect() && !(SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
-            || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
-                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-            else if ((gBattleWeather & B_WEATHER_SUN) || (SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
+            else if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
+                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
             else // not sunny weather
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
 
@@ -13433,7 +13428,7 @@ static bool32 CheckIfCanFireTwoTurnMoveNow(u8 battler, bool8 checkChargeTurnEffe
 
     // Certain two-turn moves may fire on the first turn in the right weather (Solar Beam, Electro Shot)
     // By default, all two-turn moves have the option of adding weather to their argument
-    if (IsBattlerWeatherAffected(battler, GetMoveTwoTurnAttackWeather(gCurrentMove)))
+    if (IsBattlerWeatherAffected(battler, GetMoveTwoTurnAttackWeather(gCurrentMove))) //didntchangeweather
         return TRUE;
 
     return FALSE;
@@ -19388,7 +19383,7 @@ void BS_JumpIfWeatherAffected(void)
 {
     NATIVE_ARGS(u16 flags, const u8 *jumpInstr);
     u32 weather = cmd->flags;
-    if (IsBattlerWeatherAffected(gBattlerAttacker, weather))
+    if (IsBattlerWeatherAffected(gBattlerAttacker, weather)) //didntchangeweather
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

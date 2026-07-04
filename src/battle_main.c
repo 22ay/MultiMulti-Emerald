@@ -4847,17 +4847,15 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     || SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
     || SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO))
     {
-        if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_RAIN) 
-        || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)))
+        if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) 
+        && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN))
             speed += baseSpeed;
-        if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) && ((gBattleWeather & B_WEATHER_SUN) 
-        || SearchTraits(battlerTraits, ABILITY_MEGA_SOL)))
+        if (SearchTraits(battlerTraits, ABILITY_CHLOROPHYLL) && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) 
+        && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN))
             speed += baseSpeed;
-        if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH) && ((gBattleWeather & B_WEATHER_SANDSTORM) 
-        || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)))
+        if (SearchTraits(battlerTraits, ABILITY_SAND_RUSH) && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SANDSTORM))
             speed += baseSpeed;
-        if (SearchTraits(battlerTraits, ABILITY_SLUSH_RUSH) && ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW))
-        || SearchTraits(battlerTraits, ABILITY_MEGA_NIX)))
+        if (SearchTraits(battlerTraits, ABILITY_SLUSH_RUSH) && (GetAttackerWeather(battler, GetWeather()) & (B_WEATHER_SNOW | B_WEATHER_HAIL)))
             speed += baseSpeed;
     }
 
@@ -4999,13 +4997,13 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_INFERNAL_SOUL)
-          && ((gBattleWeather & B_WEATHER_SUN) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL))
+          && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN)
           && GetMoveType(move) == TYPE_FIRE)
     {
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_TIDAL_SOUL)
-          && ((gBattleWeather & B_WEATHER_RAIN) || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA))
+          && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN)
           && GetMoveType(move) == TYPE_WATER)
     {
         priority++;
@@ -6067,37 +6065,28 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
     case EFFECT_WEATHER_BALL:
         if (state == MON_IN_BATTLE)
         {
-            if (HasWeatherEffect() || BattlerHasTrait(battler, ABILITY_MEGA_SOL)
-            || BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
-            || BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
-            || BattlerHasTrait(battler, ABILITY_MEGA_NIX))
-            {
-                if (((gBattleWeather & B_WEATHER_RAIN) || BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)) && !utilityUmbrellaAffected 
-                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_NIX))
-                    return TYPE_WATER;
-                else if (((gBattleWeather & B_WEATHER_SANDSTORM) || BattlerHasTrait(battler, ABILITY_MEGA_HARENA))
-                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_NIX))
-                    return TYPE_ROCK;
-                else if (((gBattleWeather & B_WEATHER_SUN) || BattlerHasTrait(battler, ABILITY_MEGA_SOL)) && !utilityUmbrellaAffected 
-                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_NIX))
-                    return TYPE_FIRE;
-                else if (((gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL)) || BattlerHasTrait(battler, ABILITY_MEGA_NIX))
-                && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
-                && !BattlerHasTrait(battler, ABILITY_MEGA_SOL))
-                    return TYPE_ICE;
-                else
-                    return moveType;
-            }
+            u32 weather =  GetAttackerWeather(battler, GetWeather());
+            if (weather & B_WEATHER_SUN)
+                return TYPE_FIRE;
+            else if (weather & B_WEATHER_RAIN)
+                return TYPE_WATER;
+            else if (weather & B_WEATHER_SANDSTORM)
+                return TYPE_ROCK;
+            else if (weather & B_WEATHER_ICY_ANY)
+                return TYPE_ICE;
+            else
+                return moveType;
         }
         else
         {
+            if (BattlerHasTrait(battler, ABILITY_MEGA_SOL))
+                return TYPE_FIRE;
+            if (BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA))
+                return TYPE_WATER;
+            if (BattlerHasTrait(battler, ABILITY_MEGA_HARENA))
+                return TYPE_ROCK;
+            if (BattlerHasTrait(battler, ABILITY_MEGA_NIX))
+                return TYPE_ICE;
             switch (gWeatherPtr->currWeather)
             {
             case WEATHER_DROUGHT:

@@ -228,6 +228,7 @@ enum EjectPackTiming
 
 void HandleAction_ThrowBall(void);
 u32 GetCurrentBattleWeather(void);
+u32 GetWeatherFlagsFromIndex(u32 index);
 bool32 EndOrContinueWeather(void);
 bool32 IsUnnerveBlocked(u32 battler, u32 itemId);
 bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move);
@@ -367,6 +368,8 @@ bool32 CompareStatIgnoreContrary(u32 battler, enum Stat statId, u8 cmpTo, u8 cmp
 bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
 bool32 PickupHasValidTarget(u32 battler);
 bool32 CantPickupItem(u32 battler);
+u32 GetWeather(void);
+u32 GetAttackerWeather(u32 battler, u32 weather);
 bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags);
 u32 GetBattlerMoveTargetType(u32 battler, u32 move);
 bool32 CanTargetBattler(u32 battlerAtk, u32 battlerDef, u16 move);
@@ -426,6 +429,7 @@ bool32 IsPursuitTargetSet(void);
 void ClearPursuitValuesIfSet(u32 battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
+bool32 HasAbilityWeatherEffect(void);
 bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void ChooseStatBoostAnimation(u32 battler);
