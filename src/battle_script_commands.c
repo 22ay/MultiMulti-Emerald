@@ -8641,7 +8641,7 @@ bool32 DoSwitchInAbilities(u32 battler)
 {
     return (TryPrimalReversion(battler)
          || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, 0, 0)
-         || (gBattleWeather & B_WEATHER_ANY && HasWeatherEffect() && AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0))
+         || ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_ANY) && AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0))
          || (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0)));
 }
 
@@ -18466,7 +18466,7 @@ void BS_SwitchinAbilities(void)
     AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, 0, 0);
     AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, 0, 0);
 
-    if (gBattleWeather & B_WEATHER_ANY && HasWeatherEffect())
+    if (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_ANY)
         AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0);
 
     if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)

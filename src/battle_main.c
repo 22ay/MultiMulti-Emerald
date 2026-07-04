@@ -4840,12 +4840,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     STORE_BATTLER_ITEMS(battler);
 
     // weather abilities
-    if (HasWeatherEffect() 
-    || SearchTraits(battlerTraits, ABILITY_MEGA_SOL) 
-    || SearchTraits(battlerTraits, ABILITY_MEGA_PLUVIA)
-    || SearchTraits(battlerTraits, ABILITY_MEGA_HARENA)
-    || SearchTraits(battlerTraits, ABILITY_MEGA_NIX)
-    || SearchTraits(battlerTraits, ABILITY_MEGA_CALIGO))
+    if (HasWeatherEffect() || HasAbilityWeatherEffect())
     {
         if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) 
         && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN))
@@ -4875,7 +4870,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     if (SearchTraits(battlerTraits, ABILITY_SURGE_SURFER) && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
         speed += baseSpeed;
 
-    if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS) && !(gBattleMons[battler].volatiles.transformed) && ((gBattleWeather & B_WEATHER_SUN && HasWeatherEffect()) || SearchTraits(battlerTraits, ABILITY_MEGA_SOL) || gDisableStructs[battler].boosterEnergyActivated))
+    if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS) && !(gBattleMons[battler].volatiles.transformed) && ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN) || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
 
     if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE) && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battler].boosterEnergyActivated))
