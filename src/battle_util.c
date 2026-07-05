@@ -8453,6 +8453,45 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
 		atkStat  = gBattleMons[battlerAtk].speed;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
     }
+    else if (BattlerHasTrait(battlerAtk, ABILITY_MOMENTUM))
+    {
+		if (IsBattleMovePhysical(move))
+        {
+            atkStat  = gBattleMons[battlerAtk].attack + (gBattleMons[battlerAtk].speed * 0.5);
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+        }
+        else
+        {
+            atkStat  = gBattleMons[battlerAtk].spAttack + (gBattleMons[battlerAtk].speed * 0.5);
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+        }
+    }
+    else if (BattlerHasTrait(battlerAtk, ABILITY_JUGGERNAUT) || BattlerHasTrait(battlerAtk, ABILITY_BASTION))
+    {
+		if (IsBattleMovePhysical(move))
+        {
+            atkStat  = gBattleMons[battlerAtk].attack + (gBattleMons[battlerAtk].defense * 0.5);
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+        }
+        else
+        {
+            atkStat  = gBattleMons[battlerAtk].spAttack + (gBattleMons[battlerAtk].spDefense * 0.5);
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+        }
+    }
+    else if (BattlerHasTrait(battlerAtk, ABILITY_REDIRECTION))
+    {
+		if (IsBattleMovePhysical(move))
+        {
+            atkStat  = gBattleMons[battlerAtk].attack + (gBattleMons[battlerDef].attack * 0.5);
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+        }
+        else
+        {
+            atkStat  = gBattleMons[battlerAtk].spAttack + (gBattleMons[battlerDef].spAttack * 0.5);
+            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+        }
+    }
     else if (BattlerHasTrait(battlerAtk, ABILITY_BRUTE_FORCE) && IsBattleMoveSpecial(move))
     {
         atkStat  = gBattleMons[battlerAtk].attack;
@@ -8920,10 +8959,13 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     {
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
     }
-    if (SearchTraits(battlerTraits, ABILITY_MAGIC_GUARD))
+    if (SearchTraits(battlerTraits, ABILITY_MAGIC_GUARD) && !usesDefStat)
     {
-        if (!usesDefStat)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_INDOMITABLE) && usesDefStat)
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
     }
 
     // ally's abilities

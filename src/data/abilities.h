@@ -4093,4 +4093,52 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_MOMENTUM] =
+    {
+        .name = _("Momentum"),
+        .description = COMPOUND_STRING("Attacks with some speed."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_JUGGERNAUT] =
+    {
+        .name = _("Juggernaut"),
+        .description = COMPOUND_STRING("Attacks with some Defense."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_BASTION] =
+    {
+        .name = _("Bastion"),
+        .description = COMPOUND_STRING("Attacks with some Defense."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_REDIRECTION] =
+    {
+        .name = _("Redirection"),
+        .description = COMPOUND_STRING("Attacks with opponent's attack."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };
