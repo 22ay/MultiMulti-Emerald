@@ -8109,6 +8109,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_TOUGH_CLAWS) && IsMoveMakingContact(battlerAtk, battlerDef, ctx->move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
 
+    if (SearchTraits(battlerTraits, ABILITY_CLOSE_QUARTERS) && IsMoveMakingContact(battlerAtk, battlerDef, ctx->move))
+        modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
+
     if (SearchTraits(battlerTraits, ABILITY_BIG_PECKS) && IsMoveMakingContact(battlerAtk, battlerDef, ctx->move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
 
@@ -8919,7 +8922,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     {
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     }
-    if(SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS))
+    if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS))
     {
         enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
         if (((GetAttackerWeather(ctx->battlerDef, ctx->weather) & B_WEATHER_SUN) || gDisableStructs[battlerDef].boosterEnergyActivated)
@@ -8927,7 +8930,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
          && !(gBattleMons[battlerDef].volatiles.transformed))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
     }
-     if(SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE))
+    if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE))
     {
         u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
         if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
@@ -8966,6 +8969,10 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_INDOMITABLE) && usesDefStat)
     {
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.2));
+    }
+    if (SearchTraits(battlerTraits, ABILITY_CLOSE_QUARTERS) && usesDefStat)
+    {
+        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
     }
 
     // ally's abilities

@@ -4141,4 +4141,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_CLOSE_QUARTERS] =
+    {
+        .name = _("Close Quarters"),
+        .description = COMPOUND_STRING("Ups contact moves, lowers Defense."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };
