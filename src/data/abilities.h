@@ -4153,4 +4153,88 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_PRONTO] =
+    {
+        .name = _("Pronto"),
+        .description = COMPOUND_STRING("Speed used for Defenses."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_NIMBLE] =
+    {
+        .name = _("Nimble"),
+        .description = COMPOUND_STRING("Some speed used for Defenses."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_OVERPOWER] =
+    {
+        .name = _("Overpower"),
+        .description = COMPOUND_STRING("Attack used for Defense."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MIGHTY] =
+    {
+        .name = _("Mighty"),
+        .description = COMPOUND_STRING("Some Atk used for Defense."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MYSTIC_BULWARK] =
+    {
+        .name = _("Mystic Bulwark"),
+        .description = COMPOUND_STRING("Sp.Atk used for Sp.Def."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_BALLISTIC_GUARD] =
+    {
+        .name = _("Ballistic Guard"),
+        .description = COMPOUND_STRING("Sp.Atk used for Sp.Def."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_OUTRANGED] =
+    {
+        .name = _("Out Ranged"),
+        .description = COMPOUND_STRING("Some Sp.Atk used for Sp.Def."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };
