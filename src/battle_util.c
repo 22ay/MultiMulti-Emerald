@@ -12807,7 +12807,7 @@ bool32 BattlerHasHeldItemEffectInternal(u32 battler, u32 holdEffect, bool32 chec
             return FALSE;
         if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
             return FALSE;
-        if (checkAbility && GetBattlerAbility(battler) == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid)
+        if (checkAbility && BattlerHasTrait(battler, ABILITY_KLUTZ) && !gBattleMons[battler].volatiles.gastroAcid)
             return FALSE;
     }
     

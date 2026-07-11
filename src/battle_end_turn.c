@@ -615,7 +615,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
      && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
      && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
     {
-        if (gBattleMons[battler].status1 & STATUS1_SLEEP || GetBattlerAbility(battler) == ABILITY_COMATOSE)
+        if (gBattleMons[battler].status1 & STATUS1_SLEEP || BattlerHasTrait(battler, ABILITY_COMATOSE)
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
             BattleScriptExecute(BattleScript_NightmareTurnDmg);
