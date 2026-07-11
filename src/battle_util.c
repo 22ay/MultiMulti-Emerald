@@ -11344,6 +11344,28 @@ bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags)
     return TRUE;
 }
 
+u32 GetFieldStatus(void)
+{
+    return gFieldStatuses;
+}
+
+u32 GetAttackerFieldStatus(u32 battler, u32 fieldStatus)
+{
+    if (BattlerHasTrait(battler, ABILITY_MEGA_NATURA))
+        return STATUS_FIELD_GRASSY_TERRAIN;
+
+    if (BattlerHasTrait(battler, ABILITY_MEGA_FULGUR))
+        return STATUS_FIELD_ELECTRIC_TERRAIN;
+
+    if (BattlerHasTrait(battler, ABILITY_MEGA_NEBULA))
+        return STATUS_FIELD_MISTY_TERRAIN;
+
+    if (BattlerHasTrait(battler, ABILITY_MEGA_PSYCHICA))
+        return STATUS_FIELD_PSYCHIC_TERRAIN;
+
+    return fieldStatus;
+}
+
 // Gets move target before redirection effects etc. are applied
 // Possible return values are defined in battle.h following MOVE_TARGET_SELECTED
 // TODO: Add args: ability and hold effect

@@ -371,6 +371,8 @@ bool32 CantPickupItem(u32 battler);
 u32 GetWeather(void);
 u32 GetAttackerWeather(u32 battler, u32 weather);
 bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags);
+u32 GetFieldStatus(void);
+u32 GetAttackerFieldStatus(u32 battler, u32 fieldStatus);
 u32 GetBattlerMoveTargetType(u32 battler, u32 move);
 bool32 CanTargetBattler(u32 battlerAtk, u32 battlerDef, u16 move);
 void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon);

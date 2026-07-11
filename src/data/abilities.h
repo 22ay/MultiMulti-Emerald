@@ -4237,4 +4237,52 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_MEGA_NATURA] =
+    {
+        .name = _("Mega Natura"),
+        .description = COMPOUND_STRING("Always in Grassy Terrain."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MEGA_FULGUR] =
+    {
+        .name = _("Mega Fulgur"),
+        .description = COMPOUND_STRING("Always in Electric Terrain."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MEGA_NEBULA] =
+    {
+        .name = _("Mega Nebula"),
+        .description = COMPOUND_STRING("Always in Misty Terrain."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_MEGA_PSYCHICA] =
+    {
+        .name = _("Mega Psychica"),
+        .description = COMPOUND_STRING("Always in Psychic Terrain."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };
