@@ -30305,10 +30305,10 @@ gBattleAnimMove_SkyUppercut::
 
 gBattleAnimMove_SecretPower::
 	createvisualtask AnimTask_GetFieldTerrain, 5
-	jumpargeq 0, STATUS_FIELD_MISTY_TERRAIN,    gBattleAnimMove_FairyWind
-	jumpargeq 0, STATUS_FIELD_GRASSY_TERRAIN,   gBattleAnimMove_NeedleArm
-	jumpargeq 0, STATUS_FIELD_ELECTRIC_TERRAIN, gBattleAnimMove_ThunderShock
-	jumpargeq 0, STATUS_FIELD_PSYCHIC_TERRAIN,  gBattleAnimMove_Confusion
+	jumpargeq 0, BATTLE_FIELD_MISTY_TERRAIN,    gBattleAnimMove_FairyWind
+	jumpargeq 0, BATTLE_FIELD_GRASSY_TERRAIN,   gBattleAnimMove_NeedleArm
+	jumpargeq 0, BATTLE_FIELD_ELECTRIC_TERRAIN, gBattleAnimMove_ThunderShock
+	jumpargeq 0, BATTLE_FIELD_PSYCHIC_TERRAIN,  gBattleAnimMove_Confusion
 	createvisualtask AnimTask_GetBattleEnvironment, 5
 	jumpargeq 0, BATTLE_ENVIRONMENT_GRASS,          gBattleAnimMove_NeedleArm
 	jumpargeq 0, BATTLE_ENVIRONMENT_LONG_GRASS,     gBattleAnimMove_MagicalLeaf

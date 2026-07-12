@@ -689,7 +689,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_STEEL_ROLLER:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+        if (!(gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY))
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:
@@ -2104,9 +2104,19 @@ bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
     return FieldStatusChecker(battler, fieldStatus, FIELD_EFFECT_POSITIVE);
 }
 
+bool32 ShouldSetTerrain(u32 battler, u32 terrain)
+{
+    return TerrainChecker(battler, terrain, FIELD_EFFECT_POSITIVE);
+}
+
 bool32 ShouldClearFieldStatus(u32 battler, u32 fieldStatus)
 {
     return FieldStatusChecker(battler, fieldStatus, FIELD_EFFECT_NEGATIVE);
+}
+
+bool32 ShouldClearTerrain(u32 battler, u32 terrain)
+{
+    return TerrainChecker(battler, terrain, FIELD_EFFECT_NEGATIVE);
 }
 
 bool32 IsBattlerDamagedByStatus(u32 battler)
@@ -3671,7 +3681,7 @@ bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move)
 {
     if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
      || (AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_OWN_TEMPO) && !DoesBattlerIgnoreAbilityChecks(battlerAtk, move))
-     || IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN)
+     || IsBattlerTerrainAffected(battlerDef, BATTLE_FIELD_MISTY_TERRAIN)
      || gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD
      || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
         return FALSE;

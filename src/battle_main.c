@@ -239,6 +239,7 @@ EWRAM_DATA struct MonSpritesGfx *gMonSpritesGfxPtr = NULL;
 EWRAM_DATA u16 gBattleMovePower = 0;
 EWRAM_DATA u16 gMoveToLearn = 0;
 EWRAM_DATA u32 gFieldStatuses = 0;
+EWRAM_DATA u32 gBattleTerrain = 0;
 EWRAM_DATA struct FieldTimer gFieldTimers = {0};
 EWRAM_DATA u16 gBattleTurnCounter = 0;
 EWRAM_DATA u8 gBattlerAbility = 0;
@@ -3093,6 +3094,7 @@ static void BattleStartClearSetData(void)
 
     gLastUsedMove = 0;
     gFieldStatuses = 0;
+    gBattleTerrain = 0;
 
     gHasFetchedBall = FALSE;
     gLastUsedBall = 0;
@@ -3484,7 +3486,7 @@ const u8* FaintClearSetData(u32 battler)
                 // Don't use CanBeConfused here, since it can cause issues in edge cases.
                 if (!(BattlerHasTrait(otherSkyDropper, ABILITY_OWN_TEMPO)
                     || gBattleMons[otherSkyDropper].volatiles.confusionTurns
-                    || (GetAttackerFieldStatus(otherSkyDropper, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)))
+                    || (GetAttackerTerrain(otherSkyDropper, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN)))
                 {
                     gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
                     gBattlerAttacker = otherSkyDropper;
@@ -4867,13 +4869,13 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     if (SearchTraits(battlerTraits, ABILITY_LIGHT_METAL))
         speed += baseSpeed / 4;
 
-    if (SearchTraits(battlerTraits, ABILITY_SURGE_SURFER) && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (SearchTraits(battlerTraits, ABILITY_SURGE_SURFER) && (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN))
         speed += baseSpeed;
 
     if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS) && !(gBattleMons[battler].volatiles.transformed) && ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN) || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
 
-    if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE) && !(gBattleMons[battler].volatiles.transformed) && ((GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN) || gDisableStructs[battler].boosterEnergyActivated))
+    if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE) && !(gBattleMons[battler].volatiles.transformed) && ((GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN) || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
 
     if (SearchTraits(battlerTraits, ABILITY_UNBURDEN) && gDisableStructs[battler].unburdenActive)
@@ -5004,13 +5006,13 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_NATURE_SOUL)
-          && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN)
+          && (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_GRASSY_TERRAIN)
           && GetMoveType(move) == TYPE_GRASS)
     {
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_THUNDEROUS_SOUL)
-          && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
+          && (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN)
           && GetMoveType(move) == TYPE_ELECTRIC)
     {
         priority++;
@@ -5026,7 +5028,7 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         gProtectStructs[battler].pranksterElevated = 1;
         priority++;
     }
-    if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
+    if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE && (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_GRASSY_TERRAIN) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
         priority++;
     }
@@ -6196,15 +6198,15 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
     case EFFECT_TERRAIN_PULSE:
         if (state == MON_IN_BATTLE)
         {
-            if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
+            if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
             {
-                if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
+                if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN)
                     return TYPE_ELECTRIC;
-                else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN)
+                else if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_GRASSY_TERRAIN)
                     return TYPE_GRASS;
-                else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
+                else if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN)
                     return TYPE_FAIRY;
-                else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_PSYCHIC_TERRAIN)
+                else if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_PSYCHIC_TERRAIN)
                     return TYPE_PSYCHIC;
                 else //failsafe
                     return moveType;

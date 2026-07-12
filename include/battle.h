@@ -1113,6 +1113,7 @@ extern struct MonSpritesGfx *gMonSpritesGfxPtr;
 extern u16 gBattleMovePower;
 extern u16 gMoveToLearn;
 extern u32 gFieldStatuses;
+extern u32 gBattleTerrain;
 extern struct FieldTimer gFieldTimers;
 extern u16 gBattleTurnCounter;
 extern u8 gBattlerAbility;

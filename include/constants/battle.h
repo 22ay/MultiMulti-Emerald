@@ -324,15 +324,18 @@ enum TypeSideHazard
 #define STATUS_FIELD_MUDSPORT                       (1 << 3)
 #define STATUS_FIELD_WATERSPORT                     (1 << 4)
 #define STATUS_FIELD_GRAVITY                        (1 << 5)
-#define STATUS_FIELD_GRASSY_TERRAIN                 (1 << 6)
-#define STATUS_FIELD_MISTY_TERRAIN                  (1 << 7)
-#define STATUS_FIELD_ELECTRIC_TERRAIN               (1 << 8)
-#define STATUS_FIELD_PSYCHIC_TERRAIN                (1 << 9)
-#define STATUS_FIELD_ION_DELUGE                     (1 << 10)
-#define STATUS_FIELD_FAIRY_LOCK                     (1 << 11)
-#define STATUS_FIELD_INVERSE_ROOM                   (1 << 12)
+#define STATUS_FIELD_ION_DELUGE                     (1 << 6)
+#define STATUS_FIELD_FAIRY_LOCK                     (1 << 7)
+#define STATUS_FIELD_INVERSE_ROOM                   (1 << 8)
 
-#define STATUS_FIELD_TERRAIN_ANY        (STATUS_FIELD_GRASSY_TERRAIN | STATUS_FIELD_MISTY_TERRAIN | STATUS_FIELD_ELECTRIC_TERRAIN | STATUS_FIELD_PSYCHIC_TERRAIN)
+//Battle Terrain
+#define BATTLE_FIELD_NONE                           0
+#define BATTLE_FIELD_GRASSY_TERRAIN                 (1 << 0)
+#define BATTLE_FIELD_MISTY_TERRAIN                  (1 << 1)
+#define BATTLE_FIELD_ELECTRIC_TERRAIN               (1 << 2)
+#define BATTLE_FIELD_PSYCHIC_TERRAIN                (1 << 3)
+
+#define BATTLE_FIELD_TERRAIN_ANY        (BATTLE_FIELD_GRASSY_TERRAIN | BATTLE_FIELD_MISTY_TERRAIN | BATTLE_FIELD_ELECTRIC_TERRAIN | BATTLE_FIELD_PSYCHIC_TERRAIN)
 
 // Flags describing move's result
 #define MOVE_RESULT_MISSED                (1 << 0)

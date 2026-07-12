@@ -1593,7 +1593,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
             && status == 0
             && !(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
             && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
-            && !IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
+            && !IsBattlerTerrainAffected(battler, BATTLE_FIELD_MISTY_TERRAIN)
             && !IsAbilityStatusProtected(battler)
             && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CURE_PSN, TRUE)
             && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CURE_STATUS, TRUE)

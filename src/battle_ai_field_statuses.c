@@ -24,7 +24,8 @@
 #include "constants/items.h"
 
 static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather);
-static bool32 DoesBattlerBenefitFromFieldStatus(u32 battler, u32 fieldStatus);
+//static bool32 DoesBattlerBenefitFromFieldStatus(u32 battler, u32 fieldStatus);
+static bool32 DoesBattlerBenefitFromTerrain(u32 battler, u32 terrain);
 // A move is light sensitive if it is boosted by Sunny Day and weakened by low light weathers.
 static bool32 IsLightSensitiveMove(u32 move);
 static bool32 HasLightSensitiveMove(u32 battler);
@@ -97,17 +98,7 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
 
     for (i = 0; i < battlersOnSide; i++)
     {
-        // terrains
-        if (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN)
-            result = BenefitsFromElectricTerrain(battler);
-        if (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN)
-            result = BenefitsFromGrassyTerrain(battler);
-        if (fieldStatus & STATUS_FIELD_MISTY_TERRAIN)
-            result = BenefitsFromMistyTerrain(battler);
-        if (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)
-            result = BenefitsFromPsychicTerrain(battler);
-
-        // other field statuses
+        //field statuses
         if (fieldStatus & STATUS_FIELD_GRAVITY)
             result = BenefitsFromGravity(battler);
         if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
@@ -120,6 +111,41 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
             // Trick room wants both pokemon to agree, not just one
             if (fieldStatus & STATUS_FIELD_TRICK_ROOM && i == 0 && battlersOnSide == 2)
                 firstResult = result;
+        }
+    }
+    if (firstResult != FIELD_EFFECT_NEUTRAL)
+        return (firstResult == result) && (result == desiredResult);
+    return (result == desiredResult);
+}
+
+bool32 TerrainChecker(u32 battler, u32 terrain, enum FieldEffectOutcome desiredResult)
+{
+    enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
+    enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
+    u32 i;
+
+    u32 battlersOnSide = 1;
+
+    if (HasPartner(battler))
+        battlersOnSide = 2;
+
+    for (i = 0; i < battlersOnSide; i++)
+    {
+        // terrains
+        if (terrain & BATTLE_FIELD_ELECTRIC_TERRAIN)
+            result = BenefitsFromElectricTerrain(battler);
+        if (terrain & BATTLE_FIELD_GRASSY_TERRAIN)
+            result = BenefitsFromGrassyTerrain(battler);
+        if (terrain & BATTLE_FIELD_MISTY_TERRAIN)
+            result = BenefitsFromMistyTerrain(battler);
+        if (terrain & BATTLE_FIELD_PSYCHIC_TERRAIN)
+            result = BenefitsFromPsychicTerrain(battler);
+
+        battler = BATTLE_PARTNER(battler);
+
+        if (result != FIELD_EFFECT_NEUTRAL)
+        {
+            firstResult = result;
         }
     }
     if (firstResult != FIELD_EFFECT_NEUTRAL)
@@ -167,24 +193,31 @@ static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather)
     return FALSE;
 }
 
-static bool32 DoesBattlerBenefitFromFieldStatus(u32 battler, u32 fieldStatus)
+// static bool32 DoesBattlerBenefitFromFieldStatus(u32 battler, u32 fieldStatus)
+// {
+//     enum Ability AIBattlerTraits[MAX_MON_TRAITS];
+//     AI_STORE_BATTLER_TRAITS(battler);
+//     return FALSE;
+// }
+
+static bool32 DoesBattlerBenefitFromTerrain(u32 battler, u32 terrain)
 {
     enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
     if (SearchTraits(AIBattlerTraits, ABILITY_MIMICRY))
-        return (fieldStatus & STATUS_FIELD_TERRAIN_ANY);
+        return (terrain & BATTLE_FIELD_TERRAIN_ANY);
     if (SearchTraits(AIBattlerTraits, ABILITY_HADRON_ENGINE)
      || SearchTraits(AIBattlerTraits, ABILITY_QUARK_DRIVE)
      || SearchTraits(AIBattlerTraits, ABILITY_SURGE_SURFER)
      || SearchTraits(AIBattlerTraits, ABILITY_THUNDEROUS_SOUL))
-        return (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN);
+        return (terrain & BATTLE_FIELD_ELECTRIC_TERRAIN);
     if (SearchTraits(AIBattlerTraits, ABILITY_GRASS_PELT)
      || SearchTraits(AIBattlerTraits, ABILITY_NATURE_SOUL))
-        return (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN);
+        return (terrain & BATTLE_FIELD_GRASSY_TERRAIN);
     // no abilities inherently benefit from Misty or Psychic Terrains
-    // return (fieldStatus & STATUS_FIELD_MISTY_TERRAIN);
-    // return (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN);
+    // return (fieldStatus & BATTLE_FIELD_MISTY_TERRAIN);
+    // return (fieldStatus & BATTLE_FIELD_PSYCHIC_TERRAIN);
 
     return FALSE;
 }
@@ -309,7 +342,7 @@ static enum FieldEffectOutcome BenefitsFromRain(u32 battler)
 //TODO: when is electric terrain bad?
 static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
 {
-    if (DoesBattlerBenefitFromFieldStatus(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (DoesBattlerBenefitFromTerrain(battler, BATTLE_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasMoveWithEffect(battler, EFFECT_RISING_VOLTAGE))
@@ -338,7 +371,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
 //TODO: when is grassy terrain bad?
 static enum FieldEffectOutcome BenefitsFromGrassyTerrain(u32 battler)
 {
-    if (DoesBattlerBenefitFromFieldStatus(battler, STATUS_FIELD_GRASSY_TERRAIN))
+    if (DoesBattlerBenefitFromTerrain(battler, BATTLE_FIELD_GRASSY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerSideMoveWithEffect(battler, EFFECT_GRASSY_GLIDE))
@@ -366,7 +399,7 @@ static enum FieldEffectOutcome BenefitsFromGrassyTerrain(u32 battler)
 //TODO: when is misty terrain bad?
 static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
 {
-    if (DoesBattlerBenefitFromFieldStatus(battler, STATUS_FIELD_MISTY_TERRAIN))
+    if (DoesBattlerBenefitFromTerrain(battler, BATTLE_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerSideMoveWithEffect(battler, EFFECT_MISTY_EXPLOSION))
@@ -399,7 +432,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
 //TODO: when is Psychic Terrain negative?
 static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
 {
-    if (DoesBattlerBenefitFromFieldStatus(battler, STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (DoesBattlerBenefitFromTerrain(battler, BATTLE_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerSideMoveWithEffect(battler, EFFECT_EXPANDING_FORCE))
@@ -488,7 +521,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
     }
 
     // First checking if we have enough priority for one pokemon to disregard Trick Room entirely.
-    if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (!(gBattleTerrain & BATTLE_FIELD_PSYCHIC_TERRAIN))
     {
         u16* aiMoves = GetMovesArray(battler);
         for (int i = 0; i < MAX_MON_MOVES; i++)

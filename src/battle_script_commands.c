@@ -3844,20 +3844,20 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         break;
     case MOVE_EFFECT_SECRET_POWER:
-        if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
+        if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
         {
-            switch (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
+            switch (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
             {
-            case STATUS_FIELD_MISTY_TERRAIN:
+            case BATTLE_FIELD_MISTY_TERRAIN:
                 moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
                 break;
-            case STATUS_FIELD_GRASSY_TERRAIN:
+            case BATTLE_FIELD_GRASSY_TERRAIN:
                 moveEffect = MOVE_EFFECT_SLEEP;
                 break;
-            case STATUS_FIELD_ELECTRIC_TERRAIN:
+            case BATTLE_FIELD_ELECTRIC_TERRAIN:
                 moveEffect = MOVE_EFFECT_PARALYSIS;
                 break;
-            case STATUS_FIELD_PSYCHIC_TERRAIN:
+            case BATTLE_FIELD_PSYCHIC_TERRAIN:
                 moveEffect = MOVE_EFFECT_SPD_MINUS_1;
                 break;
             default:
@@ -4138,32 +4138,32 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_ELECTRIC_TERRAIN:
     case MOVE_EFFECT_PSYCHIC_TERRAIN:
     {
-        u32 statusFlag = 0;
+        u32 terrainFlag = 0;
         switch (moveEffect)
         {
             case MOVE_EFFECT_MISTY_TERRAIN:
-                statusFlag = STATUS_FIELD_MISTY_TERRAIN;
+                terrainFlag = BATTLE_FIELD_MISTY_TERRAIN;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
                 break;
             case MOVE_EFFECT_GRASSY_TERRAIN:
-                statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
+                terrainFlag = BATTLE_FIELD_GRASSY_TERRAIN;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
                 break;
             case MOVE_EFFECT_ELECTRIC_TERRAIN:
-                statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
+                terrainFlag = BATTLE_FIELD_ELECTRIC_TERRAIN;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
                 break;
             case MOVE_EFFECT_PSYCHIC_TERRAIN:
-                statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
+                terrainFlag = BATTLE_FIELD_PSYCHIC_TERRAIN;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
                 break;
             default:
                 break;
         }
-        if (!(gFieldStatuses & statusFlag) && statusFlag != 0)
+        if (!(gBattleTerrain & terrainFlag) && terrainFlag != 0)
         {
-            gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
-            gFieldStatuses |= statusFlag;
+            gBattleTerrain &= ~BATTLE_FIELD_TERRAIN_ANY;
+            gBattleTerrain |= terrainFlag;
             if (BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_TERRAIN_EXTENDER, TRUE))
                 gFieldTimers.terrainTimer = 8;
             else
@@ -4203,7 +4203,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         if (gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SCREEN_ANY
             || AreAnyHazardsOnSide(GetBattlerSide(gBattlerTarget))
             || AreAnyHazardsOnSide(GetBattlerSide(gBattlerAttacker))
-            || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            || gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY)
         {
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectDefog;
@@ -5925,9 +5925,9 @@ static void Cmd_signatureeffect(void)
             break;
 
         case SIG_EFFECT_MISTY_TERRAIN:
-            if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+            if (!(gBattleTerrain & BATTLE_FIELD_MISTY_TERRAIN))
             {
-                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_MISTY_TERRAIN);
+                TryChangeBattleTerrain(gBattlerAttacker, BATTLE_FIELD_MISTY_TERRAIN);
                 BattleScriptPush(nextInstr);
                 gBattlescriptCurrInstr = BattleScript_SignatureMistyTerrain;
                 return;
@@ -5935,9 +5935,9 @@ static void Cmd_signatureeffect(void)
             break;
 
         case SIG_EFFECT_GRASSY_TERRAIN:
-            if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
+            if (!(gBattleTerrain & BATTLE_FIELD_GRASSY_TERRAIN))
             {
-                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_GRASSY_TERRAIN);
+                TryChangeBattleTerrain(gBattlerAttacker, BATTLE_FIELD_GRASSY_TERRAIN);
                 BattleScriptPush(nextInstr);
                 gBattlescriptCurrInstr = BattleScript_SignatureGrassyTerrain;
                 return;
@@ -5945,9 +5945,9 @@ static void Cmd_signatureeffect(void)
             break;
 
         case SIG_EFFECT_ELECTRIC_TERRAIN:
-            if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
+            if (!(gBattleTerrain & BATTLE_FIELD_ELECTRIC_TERRAIN))
             {
-                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_ELECTRIC_TERRAIN);
+                TryChangeBattleTerrain(gBattlerAttacker, BATTLE_FIELD_ELECTRIC_TERRAIN);
                 BattleScriptPush(nextInstr);
                 gBattlescriptCurrInstr = BattleScript_SignatureElectricTerrain;
                 return;
@@ -5955,9 +5955,9 @@ static void Cmd_signatureeffect(void)
             break;
 
         case SIG_EFFECT_PSYCHIC_TERRAIN:
-            if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+            if (!(gBattleTerrain & BATTLE_FIELD_PSYCHIC_TERRAIN))
             {
-                TryChangeBattleTerrain(gBattlerAttacker, STATUS_FIELD_PSYCHIC_TERRAIN);
+                TryChangeBattleTerrain(gBattlerAttacker, BATTLE_FIELD_PSYCHIC_TERRAIN);
                 BattleScriptPush(nextInstr);
                 gBattlescriptCurrInstr = BattleScript_SignaturePsychicTerrain;
                 return;
@@ -7801,13 +7801,13 @@ static void Cmd_moveend(void)
             switch (moveEffect)
             {
             case EFFECT_STEEL_ROLLER:
-                if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && IsBattlerTurnDamaged(gBattlerTarget))
+                if (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY && IsBattlerTurnDamaged(gBattlerTarget))
                 {
                     BattleScriptCall(BattleScript_RemoveTerrain);
                     effect = TRUE;
                 }
             case EFFECT_ICE_SPINNER:
-                if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
+                if (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY
                  && gLastPrintedMoves[gBattlerAttacker] == gCurrentMove
                  && IsBattlerAlive(gBattlerAttacker)
                  && IsBattlerTurnDamaged(gBattlerTarget))
@@ -8642,7 +8642,7 @@ bool32 DoSwitchInAbilities(u32 battler)
     return (TryPrimalReversion(battler)
          || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, 0, 0)
          || ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_ANY) && AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0))
-         || (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0)));
+         || (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY && AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0)));
 }
 
 static void UpdateSentMonFlags(u32 battler)
@@ -10187,25 +10187,25 @@ static void RemoveAllWeather(void)
 
 static void RemoveAllTerrains(void)
 {
-    switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+    switch (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY)
     {
-    case STATUS_FIELD_MISTY_TERRAIN:
+    case BATTLE_FIELD_MISTY_TERRAIN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_MISTY;
         break;
-    case STATUS_FIELD_GRASSY_TERRAIN:
+    case BATTLE_FIELD_GRASSY_TERRAIN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_GRASSY;
         break;
-    case STATUS_FIELD_ELECTRIC_TERRAIN:
+    case BATTLE_FIELD_ELECTRIC_TERRAIN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_ELECTRIC;
         break;
-    case STATUS_FIELD_PSYCHIC_TERRAIN:
+    case BATTLE_FIELD_PSYCHIC_TERRAIN:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_PSYCHIC;
         break;
     default:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
         break;
     }
-    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;    // remove the terrain
+    gBattleTerrain &= ~BATTLE_FIELD_TERRAIN_ANY;    // remove the terrain
     TryToRevertMimicryAndFlags();
 }
 
@@ -10289,7 +10289,7 @@ static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
             }
             return TRUE;
         }
-        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_8 && (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_8 && (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY))
         {
             if (clear)
             {
@@ -10803,11 +10803,11 @@ static void Cmd_trysetrest(void)
 
     gBattlerTarget = gBattlerAttacker;
     SetHealAmount(gBattlerTarget, gBattleMons[gBattlerTarget].maxHP);
-    if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
+    if (GetAttackerTerrain(gBattlerTarget, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN)
     {
         gBattlescriptCurrInstr = BattleScript_ElectricTerrainPrevents;
     }
-    else if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
+    else if (GetAttackerTerrain(gBattlerTarget, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN)
     {
         gBattlescriptCurrInstr = BattleScript_MistyTerrainPrevents;
     }
@@ -13865,13 +13865,13 @@ static void Cmd_setyawn(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
+    else if (GetAttackerTerrain(gBattlerTarget, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN)
     {
         // When Yawn is used while Electric Terrain is set and drowsiness is set from Yawn being used against target in the previous turn:
         // "But it failed" will display first.
         gBattlescriptCurrInstr = BattleScript_ElectricTerrainPrevents;
     }
-    else if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
+    else if (GetAttackerTerrain(gBattlerTarget, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN)
     {
         // When Yawn is used while Misty Terrain is set and drowsiness is set from Yawn being used against target in the previous turn:
         // "But it failed" will display first.
@@ -14455,18 +14455,18 @@ static void Cmd_settypetoenvironment(void)
     CMD_ARGS(const u8 *failInstr);
 
     u8 environmentType;
-    switch(GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
+    switch(GetAttackerTerrain(gBattlerAttacker, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
     {
-    case STATUS_FIELD_ELECTRIC_TERRAIN:
+    case BATTLE_FIELD_ELECTRIC_TERRAIN:
         environmentType = TYPE_ELECTRIC;
         break;
-    case STATUS_FIELD_GRASSY_TERRAIN:
+    case BATTLE_FIELD_GRASSY_TERRAIN:
         environmentType = TYPE_GRASS;
         break;
-    case STATUS_FIELD_MISTY_TERRAIN:
+    case BATTLE_FIELD_MISTY_TERRAIN:
         environmentType = TYPE_FAIRY;
         break;
-    case STATUS_FIELD_PSYCHIC_TERRAIN:
+    case BATTLE_FIELD_PSYCHIC_TERRAIN:
         environmentType = TYPE_PSYCHIC;
         break;
     default:
@@ -16193,35 +16193,35 @@ void BS_JumpIfElectricAbilityAffected(void)
 void BS_SetTerrain(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
-    u32 statusFlag = 0;
+    u32 terrainFlag = 0;
 
     switch (GetMoveEffect(gCurrentMove))
     {
     case EFFECT_MISTY_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+        if (!(gBattleTerrain & BATTLE_FIELD_MISTY_TERRAIN))
         {
-            statusFlag = STATUS_FIELD_MISTY_TERRAIN;
+            terrainFlag = BATTLE_FIELD_MISTY_TERRAIN;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
         }
         break;
     case EFFECT_GRASSY_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
+        if (!(gBattleTerrain & BATTLE_FIELD_GRASSY_TERRAIN))
         {
-            statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
+            terrainFlag = BATTLE_FIELD_GRASSY_TERRAIN;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
         }
         break;
     case EFFECT_ELECTRIC_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
+        if (!(gBattleTerrain & BATTLE_FIELD_ELECTRIC_TERRAIN))
         {
-            statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
+            terrainFlag = BATTLE_FIELD_ELECTRIC_TERRAIN;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
         }
         break;
     case EFFECT_PSYCHIC_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+        if (!(gBattleTerrain & BATTLE_FIELD_PSYCHIC_TERRAIN))
         {
-            statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
+            terrainFlag = BATTLE_FIELD_PSYCHIC_TERRAIN;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
         }
         break;
@@ -16232,9 +16232,9 @@ void BS_SetTerrain(void)
     {
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
-    else if (statusFlag)
+    else if (terrainFlag)
     {
-        TryChangeBattleTerrain(gBattlerAttacker, statusFlag);
+        TryChangeBattleTerrain(gBattlerAttacker, terrainFlag);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
@@ -16488,7 +16488,7 @@ void BS_TryHealPulse(void)
         s32 healAmount = 0;
         if (BattlerHasTrait(gBattlerAttacker, ABILITY_MEGA_LAUNCHER) && IsPulseMove(gCurrentMove))
             healAmount = GetNonDynamaxMaxHP(gBattlerTarget) * 75 / 100;
-        else if ((GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN) && GetMoveEffectArg_MoveProperty(gCurrentMove) == MOVE_EFFECT_FLORAL_HEALING)
+        else if ((GetAttackerTerrain(gBattlerTarget, GetTerrain()) & BATTLE_FIELD_GRASSY_TERRAIN) && GetMoveEffectArg_MoveProperty(gCurrentMove) == MOVE_EFFECT_FLORAL_HEALING)
             healAmount = GetNonDynamaxMaxHP(gBattlerTarget) * 2 / 3;
         else
             healAmount = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
@@ -18469,7 +18469,7 @@ void BS_SwitchinAbilities(void)
     if (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_ANY)
         AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0);
 
-    if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+    if (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY)
         AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0);
 }
 

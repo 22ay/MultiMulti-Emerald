@@ -61,7 +61,7 @@ enum ItemEffect TryBoosterEnergy(u32 battler, ActivationTiming timing)
 
     if (BattlerHasTrait(battler, ABILITY_PROTOSYNTHESIS) && !(GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN))
         ability = ABILITY_PROTOSYNTHESIS;
-    else if (BattlerHasTrait(battler, ABILITY_QUARK_DRIVE) && !(GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN))
+    else if (BattlerHasTrait(battler, ABILITY_QUARK_DRIVE) && !(GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN))
         ability = ABILITY_QUARK_DRIVE;
     
     if (ability != ABILITY_NONE)
@@ -104,7 +104,7 @@ static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
 
 enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, ActivationTiming timing)
 {
-    if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
+    if (gBattleTerrain & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
     {
         gEffectBattler = gBattleScripting.battler = battler;
         SET_STATCHANGER(statId, 1, FALSE);
@@ -126,16 +126,16 @@ static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item, ActivationTiming t
     switch (GetItemHoldEffectParam(item))
     {
     case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_ELECTRIC_TERRAIN, STAT_DEF, timing);
+        effect = TryHandleSeed(battler, BATTLE_FIELD_ELECTRIC_TERRAIN, STAT_DEF, timing);
         break;
     case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_GRASSY_TERRAIN, STAT_DEF, timing);
+        effect = TryHandleSeed(battler, BATTLE_FIELD_GRASSY_TERRAIN, STAT_DEF, timing);
         break;
     case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_MISTY_TERRAIN, STAT_SPDEF, timing);
+        effect = TryHandleSeed(battler, BATTLE_FIELD_MISTY_TERRAIN, STAT_SPDEF, timing);
         break;
     case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF, timing);
+        effect = TryHandleSeed(battler, BATTLE_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF, timing);
         break;
     }
 
@@ -145,7 +145,7 @@ static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item, ActivationTiming t
 static bool32 CanBeInfinitelyConfused(u32 battler)
 {
     if  (BattlerHasTrait(battler, ABILITY_OWN_TEMPO)
-      || (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
+      || (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN)
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;

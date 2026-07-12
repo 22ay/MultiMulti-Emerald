@@ -393,7 +393,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
-        if ((GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN)
+        if ((GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_GRASSY_TERRAIN)
          && !IsBattlerAtMaxHp(battler)
          && !gBattleMons[battler].volatiles.healBlock
          && !IsSemiInvulnerable(battler, CHECK_ALL)
@@ -935,12 +935,12 @@ static bool32 HandleEndTurnYawn(u32 battler)
          && !IsLeafGuardProtected(battler))
         {
             gEffectBattler = gBattlerTarget = battler;
-            if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
+            if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
             }
-            else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
+            else if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_MISTY;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
@@ -1255,7 +1255,7 @@ static bool32 EndTurnTerrain(u32 terrainFlag, u32 stringTableId)
 {
     if (gFieldTimers.terrainTimer > 0 && --gFieldTimers.terrainTimer == 0)
     {
-        gFieldStatuses &= ~terrainFlag;
+        gBattleTerrain &= ~terrainFlag;
         TryToRevertMimicryAndFlags();
         gBattleCommunication[MULTISTRING_CHOOSER] = stringTableId;
         BattleScriptExecute(BattleScript_TerrainEnds);
@@ -1271,14 +1271,14 @@ static bool32 HandleEndTurnTerrain(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_ELECTRIC_TERRAIN, B_MSG_TERRAIN_END_ELECTRIC);
-    else if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_MISTY_TERRAIN, B_MSG_TERRAIN_END_MISTY);
-    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_GRASSY_TERRAIN, B_MSG_TERRAIN_END_GRASSY);
-    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
-        effect = EndTurnTerrain(STATUS_FIELD_PSYCHIC_TERRAIN, B_MSG_TERRAIN_END_PSYCHIC);
+    if (gBattleTerrain & BATTLE_FIELD_ELECTRIC_TERRAIN)
+        effect = EndTurnTerrain(BATTLE_FIELD_ELECTRIC_TERRAIN, B_MSG_TERRAIN_END_ELECTRIC);
+    else if (gBattleTerrain & BATTLE_FIELD_MISTY_TERRAIN)
+        effect = EndTurnTerrain(BATTLE_FIELD_MISTY_TERRAIN, B_MSG_TERRAIN_END_MISTY);
+    else if (gBattleTerrain & BATTLE_FIELD_GRASSY_TERRAIN)
+        effect = EndTurnTerrain(BATTLE_FIELD_GRASSY_TERRAIN, B_MSG_TERRAIN_END_GRASSY);
+    else if (gBattleTerrain & BATTLE_FIELD_PSYCHIC_TERRAIN)
+        effect = EndTurnTerrain(BATTLE_FIELD_PSYCHIC_TERRAIN, B_MSG_TERRAIN_END_PSYCHIC);
 
     return effect;
 }

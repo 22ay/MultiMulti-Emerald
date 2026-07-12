@@ -205,6 +205,8 @@ bool32 ShouldSetWeather(u32 battler, u32 weather);
 bool32 ShouldClearWeather(u32 battler, u32 weather);
 bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus);
 bool32 ShouldClearFieldStatus(u32 battler, u32 fieldStatus);
+bool32 ShouldSetTerrain(u32 battler, u32 terrain);
+bool32 ShouldClearTerrain(u32 battler, u32 terrain);
 bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef);
 bool32 IsHealingMove(u32 move);
 bool32 HasHealingEffect(u32 battler);
