@@ -3484,7 +3484,7 @@ const u8* FaintClearSetData(u32 battler)
                 // Don't use CanBeConfused here, since it can cause issues in edge cases.
                 if (!(BattlerHasTrait(otherSkyDropper, ABILITY_OWN_TEMPO)
                     || gBattleMons[otherSkyDropper].volatiles.confusionTurns
-                    || IsBattlerTerrainAffected(otherSkyDropper, STATUS_FIELD_MISTY_TERRAIN)))
+                    || (GetAttackerFieldStatus(otherSkyDropper, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)))
                 {
                     gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
                     gBattlerAttacker = otherSkyDropper;
@@ -4867,13 +4867,13 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     if (SearchTraits(battlerTraits, ABILITY_LIGHT_METAL))
         speed += baseSpeed / 4;
 
-    if (SearchTraits(battlerTraits, ABILITY_SURGE_SURFER) && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+    if (SearchTraits(battlerTraits, ABILITY_SURGE_SURFER) && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN))
         speed += baseSpeed;
 
     if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS) && !(gBattleMons[battler].volatiles.transformed) && ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN) || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
 
-    if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE) && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battler].boosterEnergyActivated))
+    if (SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE) && !(gBattleMons[battler].volatiles.transformed) && ((GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN) || gDisableStructs[battler].boosterEnergyActivated))
         speed += (GetHighestStatId(battler) == STAT_SPEED) ? baseSpeed / 2 : 0;
 
     if (SearchTraits(battlerTraits, ABILITY_UNBURDEN) && gDisableStructs[battler].unburdenActive)
@@ -5004,13 +5004,13 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_NATURE_SOUL)
-          && (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+          && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN)
           && GetMoveType(move) == TYPE_GRASS)
     {
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_THUNDEROUS_SOUL)
-          && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+          && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
           && GetMoveType(move) == TYPE_ELECTRIC)
     {
         priority++;
@@ -5026,7 +5026,7 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         gProtectStructs[battler].pranksterElevated = 1;
         priority++;
     }
-    if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE && IsBattlerTerrainAffected(battler, STATUS_FIELD_GRASSY_TERRAIN) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
+    if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE && (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
         priority++;
     }
@@ -6196,15 +6196,15 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
     case EFFECT_TERRAIN_PULSE:
         if (state == MON_IN_BATTLE)
         {
-            if (IsBattlerTerrainAffected(battler, STATUS_FIELD_TERRAIN_ANY))
+            if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
             {
-                if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+                if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
                     return TYPE_ELECTRIC;
-                else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+                else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN)
                     return TYPE_GRASS;
-                else if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
+                else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
                     return TYPE_FAIRY;
-                else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+                else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_PSYCHIC_TERRAIN)
                     return TYPE_PSYCHIC;
                 else //failsafe
                     return moveType;

@@ -393,7 +393,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
-        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN
+        if ((GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN)
          && !IsBattlerAtMaxHp(battler)
          && !gBattleMons[battler].volatiles.healBlock
          && !IsSemiInvulnerable(battler, CHECK_ALL)
@@ -935,12 +935,12 @@ static bool32 HandleEndTurnYawn(u32 battler)
          && !IsLeafGuardProtected(battler))
         {
             gEffectBattler = gBattlerTarget = battler;
-            if (IsBattlerTerrainAffected(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
+            if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
             }
-            else if (IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN))
+            else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_MISTY;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);

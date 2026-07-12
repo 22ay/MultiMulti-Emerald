@@ -3844,9 +3844,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         break;
     case MOVE_EFFECT_SECRET_POWER:
-        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+        if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
         {
-            switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            switch (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
             {
             case STATUS_FIELD_MISTY_TERRAIN:
                 moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
@@ -10803,11 +10803,11 @@ static void Cmd_trysetrest(void)
 
     gBattlerTarget = gBattlerAttacker;
     SetHealAmount(gBattlerTarget, gBattleMons[gBattlerTarget].maxHP);
-    if (IsBattlerTerrainAffected(gBattlerTarget, STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
     {
         gBattlescriptCurrInstr = BattleScript_ElectricTerrainPrevents;
     }
-    else if (IsBattlerTerrainAffected(gBattlerTarget, STATUS_FIELD_MISTY_TERRAIN))
+    else if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
     {
         gBattlescriptCurrInstr = BattleScript_MistyTerrainPrevents;
     }
@@ -13865,13 +13865,13 @@ static void Cmd_setyawn(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (IsBattlerTerrainAffected(gBattlerTarget, STATUS_FIELD_ELECTRIC_TERRAIN))
+    else if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN)
     {
         // When Yawn is used while Electric Terrain is set and drowsiness is set from Yawn being used against target in the previous turn:
         // "But it failed" will display first.
         gBattlescriptCurrInstr = BattleScript_ElectricTerrainPrevents;
     }
-    else if (IsBattlerTerrainAffected(gBattlerTarget, STATUS_FIELD_MISTY_TERRAIN))
+    else if (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
     {
         // When Yawn is used while Misty Terrain is set and drowsiness is set from Yawn being used against target in the previous turn:
         // "But it failed" will display first.
@@ -14455,7 +14455,7 @@ static void Cmd_settypetoenvironment(void)
     CMD_ARGS(const u8 *failInstr);
 
     u8 environmentType;
-    switch(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+    switch(GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_TERRAIN_ANY)
     {
     case STATUS_FIELD_ELECTRIC_TERRAIN:
         environmentType = TYPE_ELECTRIC;
@@ -16488,7 +16488,7 @@ void BS_TryHealPulse(void)
         s32 healAmount = 0;
         if (BattlerHasTrait(gBattlerAttacker, ABILITY_MEGA_LAUNCHER) && IsPulseMove(gCurrentMove))
             healAmount = GetNonDynamaxMaxHP(gBattlerTarget) * 75 / 100;
-        else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && GetMoveEffectArg_MoveProperty(gCurrentMove) == MOVE_EFFECT_FLORAL_HEALING)
+        else if ((GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_GRASSY_TERRAIN) && GetMoveEffectArg_MoveProperty(gCurrentMove) == MOVE_EFFECT_FLORAL_HEALING)
             healAmount = GetNonDynamaxMaxHP(gBattlerTarget) * 2 / 3;
         else
             healAmount = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
