@@ -54,6 +54,7 @@ void FreeBattleResources(void)
         FreeTrainerHillBattleStruct();
 
     gFieldStatuses = 0;
+    gBattleTerrain = 0;
     if (gBattleResources != NULL)
     {
         memset(&gBattleStruct->illusion, 0, sizeof(gBattleStruct->illusion));
