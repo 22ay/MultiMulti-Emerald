@@ -104,7 +104,7 @@ static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
 
 enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, ActivationTiming timing)
 {
-    if (gBattleTerrain & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
+    if (GetAttackerTerrain(battler, GetTerrain()) & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
     {
         gEffectBattler = gBattleScripting.battler = battler;
         SET_STATCHANGER(statId, 1, FALSE);
