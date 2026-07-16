@@ -3975,6 +3975,24 @@ static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16
     return FALSE;
 }
 
+static inline bool32 SetStartingTerrain(u32 flag, u32 message, u32 anim, u16 *timer)
+{
+    if (!(gBattleTerrain & flag))
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = message;
+        gBattleTerrain |= flag;
+        gBattleScripting.animArg1 = anim;
+        if (gBattleStruct->startingStatusTimer)
+            *timer = gBattleStruct->startingStatusTimer;
+        else
+            *timer = 0; // Infinite
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 anim, u16 *timer)
 {
     if (!(gSideStatuses[side] & flag))
@@ -4010,7 +4028,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         case STARTING_STATUS_NONE:
             break;
         case STARTING_STATUS_ELECTRIC_TERRAIN:
-            effect = SetStartingFieldStatus(
+            effect = SetStartingTerrain(
                         BATTLE_FIELD_ELECTRIC_TERRAIN,
                         B_MSG_TERRAIN_SET_ELECTRIC,
                         0,
@@ -4018,7 +4036,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
             isTerrain = TRUE;
             break;
         case STARTING_STATUS_MISTY_TERRAIN:
-            effect = SetStartingFieldStatus(
+            effect = SetStartingTerrain(
                         BATTLE_FIELD_MISTY_TERRAIN,
                         B_MSG_TERRAIN_SET_MISTY,
                         0,
@@ -4026,7 +4044,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
             isTerrain = TRUE;
             break;
         case STARTING_STATUS_GRASSY_TERRAIN:
-            effect = SetStartingFieldStatus(
+            effect = SetStartingTerrain(
                         BATTLE_FIELD_GRASSY_TERRAIN,
                         B_MSG_TERRAIN_SET_GRASSY,
                         0,
@@ -4034,7 +4052,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
             isTerrain = TRUE;
             break;
         case STARTING_STATUS_PSYCHIC_TERRAIN:
-            effect = SetStartingFieldStatus(
+            effect = SetStartingTerrain(
                         BATTLE_FIELD_PSYCHIC_TERRAIN,
                         B_MSG_TERRAIN_SET_PSYCHIC,
                         0,
