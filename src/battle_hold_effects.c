@@ -126,15 +126,19 @@ static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item, ActivationTiming t
     switch (GetItemHoldEffectParam(item))
     {
     case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
+        if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN)
         effect = TryHandleSeed(battler, BATTLE_FIELD_ELECTRIC_TERRAIN, STAT_DEF, timing);
         break;
     case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
+        if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_GRASSY_TERRAIN)
         effect = TryHandleSeed(battler, BATTLE_FIELD_GRASSY_TERRAIN, STAT_DEF, timing);
         break;
     case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
+        if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN)
         effect = TryHandleSeed(battler, BATTLE_FIELD_MISTY_TERRAIN, STAT_SPDEF, timing);
         break;
     case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
+        if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_PSYCHIC_TERRAIN)
         effect = TryHandleSeed(battler, BATTLE_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF, timing);
         break;
     }
