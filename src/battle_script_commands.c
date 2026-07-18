@@ -8643,7 +8643,7 @@ bool32 DoSwitchInAbilities(u32 battler)
     return (TryPrimalReversion(battler)
          || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, 0, 0)
          || ((GetAttackerWeather(battler, GetWeather()) & B_WEATHER_ANY) && AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0))
-         || (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY && AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0)));
+         || ((GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY) && AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0)));
 }
 
 static void UpdateSentMonFlags(u32 battler)
