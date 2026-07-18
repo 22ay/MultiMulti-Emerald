@@ -3844,6 +3844,8 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         break;
     case MOVE_EFFECT_SECRET_POWER:
+        moveEffect = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect;
+
         if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
         {
             switch (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
@@ -3865,8 +3867,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
                 break;
             }
         }
-        else
-        SetMoveEffect(battler, effectBattler, gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect, battleScript, effectFlags);
+        SetMoveEffect(battler, effectBattler, moveEffect, battleScript, effectFlags);
         break;
     case MOVE_EFFECT_PSYCHIC_NOISE:
         battlerAbility = IsAbilityOnSide(gEffectBattler, ABILITY_AROMA_VEIL);
