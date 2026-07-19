@@ -7378,6 +7378,7 @@ BattleScript_DeltaStreamActivates::
 	end3
 
 BattleScript_ProtosynthesisActivates::
+	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
 	printstring STRINGID_SUNLIGHTACTIVATEDABILITY
 	waitmessage B_WAIT_TIME_MED
@@ -7386,11 +7387,26 @@ BattleScript_ProtosynthesisActivates::
 	end3
 
 BattleScript_QuarkDriveActivates::
+	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ELECTRICTERRAINACTIVATEDABILITY
 	waitmessage B_WAIT_TIME_MED
 	printstring STRINGID_STATWASHEIGHTENED
 	waitmessage B_WAIT_TIME_MED
+	end3
+
+BattleScript_MegaSolActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_ActivateWeatherAbilities
+	end3
+
+BattleScript_MegaFulgurActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_ActivateTerrainEffects
 	end3
 
 BattleScript_RuinAbilityActivatesVessel::

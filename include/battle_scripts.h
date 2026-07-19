@@ -530,6 +530,8 @@ extern const u8 BattleScript_WindPowerActivates[];
 extern const u8 BattleScript_ElectromorphosisActivates[];
 extern const u8 BattleScript_ProtosynthesisActivates[];
 extern const u8 BattleScript_QuarkDriveActivates[];
+extern const u8 BattleScript_MegaSolActivates[];
+extern const u8 BattleScript_MegaFulgurActivates[];
 extern const u8 BattleScript_GoodAsGoldActivates[];
 extern const u8 BattleScript_RuinAbilityActivatesVessel[];
 extern const u8 BattleScript_RuinAbilityActivatesSword[];

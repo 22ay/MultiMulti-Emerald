@@ -728,11 +728,11 @@ void UI_Battle_Menu_Init(MainCallback callback)
                     isExtraInfoShown = TRUE;
                 break;
             case STATUS_INFO_PROTOSYNTHESIS:
-                if (GetBattlerAbility(j) == ABILITY_PROTOSYNTHESIS)
+                if (BattlerHasTrait(j, ABILITY_PROTOSYNTHESIS))
                     isExtraInfoShown = TRUE;
                 break;
             case STATUS_INFO_QUARK_DRIVE:
-                if (GetBattlerAbility(j) == ABILITY_QUARK_DRIVE)
+                if (BattlerHasTrait(j, ABILITY_QUARK_DRIVE))
                     isExtraInfoShown = TRUE;
                     break;
             case STATUS_INFO_COMMANDED:

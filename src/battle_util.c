@@ -4902,6 +4902,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         {
             effect += CommonSwitchInAbilities(battler, ABILITY_WIND_POWER, traitCheck, BattleScript_TryZephyrWindPower_Loop);
         }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MEGA_SOL)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+            effect += CommonSwitchInAbilities(battler, ABILITY_MEGA_SOL, traitCheck, BattleScript_MegaSolActivates);
+
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MEGA_FULGUR)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+            effect += CommonSwitchInAbilities(battler, ABILITY_MEGA_FULGUR, traitCheck, BattleScript_MegaFulgurActivates);
        break;
     case ABILITYEFFECT_ENDTURN:
         if (IsBattlerAlive(battler))
