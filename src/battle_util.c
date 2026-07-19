@@ -6442,6 +6442,8 @@ bool32 CanBattlerEscape(u32 battler) // no ability check
         return FALSE;
     else if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
         return FALSE;
+    else if (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_GRAVITY)
+        return FALSE;
     else if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
         return FALSE;
     else
@@ -7410,9 +7412,7 @@ static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck
 {
     if (skipIronBall == FALSE && BattlerHasHeldItemEffect(battler, HOLD_EFFECT_IRON_BALL, TRUE))
         return TRUE;
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY && isAnticipation == FALSE)
-        return TRUE;
-    if (BattlerHasTrait(gBattlerAttacker, ABILITY_ATLAS))
+    if ((GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_GRAVITY) && isAnticipation == FALSE)
         return TRUE;
     if (B_ROOTED_GROUNDING >= GEN_4 && gBattleMons[battler].volatiles.root)
         return TRUE;
@@ -7934,7 +7934,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         break;
     }
     case EFFECT_GRAV_APPLE:
-        if ((gFieldStatuses & STATUS_FIELD_GRAVITY) || BattlerHasTrait(battlerAtk, ABILITY_ATLAS))
+        if (GetAttackerFieldStatus(battlerAtk, GetFieldStatus()) & STATUS_FIELD_GRAVITY)
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_TERRAIN_PULSE:
@@ -10088,16 +10088,14 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, struc
 
         if (mon == 0) //catch for non Pokemon struct entries, only checks Ability
         {
-            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(gFieldStatuses & STATUS_FIELD_GRAVITY)
-            && !BattlerHasTrait(gBattlerAttacker, ABILITY_ATLAS))
+            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_GRAVITY))
                 modifier = UQ_4_12(0.0);
             if (MonHasTrait(mon, ABILITY_WONDER_GUARD) && modifier <= UQ_4_12(1.0) && GetMovePower(move) != 0)
                 modifier = UQ_4_12(0.0);
         }
         else
         {
-            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(gFieldStatuses & STATUS_FIELD_GRAVITY)
-            && !BattlerHasTrait(gBattlerAttacker, ABILITY_ATLAS))
+            if (ctx.moveType == TYPE_GROUND && MonHasTrait(mon, ABILITY_LEVITATE) && !(GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_GRAVITY))
                 modifier = UQ_4_12(0.0);
             if (MonHasTrait(mon, ABILITY_WONDER_GUARD) && modifier <= UQ_4_12(1.0) && GetMovePower(move) != 0)
                 modifier = UQ_4_12(0.0);
@@ -10150,9 +10148,8 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
 
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType)
 {
-    if ((B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE)) || (gFieldStatuses & STATUS_FIELD_INVERSE_ROOM) 
-    || BattlerHasTrait(gBattlerAttacker, ABILITY_GLITCHED)
-    || BattlerHasTrait(gBattlerTarget, ABILITY_GLITCHED))
+    if ((B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE)) 
+    || (GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_INVERSE_ROOM))
         return GetInverseTypeMultiplier(gTypeEffectivenessTable[atkType][defType]);
     return gTypeEffectivenessTable[atkType][defType];
 }
@@ -11391,6 +11388,25 @@ u32 GetAttackerTerrain(u32 battler, u32 terrain)
     return terrain;
 }
 
+u32 GetFieldStatus(void)
+{
+    return gFieldStatuses;
+}
+
+u32 GetAttackerFieldStatus(u32 battler, u32 fieldStatus)
+{
+    if (BattlerHasTrait(battler, ABILITY_ATLAS))
+        return STATUS_FIELD_GRAVITY;
+
+    if (BattlerHasTrait(battler, ABILITY_GLITCHED))
+        return STATUS_FIELD_INVERSE_ROOM;
+
+    if (BattlerHasTrait(battler, ABILITY_SLOW_AND_STEADY))
+        return STATUS_FIELD_TRICK_ROOM;
+
+    return fieldStatus;
+}
+
 // Gets move target before redirection effects etc. are applied
 // Possible return values are defined in battle.h following MOVE_TARGET_SELECTED
 // TODO: Add args: ability and hold effect
@@ -12303,8 +12319,6 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
         calc = (calc * 110) / 100; // 1.1 victory star boost
     if (SearchTraits(battlerTraits, ABILITY_HUSTLE))
         calc = (calc * 80) / 100; // 1.2 hustle loss
-    if (SearchTraits(battlerTraits, ABILITY_ATLAS))
-        calc = (calc * 5) / 3; // 1.66 Atlas boost
 
     // Target's ability
     STORE_BATTLER_TRAITS(battlerDef);
@@ -12350,7 +12364,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
             calc = (calc * 120) / 100;  // 20% acc boost
     }
 
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY)
+    if (GetAttackerFieldStatus(battlerAtk, GetFieldStatus()) & STATUS_FIELD_GRAVITY)
         calc = (calc * 5) / 3; // 1.66 Gravity acc boost
 
     if (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerDef) == AFFECTION_FIVE_HEARTS)
