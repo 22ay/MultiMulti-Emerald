@@ -18470,7 +18470,7 @@ void BS_SwitchinAbilities(void)
     if (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_ANY)
         AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0);
 
-    if (gBattleTerrain & BATTLE_FIELD_TERRAIN_ANY)
+    if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
         AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0);
 }
 
