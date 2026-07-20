@@ -132,36 +132,36 @@ static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather)
     enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
-    if (AISearchTraits(AIBattlerTraits, ABILITY_FORECAST))
+    if (SearchTraits(AIBattlerTraits, ABILITY_FORECAST))
         return (weather & (B_WEATHER_RAIN | B_WEATHER_SUN | B_WEATHER_ICY_ANY));
-    if (AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD)
-     || AISearchTraits(AIBattlerTraits, ABILITY_OVERCOAT)
-     || AISearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE))
+    if (SearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD)
+     || SearchTraits(AIBattlerTraits, ABILITY_OVERCOAT)
+     || SearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE))
         return (weather & B_WEATHER_DAMAGING_ANY);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_SAND_FORCE)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SAND_RUSH)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SAND_VEIL))
+    if (SearchTraits(AIBattlerTraits, ABILITY_SAND_FORCE)
+     || SearchTraits(AIBattlerTraits, ABILITY_SAND_RUSH)
+     || SearchTraits(AIBattlerTraits, ABILITY_SAND_VEIL))
         return (weather & B_WEATHER_SANDSTORM);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_ICE_BODY)
-     || AISearchTraits(AIBattlerTraits, ABILITY_ICE_FACE)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SNOW_CLOAK))
+    if (SearchTraits(AIBattlerTraits, ABILITY_ICE_BODY)
+     || SearchTraits(AIBattlerTraits, ABILITY_ICE_FACE)
+     || SearchTraits(AIBattlerTraits, ABILITY_SNOW_CLOAK))
         return (weather & B_WEATHER_ICY_ANY);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_SLUSH_RUSH))
+    if (SearchTraits(AIBattlerTraits, ABILITY_SLUSH_RUSH))
         return (weather & B_WEATHER_SNOW);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_DRY_SKIN)
-     || AISearchTraits(AIBattlerTraits, ABILITY_HYDRATION)
-     || AISearchTraits(AIBattlerTraits, ABILITY_RAIN_DISH)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SWIFT_SWIM)
-     || AISearchTraits(AIBattlerTraits, ABILITY_TIDAL_SOUL))
+    if (SearchTraits(AIBattlerTraits, ABILITY_DRY_SKIN)
+     || SearchTraits(AIBattlerTraits, ABILITY_HYDRATION)
+     || SearchTraits(AIBattlerTraits, ABILITY_RAIN_DISH)
+     || SearchTraits(AIBattlerTraits, ABILITY_SWIFT_SWIM)
+     || SearchTraits(AIBattlerTraits, ABILITY_TIDAL_SOUL))
         return (weather & B_WEATHER_RAIN);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_CHLOROPHYLL)
-     || AISearchTraits(AIBattlerTraits, ABILITY_FLOWER_GIFT)
-     || AISearchTraits(AIBattlerTraits, ABILITY_HARVEST)
-     || AISearchTraits(AIBattlerTraits, ABILITY_LEAF_GUARD)
-     || AISearchTraits(AIBattlerTraits, ABILITY_ORICHALCUM_PULSE)
-     || AISearchTraits(AIBattlerTraits, ABILITY_PROTOSYNTHESIS)
-     || AISearchTraits(AIBattlerTraits, ABILITY_INFERNAL_SOUL)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SOLAR_POWER))
+    if (SearchTraits(AIBattlerTraits, ABILITY_CHLOROPHYLL)
+     || SearchTraits(AIBattlerTraits, ABILITY_FLOWER_GIFT)
+     || SearchTraits(AIBattlerTraits, ABILITY_HARVEST)
+     || SearchTraits(AIBattlerTraits, ABILITY_LEAF_GUARD)
+     || SearchTraits(AIBattlerTraits, ABILITY_ORICHALCUM_PULSE)
+     || SearchTraits(AIBattlerTraits, ABILITY_PROTOSYNTHESIS)
+     || SearchTraits(AIBattlerTraits, ABILITY_INFERNAL_SOUL)
+     || SearchTraits(AIBattlerTraits, ABILITY_SOLAR_POWER))
         return (weather & B_WEATHER_SUN);
 
     return FALSE;
@@ -172,15 +172,15 @@ static bool32 DoesBattlerBenefitFromFieldStatus(u32 battler, u32 fieldStatus)
     enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
-    if (AISearchTraits(AIBattlerTraits, ABILITY_MIMICRY))
+    if (SearchTraits(AIBattlerTraits, ABILITY_MIMICRY))
         return (fieldStatus & STATUS_FIELD_TERRAIN_ANY);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_HADRON_ENGINE)
-     || AISearchTraits(AIBattlerTraits, ABILITY_QUARK_DRIVE)
-     || AISearchTraits(AIBattlerTraits, ABILITY_SURGE_SURFER)
-     || AISearchTraits(AIBattlerTraits, ABILITY_THUNDEROUS_SOUL))
+    if (SearchTraits(AIBattlerTraits, ABILITY_HADRON_ENGINE)
+     || SearchTraits(AIBattlerTraits, ABILITY_QUARK_DRIVE)
+     || SearchTraits(AIBattlerTraits, ABILITY_SURGE_SURFER)
+     || SearchTraits(AIBattlerTraits, ABILITY_THUNDEROUS_SOUL))
         return (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN);
-    if (AISearchTraits(AIBattlerTraits, ABILITY_GRASS_PELT)
-     || AISearchTraits(AIBattlerTraits, ABILITY_NATURE_SOUL))
+    if (SearchTraits(AIBattlerTraits, ABILITY_GRASS_PELT)
+     || SearchTraits(AIBattlerTraits, ABILITY_NATURE_SOUL))
         return (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN);
     // no abilities inherently benefit from Misty or Psychic Terrains
     // return (fieldStatus & STATUS_FIELD_MISTY_TERRAIN);
@@ -227,7 +227,7 @@ static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
 
     if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, gAiLogicData))
     {
-        if (AISearchTraits(AIBattlerTraits, ABILITY_ORICHALCUM_PULSE) || AISearchTraits(AIBattlerTraits, ABILITY_PROTOSYNTHESIS))
+        if (SearchTraits(AIBattlerTraits, ABILITY_ORICHALCUM_PULSE) || SearchTraits(AIBattlerTraits, ABILITY_PROTOSYNTHESIS))
             return FIELD_EFFECT_POSITIVE;
         else
             return FIELD_EFFECT_NEUTRAL;
@@ -239,7 +239,7 @@ static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
     || HasMoveWithEffect(battler, EFFECT_HYDRO_STEAM))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasMoveWithFlag(battler, MoveHas50AccuracyInSun) || HasDamagingMoveOfType(battler, TYPE_WATER) || AISearchTraits(AIBattlerTraits, ABILITY_DRY_SKIN))
+    if (HasMoveWithFlag(battler, MoveHas50AccuracyInSun) || HasDamagingMoveOfType(battler, TYPE_WATER) || SearchTraits(AIBattlerTraits, ABILITY_DRY_SKIN))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;

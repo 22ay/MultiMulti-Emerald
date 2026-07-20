@@ -2000,7 +2000,7 @@ void EnterPokeStorage(u8 boxOption)
     }
 }
 
-void CB2_ReturnToPokeStorage(void)
+static void CB2_ReturnToPokeStorage(void)
 {
     ResetTasks();
     sStorage = Alloc(sizeof(*sStorage));
@@ -9387,7 +9387,7 @@ static void PrintItemDescription(void)
     const u8 *description;
 
     if (IsMovingItem())
-        description = GetItemLongDescription(sStorage->movingItemId);
+        description = GetItemDescription(sStorage->movingItemId);
     else
         description = GetItemDescription(sStorage->displayMonItemId[0]);
 

@@ -59,9 +59,9 @@ enum ItemEffect TryBoosterEnergy(u32 battler, ActivationTiming timing)
     if (gDisableStructs[battler].boosterEnergyActivated || gBattleMons[battler].volatiles.transformed)
         return ITEM_NO_EFFECT;
 
-    if (BattlerHasTrait(battler, ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
+    if (BattlerHasTrait(battler, ABILITY_PROTOSYNTHESIS) && !(GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN))
         ability = ABILITY_PROTOSYNTHESIS;
-    else if (BattlerHasTrait(battler, ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
+    else if (BattlerHasTrait(battler, ABILITY_QUARK_DRIVE) && !(GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_ELECTRIC_TERRAIN))
         ability = ABILITY_QUARK_DRIVE;
     
     if (ability != ABILITY_NONE)
@@ -145,7 +145,7 @@ static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item, ActivationTiming t
 static bool32 CanBeInfinitelyConfused(u32 battler)
 {
     if  (BattlerHasTrait(battler, ABILITY_OWN_TEMPO)
-      || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
+      || (GetAttackerFieldStatus(battler, GetFieldStatus()) & STATUS_FIELD_MISTY_TERRAIN)
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;

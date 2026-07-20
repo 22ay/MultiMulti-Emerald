@@ -1716,12 +1716,12 @@ const u32 gSummaryPage_BattleMoves_Tilemap[]  = INCBIN_U32("graphics/summary_scr
 const u32 gSummaryPage_ContestMoves_Tilemap[] = INCBIN_U32("graphics/summary_screen/page_contest_moves.bin.smolTM");
 const u32 gSummaryPage_InfoEgg_Tilemap[]      = INCBIN_U32("graphics/summary_screen/page_info_egg.bin.smolTM");
 
-const u32 gBagMaleTiles[] = INCBIN_U32("graphics/bag/bag.4bpp.smol");
-const u32 gBagFemaleTiles[] = INCBIN_U32("graphics/bag/bag.4bpp.smol");
+const u32 gBagMaleTiles[] = INCBIN_U32("graphics/bag/bag_male.4bpp.smol");
+const u32 gBagFemaleTiles[] = INCBIN_U32("graphics/bag/bag_female.4bpp.smol");
 const u16 gBagPalette[] = INCBIN_U16("graphics/bag/bag.gbapal");
 
 const u16 gBagScreenMale_Pal[] = INCBIN_U16("graphics/bag/menu_male.gbapal");
-const u16 gBagScreenFemale_Pal[] = INCBIN_U16("graphics/bag/menu_male.gbapal");
+const u16 gBagScreenFemale_Pal[] = INCBIN_U16("graphics/bag/menu_female.gbapal");
 
 const u32 gBagScreen_Gfx[] = INCBIN_U32("graphics/bag/menu.4bpp.smol");
 const u32 gBagScreen_GfxTileMap[] = INCBIN_U32("graphics/bag/menu.bin.smolTM");
@@ -2121,3 +2121,4 @@ const u16 gBattleIcons_Pal2[] = INCBIN_U16("graphics/types/battle_icons2.gbapal"
 
 //New Summary Pages
 const u32 gSummaryPage_Traits_Tilemap[]      = INCBIN_U32("graphics/summary_screen/page_traits.bin.smolTM");
+const u32 gSummaryLongDescriptionBox_Tilemap[] = INCBIN_U32("graphics/summary_screen/longdescriptionbox.bin.smolTM");

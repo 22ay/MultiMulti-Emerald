@@ -481,7 +481,6 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
     enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
-    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
     s32 i, j;
 
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
@@ -528,42 +527,42 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_FLASH_FIRE;
     }
-    if (incomingType == TYPE_WATER || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_WATER))
+    if (incomingType == TYPE_WATER)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WATER_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_DRY_SKIN;
         if (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_STORM_DRAIN;
     }
-    if (incomingType == TYPE_ELECTRIC || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_ELECTRIC))
+    if (incomingType == TYPE_ELECTRIC)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_VOLT_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_MOTOR_DRIVE;
         if (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_LIGHTNING_ROD;
     }
-    if (incomingType == TYPE_GRASS || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_GRASS))
+    if (incomingType == TYPE_GRASS)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_SAP_SIPPER;
     }
-    if (incomingType == TYPE_GROUND || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_GROUND))
+    if (incomingType == TYPE_GROUND)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_EARTH_EATER;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_LEVITATE;
     }
-    if (IsSoundMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsSoundMove(incomingMove)))
+    if (IsSoundMove(incomingMove))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_SOUNDPROOF;
     }
-    if (IsBallisticMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsBallisticMove(incomingMove)))
+    if (IsBallisticMove(incomingMove))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_BULLETPROOF;
     }
-    if (IsWindMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsWindMove(incomingMove)))
+    if (IsWindMove(incomingMove))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WIND_RIDER;
     }
-    if (IsPowderMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsPowderMove(incomingMove)))
+    if (IsPowderMove(incomingMove))
     {
         if (GetConfig(B_POWDER_OVERCOAT) >= GEN_6)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_OVERCOAT;
@@ -616,14 +615,23 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
 {
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
-
-    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
+    enum BattleMoveEffects effect = GetMoveEffect(incomingMove);
 
     if (IsDoubleBattle() || !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
 
+    // Two-turn attacks that charge without entering semi-invulnerable state (e.g. Solar Beam).
+    // First turn of Fly/Dive/Bounce/Sky Drop: move is selected this turn but user is not yet semi-invulnerable.
+    // Opponent is already semi-invulnerable.
+    if (!(IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove)
+        || ((effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP) && !IsSemiInvulnerable(opposingBattler, CHECK_ALL))
+        || IsSemiInvulnerable(opposingBattler, CHECK_ALL)))
+    {
+        return FALSE;
+    }
+
     // In a world with a unified ShouldSwitch function, also want to check whether we already win 1v1 and if we do don't switch; not worth doubling the HasBadOdds computation for now
-    if (isOpposingBattlerChargingOrInvulnerable && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE && RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
+    if (gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE && RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
     return FALSE;
@@ -654,7 +662,7 @@ static bool32 ShouldSwitchIfTrapperInParty(u32 battler)
     for (i = firstId; i < lastId; i++)
     {
         if (IsAceMon(battler, i))
-            return FALSE;
+            continue;
 
         monAbility = GetMonAbility(&party[i]);
         species = GetMonData(&party[i], MON_DATA_SPECIES);
@@ -680,7 +688,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     //Perish Song
     if (gBattleMons[battler].volatiles.perishSong
         && gDisableStructs[battler].perishSongTimer == 0
-        && !AISearchTraits(AIBattlerTraits, ABILITY_SOUNDPROOF)
+        && !SearchTraits(AIBattlerTraits, ABILITY_SOUNDPROOF)
         && RandomPercentage(RNG_AI_SWITCH_PERISH_SONG, GetSwitchChance(SHOULD_SWITCH_PERISH_SONG)))
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
@@ -704,9 +712,9 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 switchMon = FALSE;
 
             // Checks to see if active Pokemon can do something against sleep
-            if ((AISearchTraits(AIBattlerTraits, ABILITY_NATURAL_CURE)
-                || AISearchTraits(AIBattlerTraits, ABILITY_SHED_SKIN)
-                || AISearchTraits(AIBattlerTraits, ABILITY_EARLY_BIRD))
+            if ((SearchTraits(AIBattlerTraits, ABILITY_NATURAL_CURE)
+                || SearchTraits(AIBattlerTraits, ABILITY_SHED_SKIN)
+                || SearchTraits(AIBattlerTraits, ABILITY_EARLY_BIRD))
                 || Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_CURE_SLP, gAiLogicData) || Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_CURE_STATUS, gAiLogicData)
                 || HasMove(battler, MOVE_SLEEP_TALK)
                 || (HasMove(battler, MOVE_SNORE) && gAiLogicData->effectiveness[battler][opposingBattler][GetIndexInMoveArray(battler, MOVE_SNORE)] >= UQ_4_12(2.0))
@@ -720,10 +728,10 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
             AI_STORE_BATTLER_TRAITS(opposingBattler);
 
             if (gBattleMons[battler].statStages[STAT_EVASION] > (DEFAULT_STAT_STAGE + 3)
-                && !AISearchTraits(AIBattlerTraits, ABILITY_UNAWARE)
-                && !AISearchTraits(AIBattlerTraits, ABILITY_KEEN_EYE)
-                && !AISearchTraits(AIBattlerTraits, ABILITY_MINDS_EYE)
-                && !(AISearchTraits(AIBattlerTraits, ABILITY_ILLUMINATE) && GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9)
+                && !SearchTraits(AIBattlerTraits, ABILITY_UNAWARE)
+                && !SearchTraits(AIBattlerTraits, ABILITY_KEEN_EYE)
+                && !SearchTraits(AIBattlerTraits, ABILITY_MINDS_EYE)
+                && !(SearchTraits(AIBattlerTraits, ABILITY_ILLUMINATE) && GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9)
                 && !gBattleMons[battler].volatiles.foresight
                 && !gBattleMons[battler].volatiles.miracleEye)
                 switchMon = FALSE;

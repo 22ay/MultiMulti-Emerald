@@ -1729,6 +1729,7 @@ BattleScript_ToxicThreadTryPsn::
 
 BattleScript_EffectVenomDrench::
 	attackcanceler
+	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpifstatus BS_TARGET, STATUS1_PSN_ANY, BattleScript_EffectVenomDrenchCanBeUsed
 	goto BattleScript_ButItFailed
 BattleScript_EffectVenomDrenchCanBeUsed:
@@ -1830,6 +1831,7 @@ BattleScript_EffectGrowth::
 BattleScript_GrowthDoMoveAnim::
 	attackanimation
 	waitanimation
+	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_GrowthAtk2
 	jumpifweatheraffected B_WEATHER_SUN, BattleScript_GrowthAtk2
 	setstatchanger STAT_ATK, 1, FALSE
 	goto BattleScript_GrowthAtk
@@ -1841,6 +1843,7 @@ BattleScript_GrowthAtk:
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_GrowthTrySpAtk::
+	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_GrowthSpAtk2
 	jumpifweatheraffected B_WEATHER_SUN, BattleScript_GrowthSpAtk2
 	setstatchanger STAT_SPATK, 1, FALSE
 	goto BattleScript_GrowthSpAtk
@@ -2418,6 +2421,7 @@ BattleScript_EffectMagicRoom::
 
 BattleScript_EffectAquaRing::
 	attackcanceler
+	jumpifvolatile BS_ATTACKER, VOLATILE_AQUA_RING, BattleScript_ButItFailed
 	setvolatile BS_ATTACKER, VOLATILE_AQUA_RING
 	attackanimation
 	waitanimation
@@ -2469,6 +2473,13 @@ BattleScript_TryTailwindAbilitiesLoop_WindPower:
 	printstring STRINGID_BEINGHITCHARGEDPKMNWITHPOWER
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_TryTailwindAbilitiesLoop_Increment
+
+BattleScript_TryZephyrWindPower_Loop::
+	call BattleScript_AbilityPopUp
+	setvolatile BS_TARGET, VOLATILE_CHARGE_TIMER, 2
+	printstring STRINGID_ZEPHYRWINDPOWER
+	waitmessage B_WAIT_TIME_LONG
+	end3
 
 BattleScript_AbilityTailwind::
 	call BattleScript_AbilityPopUp
@@ -2684,6 +2695,7 @@ BattleScript_Hit_RetFromAtkAnimation::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	setadditionaleffects
+	signatureeffect
 	return
 
 BattleScript_EffectNaturalGift::
@@ -3300,12 +3312,34 @@ BattleScript_PowerHerbActivation:
 	return
 
 BattleScript_EffectTwoTurnsAttack::
+	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_MegaSolCheck
+	jumpifability BS_ATTACKER, ABILITY_MEGA_PLUVIA, BattleScript_MegaPluviaCheck
 	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_TwoTurnMovesSecondTurn
 	tryfiretwoturnmovewithoutcharging BS_ATTACKER, BattleScript_EffectHit @ e.g. Solar Beam
 	call BattleScript_FirstChargingTurn
 	tryfiretwoturnmoveaftercharging BS_ATTACKER, BattleScript_TwoTurnMovesSecondTurn @ e.g. Electro Shot
 	jumpifholdeffect BS_ATTACKER, HOLD_EFFECT_POWER_HERB, BattleScript_TwoTurnMovesSecondPowerHerbActivates, TRUE
 	goto BattleScript_MoveEnd
+
+BattleScript_MegaSolCheck:
+	jumpifmove MOVE_SOLAR_BEAM, BattleScript_TwoTurnMovesSecondTurn
+	jumpifmove MOVE_SOLAR_BLADE, BattleScript_TwoTurnMovesSecondTurn
+    goto BattleScript_EffectTwoTurnsAttack_Return
+
+BattleScript_MegaPluviaCheck:
+    jumpifmove MOVE_ELECTRO_SHOT, BattleScript_MegaPluviaElectroShot
+    goto BattleScript_EffectTwoTurnsAttack_Return
+
+BattleScript_MegaPluviaElectroShot:
+    call BattleScript_FirstChargingTurn
+    goto BattleScript_TwoTurnMovesSecondTurn
+
+BattleScript_EffectTwoTurnsAttack_Return:
+    tryfiretwoturnmovewithoutcharging BS_ATTACKER, BattleScript_EffectHit @ e.g. Solar Beam
+    call BattleScript_FirstChargingTurn
+    tryfiretwoturnmoveaftercharging BS_ATTACKER, BattleScript_TwoTurnMovesSecondTurn @ e.g. Electro Shot
+    jumpifholdeffect BS_ATTACKER, HOLD_EFFECT_POWER_HERB, BattleScript_TwoTurnMovesSecondPowerHerbActivates, TRUE
+    goto BattleScript_MoveEnd
 
 BattleScript_EffectGeomancy::
 	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_GeomancySecondTurn
@@ -4555,6 +4589,7 @@ BattleScript_EffectWaterSport::
 
 BattleScript_EffectTickle::
 	attackcanceler
+	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_ATK, MIN_STAT_STAGE, BattleScript_TickleDoMoveAnim
 	jumpifstat BS_TARGET, CMP_EQUAL, STAT_DEF, MIN_STAT_STAGE, BattleScript_CantLowerMultipleStats
 BattleScript_TickleDoMoveAnim::
@@ -5620,9 +5655,7 @@ BattleScript_GulpMissileNoDmgGorging:
 	handleformchange BS_TARGET, 0
 	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
 	waitanimation
-	swapattackerwithtarget
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_PARALYSIS
-	swapattackerwithtarget
+	seteffectprimary BS_TARGET, BS_ATTACKER, MOVE_EFFECT_PARALYSIS
 	return
 BattleScript_GulpMissileNoSecondEffectGorging:
 	handleformchange BS_TARGET, 0
@@ -5652,7 +5685,7 @@ BattleScript_GulpMissileNoDmgGulping:
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_GulpMissileGulpingEnd:
-	swapattackerwithtarget @ restore the battlers, just in case
+	swapattackerwithtarget
 	return
 BattleScript_GulpMissileNoSecondEffectGulping:
 	handleformchange BS_TARGET, 0

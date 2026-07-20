@@ -43,7 +43,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
         if (moveTargetType == MOVE_TARGET_BOTH && battlerAtk == BATTLE_PARTNER(battlerDef))
             continue;
 
-        if (IsBattlerAlive(battlerDef) && !IsSemiInvulnerable(battlerDef, move))
+        if (IsBattlerAlive(battlerDef) && (!IsSemiInvulnerable(battlerDef, CHECK_ALL) || BreaksThroughSemiInvulnerablity(battlerDef, move)))
             numOfTargets++;
     }
 
@@ -1018,7 +1018,9 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
     u32 i;
 
     if (IsSheerForceAffected(move, battlerAtk))
+    {
         return FALSE;
+    }
 
     switch (GetMoveEffect(move))
     {
@@ -3151,6 +3153,9 @@ static u32 GetPoisonDamage(u32 battlerId)
 
 static bool32 BattlerAffectedBySandstorm(u32 battlerId)
 {
+    if (!(AI_GetWeather() & B_WEATHER_SANDSTORM))
+        return FALSE;
+
     if (!IS_BATTLER_ANY_TYPE(battlerId, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
       && !AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_SAND_VEIL)
       && !AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_SAND_FORCE)
@@ -3162,6 +3167,9 @@ static bool32 BattlerAffectedBySandstorm(u32 battlerId)
 
 static bool32 BattlerAffectedByHail(u32 battlerId)
 {
+    if (!(AI_GetWeather() & B_WEATHER_HAIL))
+        return FALSE;
+
     if (!IS_BATTLER_OF_TYPE(battlerId, TYPE_ICE)
       && !AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_SNOW_CLOAK)
       && !AI_BATTLER_HAS_TRAIT(battlerId, ABILITY_OVERCOAT)
@@ -3348,17 +3356,17 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveIndex
 
                     if (!IsBattleMoveStatus(move) && ((gAiLogicData->shouldSwitch & (1u << battlerAtk))
                         || (AI_BattlerAtMaxHp(battlerDef) && (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FOCUS_SASH, gAiLogicData)
-                        || (GetConfig(B_STURDY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_STURDY))
-                        || AISearchTraits(AIBattlerTraits, ABILITY_MULTISCALE)
-                        || AISearchTraits(AIBattlerTraits, ABILITY_SHADOW_SHIELD)))))
+                        || (GetConfig(B_STURDY) >= GEN_5 && SearchTraits(AIBattlerTraits, ABILITY_STURDY))
+                        || SearchTraits(AIBattlerTraits, ABILITY_MULTISCALE)
+                        || SearchTraits(AIBattlerTraits, ABILITY_SHADOW_SHIELD)))))
                         return SHOULD_PIVOT;   // pivot to break sash/sturdy/multiscale
                 }
                 else if (!hasStatBoost)
                 {
                     if (!IsBattleMoveStatus(move) && (AI_BattlerAtMaxHp(battlerDef) && (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FOCUS_SASH, gAiLogicData)
-                        || (GetConfig(B_STURDY) >= GEN_5 && AISearchTraits(AIBattlerTraits, ABILITY_STURDY))
-                        || AISearchTraits(AIBattlerTraits, ABILITY_MULTISCALE)
-                        || AISearchTraits(AIBattlerTraits, ABILITY_SHADOW_SHIELD))))
+                        || (GetConfig(B_STURDY) >= GEN_5 && SearchTraits(AIBattlerTraits, ABILITY_STURDY))
+                        || SearchTraits(AIBattlerTraits, ABILITY_MULTISCALE)
+                        || SearchTraits(AIBattlerTraits, ABILITY_SHADOW_SHIELD))))
                         return SHOULD_PIVOT;   // pivot to break sash/sturdy/multiscale
 
                     if (gAiLogicData->shouldSwitch & (1u << battlerAtk))
@@ -3539,11 +3547,11 @@ static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler)
     enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
-    if (AISearchTraits(AIBattlerTraits, ABILITY_MARVEL_SCALE)
-      || AISearchTraits(AIBattlerTraits, ABILITY_QUICK_FEET)
-      || AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD)
-      || AISearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE)
-      || (AISearchTraits(AIBattlerTraits, ABILITY_GUTS) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
+    if (SearchTraits(AIBattlerTraits, ABILITY_MARVEL_SCALE)
+      || SearchTraits(AIBattlerTraits, ABILITY_QUICK_FEET)
+      || SearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD)
+      || SearchTraits(AIBattlerTraits, ABILITY_INDOMITABLE)
+      || (SearchTraits(AIBattlerTraits, ABILITY_GUTS) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
       || HasMoveWithEffect(battler, EFFECT_FACADE)
       || HasMoveWithEffect(battler, EFFECT_PSYCHO_SHIFT))
         return TRUE;    // battler can be poisoned and has move/ability that synergizes with being poisoned
@@ -4464,13 +4472,13 @@ static void SetBattlerFieldStatusForSwitchin(u32 battler)
     enum Ability AIBattlerTraits[MAX_MON_TRAITS];
     AI_STORE_BATTLER_TRAITS(battler);
 
-    if (AISearchTraits(AIBattlerTraits, ABILITY_VESSEL_OF_RUIN))
+    if (SearchTraits(AIBattlerTraits, ABILITY_VESSEL_OF_RUIN))
         gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
-    if (AISearchTraits(AIBattlerTraits, ABILITY_SWORD_OF_RUIN))
+    if (SearchTraits(AIBattlerTraits, ABILITY_SWORD_OF_RUIN))
         gBattleMons[battler].volatiles.swordOfRuin = TRUE;
-    if (AISearchTraits(AIBattlerTraits, ABILITY_TABLETS_OF_RUIN))
+    if (SearchTraits(AIBattlerTraits, ABILITY_TABLETS_OF_RUIN))
         gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
-    if (AISearchTraits(AIBattlerTraits, ABILITY_BEADS_OF_RUIN))
+    if (SearchTraits(AIBattlerTraits, ABILITY_BEADS_OF_RUIN))
         gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
 }
 

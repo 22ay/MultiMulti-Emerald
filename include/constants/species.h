@@ -1690,8 +1690,26 @@
 //Gmax Megas
 #define SPECIES_PIKACHU_STARTER_MEGA                    1573
 #define SPECIES_EEVEE_STARTER_MEGA                      1574
+#define SPECIES_BUTTERFREE_MEGA                         1575
+#define SPECIES_MEOWTH_MEGA                             1576
+#define SPECIES_MACHAMP_MEGA                            1577
+#define SPECIES_KINGLER_MEGA                            1578
+#define SPECIES_LAPRAS_MEGA                             1579
+#define SPECIES_SNORLAX_MEGA                            1580
+#define SPECIES_MELMETAL_MEGA                           1581
+#define SPECIES_CORVIKNIGHT_MEGA                        1582
+#define SPECIES_ORBEETLE_MEGA                           1583
+#define SPECIES_TOXTRICITY_MEGA                         1584
+#define SPECIES_CENTISKORCH_MEGA                        1585
+#define SPECIES_HATTERENE_MEGA                          1586
+#define SPECIES_GRIMMSNARL_MEGA                         1587
+#define SPECIES_CINDERACE_MEGA                          1588
+#define SPECIES_RILLABOOM_MEGA                          1589
+#define SPECIES_INTELEON_MEGA                           1590
+#define SPECIES_URSHIFU_WICKED_MEGA                     1591
+#define SPECIES_URSHIFU_SURGING_MEGA                    1592
 
-#define SPECIES_EGG                                     (SPECIES_EEVEE_STARTER_MEGA + 1)
+#define SPECIES_EGG                                     (SPECIES_URSHIFU_SURGING_MEGA + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

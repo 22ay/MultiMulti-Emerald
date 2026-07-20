@@ -65,3 +65,4 @@ data/maps/**/scripts.inc
 *.xlsx
 *.bak
 *.xcf
+compile_commands.json
