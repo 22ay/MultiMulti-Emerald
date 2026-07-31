@@ -4285,4 +4285,64 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_AQUATIC] =
+    {
+        .name = _("Aquatic"),
+        .description = COMPOUND_STRING("Adds Water type."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_TERRIC] =
+    {
+        .name = _("Terric"),
+        .description = COMPOUND_STRING("Adds Ground type."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_PHANTASMALIC] =
+    {
+        .name = _("Phantasmalic"),
+        .description = COMPOUND_STRING("Adds Ghost type."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_UMBRIC] =
+    {
+        .name = _("Umbric"),
+        .description = COMPOUND_STRING("Adds Dark type."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
+    [ABILITY_METALLIC] =
+    {
+        .name = _("Metallic"),
+        .description = COMPOUND_STRING("Adds Steel type."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "               "),
+        .aiRating = 6,
+    },
+
 };

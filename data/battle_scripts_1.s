@@ -2617,6 +2617,13 @@ BattleScript_SignatureAuroraVeil::
     playanimation BS_ATTACKER, B_ANIM_AURORAVEIL
     return
 
+BattleScript_BattlerAddedTheType::
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_BATTLERADDEDTHETYPE
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
 BattleScript_EffectRoost::
 	attackcanceler
 	tryhealhalfhealth BS_TARGET, BattleScript_AlreadyAtFullHp

@@ -876,6 +876,7 @@ extern const u8 BattleScript_EffectFlowerShield[];
 extern const u8 BattleScript_EffectSpeedSwap[];
 extern const u8 BattleScript_EffectAuroraVeil[];
 extern const u8 BattleScript_EffectThirdType[];
+extern const u8 BattleScript_BattlerAddedTheType[];
 extern const u8 BattleScript_EffectAcupressure[];
 extern const u8 BattleScript_EffectAromaticMist[];
 extern const u8 BattleScript_EffectPowder[];

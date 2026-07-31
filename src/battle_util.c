@@ -4907,6 +4907,57 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
 
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_MEGA_FULGUR)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
             effect += CommonSwitchInAbilities(battler, ABILITY_MEGA_FULGUR, traitCheck, BattleScript_MegaFulgurActivates);
+
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_AQUATIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+         && !IS_BATTLER_OF_TYPE(battler, TYPE_WATER))
+        {
+            gBattlerAttacker = battler;
+            gSpecialStatuses[battler].switchInAbilityDone = TRUE;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_AQUATIC;
+            gBattleMons[battler].types[2] = TYPE_WATER;
+            PREPARE_TYPE_BUFFER(gBattleTextBuff2, gBattleMons[battler].types[2]);
+            effect += CommonSwitchInAbilities(battler, ABILITY_AQUATIC, traitCheck, BattleScript_BattlerAddedTheType);
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_TERRIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+         && !IS_BATTLER_OF_TYPE(battler, TYPE_GROUND))
+        {
+            gBattlerAttacker = battler;
+            gSpecialStatuses[battler].switchInAbilityDone = TRUE;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_TERRIC;
+            gBattleMons[battler].types[2] = TYPE_GROUND;
+            PREPARE_TYPE_BUFFER(gBattleTextBuff2, gBattleMons[battler].types[2]);
+            effect += CommonSwitchInAbilities(battler, ABILITY_TERRIC, traitCheck, BattleScript_BattlerAddedTheType);
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PHANTASMALIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+         && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+        {
+            gBattlerAttacker = battler;
+            gSpecialStatuses[battler].switchInAbilityDone = TRUE;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_PHANTASMALIC;
+            gBattleMons[battler].types[2] = TYPE_GHOST;
+            PREPARE_TYPE_BUFFER(gBattleTextBuff2, gBattleMons[battler].types[2]);
+            effect += CommonSwitchInAbilities(battler, ABILITY_PHANTASMALIC, traitCheck, BattleScript_BattlerAddedTheType);
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_UMBRIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+         && !IS_BATTLER_OF_TYPE(battler, TYPE_DARK))
+        {
+            gBattlerAttacker = battler;
+            gSpecialStatuses[battler].switchInAbilityDone = TRUE;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_UMBRIC;
+            gBattleMons[battler].types[2] = TYPE_DARK;
+            PREPARE_TYPE_BUFFER(gBattleTextBuff2, gBattleMons[battler].types[2]);
+            effect += CommonSwitchInAbilities(battler, ABILITY_UMBRIC, traitCheck, BattleScript_BattlerAddedTheType);
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_METALLIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+         && !IS_BATTLER_OF_TYPE(battler, TYPE_STEEL))
+        {
+            gBattlerAttacker = battler;
+            gSpecialStatuses[battler].switchInAbilityDone = TRUE;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_METALLIC;
+            gBattleMons[battler].types[2] = TYPE_STEEL;
+            PREPARE_TYPE_BUFFER(gBattleTextBuff2, gBattleMons[battler].types[2]);
+            effect += CommonSwitchInAbilities(battler, ABILITY_METALLIC, traitCheck, BattleScript_BattlerAddedTheType);
+        }
        break;
     case ABILITYEFFECT_ENDTURN:
         if (IsBattlerAlive(battler))
@@ -8067,18 +8118,25 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12(gSpecialStatuses[battlerAtk].gemParam)));
     if (moveType == TYPE_ELECTRIC && gBattleMons[battlerAtk].volatiles.chargeTimer > 0)
         modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
+
     if (GetMoveEffect(ctx->chosenMove) == EFFECT_ME_FIRST)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     if ((GetAttackerTerrain(battlerAtk, GetTerrain()) & BATTLE_FIELD_GRASSY_TERRAIN) && moveType == TYPE_GRASS)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
+
     if ((GetAttackerTerrain(battlerDef, GetTerrain()) & BATTLE_FIELD_MISTY_TERRAIN) && moveType == TYPE_DRAGON)
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
+
     if ((GetAttackerTerrain(battlerAtk, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN) && moveType == TYPE_ELECTRIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
+
     if ((GetAttackerTerrain(battlerAtk, GetTerrain()) & BATTLE_FIELD_PSYCHIC_TERRAIN) && moveType == TYPE_PSYCHIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
+
     if (IsFieldMudSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
+
     if (IsFieldWaterSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
 
@@ -8188,6 +8246,21 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 
     if (SearchTraits(battlerTraits, ABILITY_SUPREME_OVERLORD))
         modifier = uq4_12_multiply(modifier, GetSupremeOverlordModifier(battlerAtk));
+    
+    if (SearchTraits(battlerTraits, ABILITY_AQUATIC) && moveType == TYPE_WATER && gBattleMons[battlerAtk].types[2] != TYPE_WATER )
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
+    if (SearchTraits(battlerTraits, ABILITY_TERRIC) && moveType == TYPE_GROUND && gBattleMons[battlerAtk].types[2] != TYPE_GROUND )
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
+    if (SearchTraits(battlerTraits, ABILITY_PHANTASMALIC) && moveType == TYPE_GHOST && gBattleMons[battlerAtk].types[2] != TYPE_GHOST )
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
+    if (SearchTraits(battlerTraits, ABILITY_UMBRIC) && moveType == TYPE_DARK && gBattleMons[battlerAtk].types[2] != TYPE_DARK )
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
+    if (SearchTraits(battlerTraits, ABILITY_METALLIC) && moveType == TYPE_STEEL && gBattleMons[battlerAtk].types[2] != TYPE_STEEL )
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
     // field abilities
     if ((IsAbilityOnField(ABILITY_DARK_AURA) && moveType == TYPE_DARK)
