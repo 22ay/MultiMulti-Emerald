@@ -3545,11 +3545,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Indomitable"),
         .description = COMPOUND_STRING("Only direct attacks damage it."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon only takes\n"
+                                           "damage from direct\n"
+                                           "attacks. Indirect damage\n"
+                                           "does not affect it."),
         .aiRating = 8,
     },
 
@@ -3557,11 +3556,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Twisted Realm"),
         .description = COMPOUND_STRING("Summons Trick Room."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon creates Trick\n"
+                                           "Room for five turns,\n"
+                                           "inverting the turn\n"
+                                           "order."),
         .aiRating = 7,
     },
 
@@ -3569,11 +3567,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Inversion"),
         .description = COMPOUND_STRING("Summons Inverse Room."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon creates Inverse\n"
+                                           "Room for five turns,\n"
+                                           "inverting the type\n"
+                                           "chart."),
         .aiRating = 7,
     },
 
@@ -3581,11 +3578,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Gravitational"),
         .description = COMPOUND_STRING("Intensifies Gravity."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon increases Gravity\n"
+                                           "for five turns, dropping\n"
+                                           "Pokémon from the air and\n"
+                                           "increasing accuracy."),
         .aiRating = 6,
     },
 
@@ -3593,11 +3589,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Wind Storm"),
         .description = COMPOUND_STRING("Summons Tailwind."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon summons Tailwind\n"
+                                           "for five turns, increasing\n"
+                                           "the speed of Pokémon on\n"
+                                           "the same side."),
         .aiRating = 6,
     },
 
@@ -3605,11 +3600,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mystic Power"),
         .description = COMPOUND_STRING("Raises Special Attack."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Doubles the power of\n"
+                                           "the Pokémon's special\n"
+                                           "moves."),
         .aiRating = 10,
     },
 
@@ -3617,11 +3610,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Versatile"),
         .description = COMPOUND_STRING("Grants STAB on moves"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("All of this Pokémon's moves\n"
+                                           "get STAB, increasing their\n"
+                                           "damage by 50%."),
         .aiRating = 8,
     },
 
@@ -3629,11 +3620,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Onslaught"),
         .description = COMPOUND_STRING("Moves hit twice"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves hit\n"
+                                           "two times, barring\n"
+                                           "multi-hit moves."),
         .aiRating = 10,
     },
 
@@ -3641,11 +3630,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Merry Rainbow"),
         .description = COMPOUND_STRING("Creates a Rainbow"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon creates a Rainbow\n"
+                                           "on their side, doubling\n"
+                                           "secondary effect chance,\n"
+                                           "barring flinching"),
         .aiRating = 6,
     },
 
@@ -3653,11 +3641,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Sea of Flames"),
         .description = COMPOUND_STRING("Summons Sea of Fire"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon summons a Sea\n"
+                                           "of Fire on the opposing\n"
+                                           "side. Non Fire-types\n"
+                                           "take 1/8 damage per\n"
+                                           "turn."),
         .aiRating = 6,
     },
 
@@ -3665,11 +3653,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Swamped"),
         .description = COMPOUND_STRING("Swamps the area"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon summons a\n"
+                                           "Swamp on the opposing\n"
+                                           "side, quartering the\n"
+                                           "foe's speed"),
         .aiRating = 6,
     },
 
@@ -3677,11 +3664,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Eerie Haze"),
         .description = COMPOUND_STRING("Summons Eerie Fog"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Pokémon summons a Fog,\n"
+                                           "boosting Ghost, Dark and\n"
+                                           "Bug damage by 50%, and\n"
+                                           "drops accuracy on\n"
+                                           "the other types"),
         .aiRating = 6,
     },
 
@@ -3689,11 +3676,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Avian Prowess"),
         .description = COMPOUND_STRING("Ups Sp.Atk but locks move"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Raises Sp.Attack, but locks\n"
+                                           "this Pokemon into the\n"
+                                           "first move it selects."),
         .aiRating = 4,
     },
 
@@ -3701,11 +3686,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Tectonize"),
         .description = COMPOUND_STRING("Normal moves become Ground"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Normal-type moves become\n"
+                                           "Ground-type and deal 20%\n"
+                                           "more damage."),
         .aiRating = 8,
     },
 
@@ -3713,11 +3696,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Spectralize"),
         .description = COMPOUND_STRING("Normal moves become Ghost"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Normal-type moves become\n"
+                                           "Ghost-type and deal 20%\n"
+                                           "more damage."),
         .aiRating = 8,
     },
 
@@ -3725,11 +3706,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Infernal Soul"),
         .description = COMPOUND_STRING("Fire moves go first"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Fire-type moves go first\n"
+                                           "in the Sun."),
         .aiRating = 6,
     },
 
@@ -3737,11 +3715,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Tidal Soul"),
         .description = COMPOUND_STRING("Water moves go first"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Water-type moves go first\n"
+                                           "in Rain."),
         .aiRating = 6,
     },
 
@@ -3749,11 +3724,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Nature Soul"),
         .description = COMPOUND_STRING("Grass moves go first"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Grass-type moves go first\n"
+                                           "in Grassy Terrain."),
         .aiRating = 6,
     },
 
@@ -3761,23 +3733,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Thunderous Soul"),
         .description = COMPOUND_STRING("Electric moves go first"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Electric-type moves go first\n"
+                                           "in Electric Terrain."),
         .aiRating = 6,
     },
 
     [ABILITY_WARRIOR_SOUL] =
     {
         .name = _("Warrior Soul"),
-        .description = COMPOUND_STRING("Fighting moves go first"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .description = COMPOUND_STRING("Fighting moves go first."),
+        .longDescription = COMPOUND_STRING("Fighting moves go first."),
         .aiRating = 6,
     },
 
@@ -3785,11 +3750,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Equilibrium"),
         .description = COMPOUND_STRING("Uses highest attack stat"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The higher of the two\n"
+                                           "raw attacking stats is\n"
+                                           "used during damage\n"
+                                           "calculations."),
         .aiRating = 6,
     },
 
@@ -3797,11 +3761,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Colossus"),
         .description = COMPOUND_STRING("Defenses used for attacking"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Defense stat is used\n"
+                                           "for Attack calculations\n"
+                                           "and Sp.Defense is used\n"
+                                           "for Sp.Attack\n"
+                                           "calculations."),
         .aiRating = 6,
     },
 
@@ -3809,11 +3773,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Blitz"),
         .description = COMPOUND_STRING("Speed used for attacking"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Speed stat is used\n"
+                                           "for damage calculcations."),
         .aiRating = 6,
     },
 
@@ -3821,11 +3782,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Ruthless"),
         .description = COMPOUND_STRING("Strong against weak foes"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon deals 50% more\n"
+                                           "damage when the foe is at\n"
+                                           "less than half HP."),
         .aiRating = 6,
     },
 
@@ -3833,11 +3792,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Violent Rush"),
         .description = COMPOUND_STRING("Hits hard first turn"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("On the first turn, this\n"
+                                           "Pokémon's Speed is\n"
+                                           "boosted by 50% and\n"
+                                           "its Attack by 20%."),
         .aiRating = 6,
     },
 
@@ -3845,11 +3803,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Physical Wall"),
         .description = COMPOUND_STRING("Sets Reflect"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon sets up Reflect\n"
+                                           "halving physical attacks for\n"
+                                           "5 turns."),
         .aiRating = 6,
     },
 
@@ -3857,11 +3813,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Magic Wall"),
         .description = COMPOUND_STRING("Sets Light Screen"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon sets up Light\n"
+                                           "Screen, halving special\n"
+                                           "attacks for 5 turns."),
         .aiRating = 6,
     },
 
