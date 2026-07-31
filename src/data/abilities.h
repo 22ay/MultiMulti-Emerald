@@ -4309,9 +4309,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_PHANTASMALIC] =
+    [ABILITY_PHANTASMIC] =
     {
-        .name = _("Phantasmalic"),
+        .name = _("Phantasmic"),
         .description = COMPOUND_STRING("Adds Ghost type."),
         .longDescription = COMPOUND_STRING("No special ability.\n"
                                            "                        \n"

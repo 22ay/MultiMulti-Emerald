@@ -4928,15 +4928,15 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             PREPARE_TYPE_BUFFER(gBattleTextBuff2, gBattleMons[battler].types[2]);
             effect += CommonSwitchInAbilities(battler, ABILITY_TERRIC, traitCheck, BattleScript_BattlerAddedTheType);
         }
-        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PHANTASMALIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PHANTASMIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         {
             gBattlerAttacker = battler;
             gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_PHANTASMALIC;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_PHANTASMIC;
             gBattleMons[battler].types[2] = TYPE_GHOST;
             PREPARE_TYPE_BUFFER(gBattleTextBuff2, gBattleMons[battler].types[2]);
-            effect += CommonSwitchInAbilities(battler, ABILITY_PHANTASMALIC, traitCheck, BattleScript_BattlerAddedTheType);
+            effect += CommonSwitchInAbilities(battler, ABILITY_PHANTASMIC, traitCheck, BattleScript_BattlerAddedTheType);
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_UMBRIC)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && !IS_BATTLER_OF_TYPE(battler, TYPE_DARK))
@@ -8253,7 +8253,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_TERRIC) && moveType == TYPE_GROUND && gBattleMons[battlerAtk].types[2] != TYPE_GROUND )
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
-    if (SearchTraits(battlerTraits, ABILITY_PHANTASMALIC) && moveType == TYPE_GHOST && gBattleMons[battlerAtk].types[2] != TYPE_GHOST )
+    if (SearchTraits(battlerTraits, ABILITY_PHANTASMIC) && moveType == TYPE_GHOST && gBattleMons[battlerAtk].types[2] != TYPE_GHOST )
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
     if (SearchTraits(battlerTraits, ABILITY_UMBRIC) && moveType == TYPE_DARK && gBattleMons[battlerAtk].types[2] != TYPE_DARK )
