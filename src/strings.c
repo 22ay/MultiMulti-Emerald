@@ -1289,6 +1289,9 @@ const u8 gText_CannotSendMonToBoxActive[] = _("Cannot send an active battler\nto
 const u8 gText_CannotSendMonToBoxPartner[] = _("Cannot send a mon that doesn't,\nbelong to you to the box.{PAUSE_UNTIL_PRESS}");
 const u8 gText_StatEditor[] = _("Edit Stats");
 const u8 gText_PkmnTraits[] = _("Traits"); //New Summary Screen Pages
+const u8 gText_InfiniteRepelOn[] = _("The Infinite Repel is now on!{PAUSE_UNTIL_PRESS}");
+const u8 gText_InfiniteRepelOff[] = _("The Infinite Repel is now off!{PAUSE_UNTIL_PRESS}");
+
 //// side quest data
 //generic strings
 const u8 gText_QuestAnnounce[] = _("The quest '{STR_VAR_1}'\nis now {STR_VAR_2}.");

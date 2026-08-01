@@ -2618,4 +2618,7 @@ extern const u8 gText_CannotSendMonToBoxPartner[];
 //New Summary Pages
 extern const u8 gText_PkmnTraits[];
 
+extern const u8 gText_InfiniteRepelOn[];
+extern const u8 gText_InfiniteRepelOff[];
+
 #endif // GUARD_STRINGS_H
