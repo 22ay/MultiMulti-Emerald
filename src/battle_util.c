@@ -10222,7 +10222,8 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType)
 {
     if ((B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE)) 
-    || (GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_INVERSE_ROOM))
+    || (GetAttackerFieldStatus(gBattlerAttacker, GetFieldStatus()) & STATUS_FIELD_INVERSE_ROOM)
+    || (GetAttackerFieldStatus(gBattlerTarget, GetFieldStatus()) & STATUS_FIELD_INVERSE_ROOM))
         return GetInverseTypeMultiplier(gTypeEffectivenessTable[atkType][defType]);
     return gTypeEffectivenessTable[atkType][defType];
 }

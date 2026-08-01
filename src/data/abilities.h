@@ -1037,7 +1037,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Iron Fist"),
         .description = COMPOUND_STRING("Boosts punching moves."),
         .longDescription = COMPOUND_STRING("Boosts the power of\n"
-                                           "punching moves by 20%."),
+                                           "punching moves by 50%."),
         .aiRating = 6,
     },
 
@@ -3782,7 +3782,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Ruthless"),
         .description = COMPOUND_STRING("Strong against weak foes"),
-        .longDescription = COMPOUND_STRING("This Pokémon deals 50% more\n"
+        .longDescription = COMPOUND_STRING("This Pokémon deals 30% more\n"
                                            "damage when the foe is at\n"
                                            "less than half HP."),
         .aiRating = 6,
@@ -3823,11 +3823,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Arctic Wall"),
         .description = COMPOUND_STRING("Sets Aurora Veil"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon sets up\n"
+                                           "Aurora Veil in the Snow,\n"
+                                           "halving damage for\n" 
+                                           "5 turns."),
         .aiRating = 6,
     },
 
@@ -3835,11 +3834,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Hubris"),
         .description = COMPOUND_STRING("KOs raise Sp.Attack"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Raises Sp.Attack by 1 stage\n"
+                                           "each time the Pokémon\n"
+                                           "knocks out a foe."),
         .aiRating = 6,
     },
 
@@ -3847,11 +3844,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Horrify"),
         .description = COMPOUND_STRING("Lowers the foe's Sp.Attack"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("When entering a battle,\n"
+                                           "lowers the Sp.Attack of\n"
+                                           "of opponents by 1 stage.\n"),
         .aiRating = 6,
     },
 
@@ -3859,11 +3854,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Striker"),
         .description = COMPOUND_STRING("Boosts kicking moves"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Boosts the power of\n"
+                                           "kicking moves by 30%."),
         .aiRating = 6,
     },
 
@@ -3871,11 +3863,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Last Stand"),
         .description = COMPOUND_STRING("Stats raise at half HP"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("When damage drops HP to\n"
+                                           "half or less, Attack,\n"
+                                           "Sp. Atk, and Speed rise\n"
+                                           "by 1 stage while Defense\n"
+                                           "and Sp. Def fall by 1\n"
+                                           "stage."),
         .aiRating = 6,
     },
 
@@ -3883,11 +3876,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Arrogance"),
         .description = COMPOUND_STRING("Stronger at full HP"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon does double\n"
+                                           "damage at full HP."),
         .aiRating = 6,
     },
 
@@ -3895,11 +3885,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Brute Force"),
         .description = COMPOUND_STRING("All attacks use Attack"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's attacks use\n"
+                                           "its Attack stat during\n"
+                                           "damage calculations.\n"
+                                           "Attack also do 20%.\n" 
+                                           "more damage."),
         .aiRating = 6,
     },
 
@@ -3907,11 +3897,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Arcana"),
         .description = COMPOUND_STRING("All attacks use Sp.Attack"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's attacks use\n"
+                                           "its Sp.Attack stat during\n"
+                                           "damage calculations.\n"
+                                           "Attack also do 20%.\n" 
+                                           "more damage."),
         .aiRating = 6,
     },
 
@@ -3919,11 +3909,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Liquid Body"),
         .description = COMPOUND_STRING("Tougher but weak to Water"),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Halves contact-move\n"
+                                           "damage but doubles\n"
+                                           "damage from Water-type\n"
+                                           "moves."),
         .aiRating = 6,
     },
 
@@ -3931,11 +3920,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Down Range"),
         .description = COMPOUND_STRING("All attacks use Sp.Attack."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's attacks use\n"
+                                           "its Sp.Attack stat during\n"
+                                           "damage calculations.\n"
+                                           "Attack also do 20%.\n" 
+                                           "more damage."),
         .aiRating = 6,
     },
 
@@ -3943,11 +3932,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Sol"),
         .description = COMPOUND_STRING("Always under Sun."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is under the Sun."),
         .aiRating = 6,
     },
 
@@ -3955,11 +3942,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Pluvia"),
         .description = COMPOUND_STRING("Always under Rain."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is under Rain."),
         .aiRating = 6,
     },
 
@@ -3967,11 +3952,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Harena"),
         .description = COMPOUND_STRING("Always under Sand."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is under Sand."),
         .aiRating = 6,
     },
 
@@ -3979,11 +3962,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Nix"),
         .description = COMPOUND_STRING("Always under Snow."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is under Snow."),
         .aiRating = 6,
     },
 
@@ -3991,11 +3972,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Caligo"),
         .description = COMPOUND_STRING("Always under Fog."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is under Fog."),
         .aiRating = 6,
     },
 
@@ -4015,11 +3994,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Atlas"),
         .description = COMPOUND_STRING("Always under Gravity."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is under Gravity."),
         .aiRating = 6,
     },
 
@@ -4027,11 +4004,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Glitched"),
         .description = COMPOUND_STRING("Effectiveness is reversed."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Type effectiveness is\n"
+                                           "reversed for this\n"
+                                           "Pokémon."),
         .aiRating = 6,
     },
 
@@ -4039,11 +4014,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Zephyr"),
         .description = COMPOUND_STRING("Always under Tailwind."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is under Tailwind."),
         .aiRating = 6,
     },
 
@@ -4051,11 +4024,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Momentum"),
         .description = COMPOUND_STRING("Attacks with some speed."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("50% of this Pokémon's speed\n"
+                                           "stat is added to the\n"
+                                           "attacking stat during\n"
+                                           "damage calculation."),
         .aiRating = 6,
     },
 
@@ -4063,11 +4035,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Juggernaut"),
         .description = COMPOUND_STRING("Attacks with some Defense."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("50% of this Pokémon's defensive\n"
+                                           "stats are added to the\n"
+                                           "respective attacking stat\n"
+                                           "during damage calculation."),
         .aiRating = 6,
     },
 
@@ -4075,11 +4046,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Bastion"),
         .description = COMPOUND_STRING("Attacks with some Defense."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("50% of this Pokémon's defensive\n"
+                                           "stats are added to the\n"
+                                           "respective attacking stat\n"
+                                           "during damage calculation."),
         .aiRating = 6,
     },
 
@@ -4087,11 +4057,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Redirection"),
         .description = COMPOUND_STRING("Attacks with opponent's attack."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("50% of the opposing Pokémon's\n"
+                                           "attacking stats are added to\n"
+                                           "the respective attacking stat\n"
+                                           "during damage calculation."),
         .aiRating = 6,
     },
 
@@ -4099,11 +4068,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Close Quarters"),
         .description = COMPOUND_STRING("Ups contact moves, lowers Defense."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("Contact moves deal double damage\n"
+                                           "but this Pokémon Defense stat is\n"
+                                           "halved."),
         .aiRating = 6,
     },
 
@@ -4111,11 +4078,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Pronto"),
         .description = COMPOUND_STRING("Speed used for Defenses."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Speed stat is used\n"
+                                           "for defensive\n" 
+                                           "calculcations."),
         .aiRating = 6,
     },
 
@@ -4123,11 +4088,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Nimble"),
         .description = COMPOUND_STRING("Some speed used for Defenses."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("50% of the Speed stat is used\n"
+                                           "for defensive calculations."),
         .aiRating = 6,
     },
 
@@ -4135,11 +4097,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Overpower"),
         .description = COMPOUND_STRING("Attack used for Defense."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Attack stat is used\n"
+                                           "for defensive\n" 
+                                           "calculcations."),
         .aiRating = 6,
     },
 
@@ -4147,11 +4107,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mighty"),
         .description = COMPOUND_STRING("Some Atk used for Defense."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("50% of the Attack stat is used\n"
+                                           "for defensive calculations."),
         .aiRating = 6,
     },
 
@@ -4159,11 +4116,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mystic Bulwark"),
         .description = COMPOUND_STRING("Sp.Atk used for Sp.Def."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Sp.Attack stat is used\n"
+                                           "for defensive\n" 
+                                           "calculcations."),
         .aiRating = 6,
     },
 
@@ -4171,11 +4126,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Ballistic Guard"),
         .description = COMPOUND_STRING("Sp.Atk used for Sp.Def."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("The Sp.Attack stat is used\n"
+                                           "for defensive\n" 
+                                           "calculcations."),
         .aiRating = 6,
     },
 
@@ -4183,11 +4136,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Out Ranged"),
         .description = COMPOUND_STRING("Some Sp.Atk used for Sp.Def."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("50% of the Sp.Attack stat is used\n"
+                                           "for defensive calculations."),
         .aiRating = 6,
     },
 
@@ -4195,11 +4145,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Natura"),
         .description = COMPOUND_STRING("Always in Grassy Terrain."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is on Grassy Terrain."),
         .aiRating = 6,
     },
 
@@ -4207,11 +4155,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Fulgur"),
         .description = COMPOUND_STRING("Always in Electric Terrain."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is on Electric Terrain."),
         .aiRating = 6,
     },
 
@@ -4219,11 +4165,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Nebula"),
         .description = COMPOUND_STRING("Always in Misty Terrain."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is on Misty Terrain."),
         .aiRating = 6,
     },
 
@@ -4231,11 +4175,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mega Psychica"),
         .description = COMPOUND_STRING("Always in Psychic Terrain."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon's moves, effects\n"
+                                           "and abilities operate as if\n"
+                                           "it is on Psychic Terrain."),
         .aiRating = 6,
     },
 
@@ -4243,11 +4185,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Aquatic"),
         .description = COMPOUND_STRING("Adds Water type."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon adds Water-type.\n"
+                                           "on switch-in. Water-type moves\n"
+                                           "deal 50% more damage if the\n"
+                                           "Pokémon is already Water-type."),
         .aiRating = 6,
     },
 
@@ -4255,11 +4196,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Terric"),
         .description = COMPOUND_STRING("Adds Ground type."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon adds Ground-type on\n"
+                                           "switch-in. Ground-type moves\n"
+                                           "deal 50% more damage if the\n"
+                                           "Pokémon is already Ground-type."),
         .aiRating = 6,
     },
 
@@ -4267,11 +4207,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Phantasmic"),
         .description = COMPOUND_STRING("Adds Ghost type."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon adds Ghost-type on\n"
+                                           "switch-in. Ghost-type moves\n"
+                                           "deal 50% more damage if the\n"
+                                           "Pokémon is already Ghost-type."),
         .aiRating = 6,
     },
 
@@ -4279,11 +4218,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Umbric"),
         .description = COMPOUND_STRING("Adds Dark type."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon adds Dark-type on\n"
+                                           "switch-in. Dark-type moves\n"
+                                           "deal 50% more damage if the\n"
+                                           "Pokémon is already Dark-type."),
         .aiRating = 6,
     },
 
@@ -4291,11 +4229,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Metallic"),
         .description = COMPOUND_STRING("Adds Steel type."),
-        .longDescription = COMPOUND_STRING("No special ability.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "               "),
+        .longDescription = COMPOUND_STRING("This Pokémon adds Steel-type on\n"
+                                           "switch-in. Steel-type moves\n"
+                                           "deal 50% more damage if the\n"
+                                           "Pokémon is already Steel-type."),
         .aiRating = 6,
     },
 
