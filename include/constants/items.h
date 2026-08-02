@@ -1182,8 +1182,9 @@
 #define ITEM_URSHIFUNITE_WICKED 1011
 #define ITEM_URSHIFUNITE_SURGING 1012
 #define ITEM_INFINITE_REPEL 1013
+#define ITEM_INFINITE_CANDY 1014
 
-#define ITEMS_COUNT 1014
+#define ITEMS_COUNT 1015
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
