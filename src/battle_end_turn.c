@@ -100,7 +100,11 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
 
-    if ((currBattleWeather == 0xFF) && !HasAbilityWeatherEffect())
+    if ((currBattleWeather == 0xFF) && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_NIX)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_CALIGO))
     {
         // If there is no weather on the field, no need to check other battlers so go to next state
         gBattleStruct->eventState.endTurnBattler = 0;
@@ -110,13 +114,19 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (!IsBattlerAlive(battler) || (!HasWeatherEffect() && !HasAbilityWeatherEffect()))
+    if (!IsBattlerAlive(battler) || (!HasWeatherEffect() && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_NIX)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_CALIGO)))
+
         return effect;
 
     if (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_SUN)
     {
         if (SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)
-        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN))
+        || SearchTraits(battlerTraits, ABILITY_DRY_SKIN)
+        || SearchTraits(battlerTraits, ABILITY_FLAME_BODY))
         {
             if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
@@ -157,15 +167,18 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && !BattlerHasTrait(battler, ABILITY_SAND_FORCE)
          && !BattlerHasTrait(battler, ABILITY_SAND_RUSH)
          && !BattlerHasTrait(battler, ABILITY_OVERCOAT)
-         && !HasAbilityWeatherEffect()
+         && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_NIX)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_CALIGO)
          && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
          && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
          && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
          && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
-         && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT)
-         && !IsAbilityAndRecord(battler, ABILITY_MEGA_HARENA))
+         && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SANDSTORM;
@@ -175,24 +188,22 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
         break;
     case BATTLE_WEATHER_HAIL:
     case BATTLE_WEATHER_SNOW:
-        if (SearchTraits(battlerTraits, ABILITY_ICE_BODY))
-        {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
-                effect = TRUE;
-        }
-        else if (currBattleWeather == BATTLE_WEATHER_HAIL)
+        if (currBattleWeather == BATTLE_WEATHER_HAIL)
         {
             if (!BattlerHasTrait(battler, ABILITY_SNOW_CLOAK)
              && !BattlerHasTrait(battler, ABILITY_OVERCOAT)
-             && !HasAbilityWeatherEffect()
+             && !BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+             && !BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+             && !BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+             && !BattlerHasTrait(battler, ABILITY_MEGA_NIX)
+             && !BattlerHasTrait(battler, ABILITY_MEGA_CALIGO)
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
              && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
              && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
              && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
-             && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT)
-             && !IsAbilityAndRecord(battler, ABILITY_MEGA_NIX))
+             && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
             {
                 SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HAIL;
@@ -1283,6 +1294,61 @@ static bool32 HandleEndTurnTerrain(u32 battler)
     return effect;
 }
 
+static bool32 HandleEndTurnTerrainDamage(u32 battler)
+{
+    bool32 effect = FALSE;
+    enum Ability battlerTraits[MAX_MON_TRAITS];
+    STORE_BATTLER_TRAITS(battler);
+
+    if ((gBattleTerrain & !BATTLE_FIELD_TERRAIN_ANY) && !BattlerHasTrait(battler, ABILITY_MEGA_NATURA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_FULGUR)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_NEBULA)
+         && !BattlerHasTrait(battler, ABILITY_MEGA_PSYCHICA))
+    {
+        // If there is no terrain on the field, no need to check other battlers so go to next state
+        gBattleStruct->eventState.endTurnBattler = 0;
+        gBattleStruct->eventState.endTurn++;
+        return effect;
+    }
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (!IsBattlerAlive(battler))
+        return effect;
+
+    if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_ELECTRIC_TERRAIN)
+    {
+        if (SearchTraits(battlerTraits, ABILITY_STATIC))
+        {
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
+                effect = TRUE;
+        }
+    }
+    if (gBattleTerrain & BATTLE_FIELD_ELECTRIC_TERRAIN)
+    {
+       if (!BattlerHasTrait(battler, ABILITY_STATIC)
+        && !BattlerHasTrait(battler, ABILITY_VOLT_ABSORB)
+        && !BattlerHasTrait(battler, ABILITY_LIGHTNING_ROD)
+        && !BattlerHasTrait(battler, ABILITY_MEGA_NATURA)
+        && !BattlerHasTrait(battler, ABILITY_MEGA_FULGUR)
+        && !BattlerHasTrait(battler, ABILITY_MEGA_NEBULA)
+        && !BattlerHasTrait(battler, ABILITY_MEGA_PSYCHICA)
+        && !IS_BATTLER_ANY_TYPE(battler, TYPE_ELECTRIC, TYPE_GROUND, TYPE_STEEL)
+        && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
+        && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
+        && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
+        && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
+        && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
+        {
+            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+            BattleScriptExecute(BattleScript_DamagingTerrain);
+            effect = TRUE;
+        } 
+    }
+
+    return effect;
+}
+
 static bool32 HandleEndTurnThirdEventBlock(u32 battler)
 {
     bool32 effect = FALSE;
@@ -1495,6 +1561,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_WONDER_ROOM] = HandleEndTurnWonderRoom,
     [ENDTURN_MAGIC_ROOM] = HandleEndTurnMagicRoom,
     [ENDTURN_TERRAIN] = HandleEndTurnTerrain,
+    [ENDTURN_TERRAIN_DAMAGE] = HandleEndTurnTerrainDamage,
     [ENDTURN_THIRD_EVENT_BLOCK] = HandleEndTurnThirdEventBlock,
     [ENDTURN_EMERGENCY_EXIT_4] = HandleEndTurnEmergencyExit,
     [ENDTURN_FORM_CHANGE_ABILITIES] = HandleEndTurnFormChangeAbilities,

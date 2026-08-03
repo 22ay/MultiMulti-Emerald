@@ -5068,6 +5068,34 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 effect++;
                 break;
             }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_FLAME_BODY)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+            && (GetAttackerWeather(battler, GetWeather()) & (B_WEATHER_SUN))
+            && !IsBattlerAtMaxHp(battler)
+            && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
+            && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
+            && !gBattleMons[battler].volatiles.healBlock)
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_FLAME_BODY);
+                BattleScriptExecute(BattleScript_FlameBodyHeal);
+                SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                effect++;
+                break;
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_STATIC)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+            && (GetAttackerTerrain(battler, GetTerrain()) & (BATTLE_FIELD_ELECTRIC_TERRAIN))
+            && !IsBattlerAtMaxHp(battler)
+            && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
+            && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
+            && !gBattleMons[battler].volatiles.healBlock)
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_STATIC);
+                BattleScriptExecute(BattleScript_StaticHeal);
+                SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                effect++;
+                break;
+            }
             if ((traitCheck = SearchTraits(battlerTraits, ABILITY_RAIN_DISH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
              && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN)
              && !IsBattlerAtMaxHp(battler)
@@ -5647,10 +5675,12 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         bool32 tryParalysis = FALSE;
         bool32 tryBurn = FALSE;
         bool32 tryPoison = FALSE;
+        bool32 tryFrostbite = FALSE;
         enum Ability sleepAbility = ABILITY_NONE;
         enum Ability paralysisAbility = ABILITY_NONE;
         enum Ability burnAbility = ABILITY_NONE;
         enum Ability poisonAbility = ABILITY_NONE;
+        enum Ability frostbiteAbility = ABILITY_NONE;
 
         if (SearchTraits(battlerTraits, ABILITY_EFFECT_SPORE))
         {
@@ -5708,6 +5738,12 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         {
             poisonAbility = ABILITY_POISON_POINT;
             tryPoison = TRUE;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_ICE_BODY)
+        && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_ICE_BODY, 30) : RandomChance(RNG_ICE_BODY, 1, 3)))
+        {
+            frostbiteAbility = ABILITY_ICE_BODY;
+            tryFrostbite = TRUE;
         }
 
         // Ailment priority is: Sleep > Paralysis > Burn > Poison
@@ -5769,6 +5805,21 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             gBattleScripting.battler = gBattlerTarget;
             gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
             gLastUsedAbility = poisonAbility;
+            PushTraitStack(battler, gLastUsedAbility);
+            BattleScriptCall(BattleScript_AbilityStatusEffectDef);
+            effect++;
+        }
+        else if (tryFrostbite
+            && IsBattlerAlive(gBattlerAttacker)
+            && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+            && IsBattlerTurnDamaged(gBattlerTarget)
+            && CanGetFrostbite(gBattlerTarget, gBattlerAttacker)
+            && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, move))
+        {
+            gEffectBattler = gBattlerAttacker;
+            gBattleScripting.battler = gBattlerTarget;
+            gBattleScripting.moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE;
+            gLastUsedAbility = frostbiteAbility;
             PushTraitStack(battler, gLastUsedAbility);
             BattleScriptCall(BattleScript_AbilityStatusEffectDef);
             effect++;
@@ -11440,8 +11491,6 @@ bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags)
 
 u32 GetTerrain(void)
 {
-    if (!HasTerrainEffect())
-        return BATTLE_FIELD_NONE;
     return gBattleTerrain;
 }
 
@@ -12001,42 +12050,6 @@ bool32 HasWeatherEffect(void)
 
         if (BattlerHasTrait(battler, ABILITY_CLOUD_NINE)
          || BattlerHasTrait(battler, ABILITY_AIR_LOCK))
-            return FALSE;
-    }
-
-    return TRUE;
-}
-
-bool32 HasAbilityWeatherEffect(void)
-{
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (!IsBattlerAlive(battler))
-            continue;
-
-        if (BattlerHasTrait(battler, ABILITY_MEGA_SOL)
-         || BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
-         || BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
-         || BattlerHasTrait(battler, ABILITY_MEGA_NIX)
-         || BattlerHasTrait(battler, ABILITY_MEGA_CALIGO))
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
-bool32 HasTerrainEffect(void)
-{
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (!IsBattlerAlive(battler))
-            continue;
-
-        if (!BattlerHasTrait(battler, ABILITY_MEGA_NATURA)
-         && !BattlerHasTrait(battler, ABILITY_MEGA_FULGUR)
-         && !BattlerHasTrait(battler, ABILITY_MEGA_NEBULA)
-         && !BattlerHasTrait(battler, ABILITY_MEGA_PSYCHICA)
-         && !IsBattlerGrounded(battler))
             return FALSE;
     }
 

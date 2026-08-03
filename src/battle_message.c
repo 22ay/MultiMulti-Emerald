@@ -592,6 +592,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_INVERSEROOMENDS]                      = COMPOUND_STRING("The battlefield returned to normal!"),
     [STRINGID_AQUARINGHEAL]                         = COMPOUND_STRING("A veil of water restored {B_ATK_NAME_WITH_PREFIX2}'s HP!"),
     [STRINGID_ELECTRICTERRAINENDS]                  = COMPOUND_STRING("The electricity disappeared from the battlefield."),
+    [STRINGID_ELECTRICTERRAINDMG]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is shocked by the terrain!"),
     [STRINGID_MISTYTERRAINENDS]                     = COMPOUND_STRING("The mist disappeared from the battlefield."),
     [STRINGID_PSYCHICTERRAINENDS]                   = COMPOUND_STRING("The weirdness disappeared from the battlefield!"),
     [STRINGID_GRASSYTERRAINENDS]                    = COMPOUND_STRING("The grass disappeared from the battlefield."),

@@ -5136,6 +5136,13 @@ BattleScript_DamagingWeather::
 	hitanimation BS_ATTACKER
 	goto BattleScript_DoTurnDmg
 
+BattleScript_DamagingTerrain::
+	printstring STRINGID_ELECTRICTERRAINDMG
+	waitmessage B_WAIT_TIME_LONG
+	effectivenesssound
+	hitanimation BS_ATTACKER
+	goto BattleScript_DoTurnDmg
+
 BattleScript_FogEnded_Ret::
 	printstring STRINGID_FOGLIFTED
 	waitmessage B_WAIT_TIME_LONG
@@ -5143,6 +5150,24 @@ BattleScript_FogEnded_Ret::
 	return
 
 BattleScript_IceBodyHeal::
+	call BattleScript_AbilityPopUp
+	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
+	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	printstring STRINGID_ICEBODYHPGAIN
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_FlameBodyHeal::
+	call BattleScript_AbilityPopUp
+	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
+	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	printstring STRINGID_ICEBODYHPGAIN
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_StaticHeal::
 	call BattleScript_AbilityPopUp
 	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE

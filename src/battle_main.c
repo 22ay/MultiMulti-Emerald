@@ -4842,7 +4842,11 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     STORE_BATTLER_ITEMS(battler);
 
     // weather abilities
-    if (HasWeatherEffect() || HasAbilityWeatherEffect())
+    if (HasWeatherEffect() || BattlerHasTrait(battler, ABILITY_MEGA_SOL)
+         || BattlerHasTrait(battler, ABILITY_MEGA_PLUVIA)
+         || BattlerHasTrait(battler, ABILITY_MEGA_HARENA)
+         || BattlerHasTrait(battler, ABILITY_MEGA_NIX)
+         || BattlerHasTrait(battler, ABILITY_MEGA_CALIGO))
     {
         if (SearchTraits(battlerTraits, ABILITY_SWIFT_SWIM)  && !SearchItemSlots(battlerItems, HOLD_EFFECT_UTILITY_UMBRELLA) 
         && (GetAttackerWeather(battler, GetWeather()) & B_WEATHER_RAIN))
