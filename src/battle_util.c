@@ -11496,6 +11496,9 @@ u32 GetTerrain(void)
 
 u32 GetAttackerTerrain(u32 battler, u32 terrain)
 {
+    if (!IsBattlerGrounded(battler))
+        return BATTLE_FIELD_NONE;
+        
     if (BattlerHasTrait(battler, ABILITY_MEGA_NATURA))
         return BATTLE_FIELD_GRASSY_TERRAIN;
 
