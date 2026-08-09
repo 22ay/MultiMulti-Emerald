@@ -4236,4 +4236,15 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_EMBER_ECHO] =
+    {
+        .name = _("Ember Echo"),
+        .description = COMPOUND_STRING("Attacks with Ember."),
+        .longDescription = COMPOUND_STRING("If this Pokémon attacks with a\n"
+                                           "Fire-type move, the move Ember\n"
+                                           "is triggered."),
+        .aiRating = 6,
+    },
+
+
 };

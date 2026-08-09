@@ -8425,6 +8425,11 @@ BattleScript_DancerActivates::
 	waitmessage B_WAIT_TIME_SHORT
 	jumptocalledmove TRUE
 
+BattleScript_ExtraMoveActivates::
+	call BattleScript_AbilityPopUp
+	waitmessage B_WAIT_TIME_SHORT
+	jumptocalledmove TRUE
+
 BattleScript_SynchronizeActivates::
 	waitstate
 	call BattleScript_AbilityPopUp

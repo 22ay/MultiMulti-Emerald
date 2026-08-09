@@ -6055,6 +6055,22 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, EFFECT_PRIMARY);
             effect++;
         }
+        else if (SearchTraits(battlerTraits, ABILITY_EMBER_ECHO)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_FIRE
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            gCalledMove = MOVE_EMBER;
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+
+            PushTraitStack(battler, ABILITY_EMBER_ECHO);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
     break;
     case ABILITYEFFECT_MOVE_END_OTHER: // Abilities that activate on *another* battler's moveend: Dancer, Soul-Heart, Receiver, Symbiosis
         if (SearchTraits(battlerTraits, ABILITY_DANCER)

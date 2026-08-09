@@ -177,7 +177,7 @@ struct SpecialStatus
     u8 afterYou:1;
     u8 enduredDamage:1;
     u8 dancerUsedMove:1;
-    u8 padding1:1;
+    u8 extraMoveUsed:1;
     // End of byte
     u8 switchInAbilityDone:1;
     u8 switchInItemDone:1;
