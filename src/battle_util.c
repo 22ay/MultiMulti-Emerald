@@ -10287,11 +10287,27 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
             GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[ctx->battlerAtk].species),
                               ctx->move);
 
-        if (entry && entry->ignoreTypeImmunity)
+        if (entry && entry->typeMultiplier != SIG_TYPING_NONE)
         {
-        // If the move would normally deal 0× damage, override it to 1×
-        if (modifier == UQ_4_12(0.0))
-            modifier = UQ_4_12(1.0);
+            switch (entry->typeMultiplier)
+            {
+                case SIG_TYPING_IMMUNITY:
+                {
+                    if (modifier == UQ_4_12(0.0))
+                        modifier = UQ_4_12(1.0);
+                }
+                break;
+
+                case SIG_TYPING_RESISTANCE:
+                {
+                    if (modifier <= UQ_4_12(0.5))
+                        modifier = UQ_4_12(1.0);
+                }
+                break;
+
+                default:
+                    break;
+            }
         }
     }
 
