@@ -79,7 +79,7 @@ struct SignatureMoveEntry
     enum SignatureMultiHitMode multiHit;
 };
 
-const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move);
+const struct SignatureMoveEntry *GetSignatureMoveEntry(u32 species, u32 move);
 u32 GetSignatureBasePower(u32 battler, u32 move, u32 basePower);
 s32 GetSignaturePriority(u32 species, u32 move);
 

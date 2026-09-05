@@ -12,7 +12,7 @@ static const struct SignatureMoveEntry sSignatureMoves[] =
     { SPECIES_VENUSAUR,   MOVE_CHLOROBLAST,   0, 0, FALSE, SIG_TYPING_NONE, SIG_PWRFORMULA_NORMAL,     SIG_ATKSTAT_NORMAL, SIG_EFFECT_SUN, SIG_MULTI_NONE },
 };
 
-const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move)
+const struct SignatureMoveEntry *GetSignatureMoveEntry(u32 species, u32 move)
 {
     for (int i = 0; i < ARRAY_COUNT(sSignatureMoves); i++)
     {

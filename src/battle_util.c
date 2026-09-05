@@ -8695,6 +8695,63 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
         }
     }
+    else if (entry && entry->attackStatMode != SIG_ATKSTAT_NORMAL)
+    {
+        switch (entry->attackStatMode)
+        {
+        case SIG_ATKSTAT_HIGHEST_OFFENSIVE:
+            if (highestAttackStat == STAT_ATK)
+            {
+                atkStat  = gBattleMons[battlerAtk].attack + (gBattleMons[battlerAtk].spAttack * 0.75);
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+            }
+            else
+            {
+                atkStat  = gBattleMons[battlerAtk].spAttack + (gBattleMons[battlerAtk].attack * 0.75);
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+            }
+            break;
+
+        case SIG_ATKSTAT_DEFENSIVE:
+            if (IsBattleMovePhysical(move))
+            {
+                atkStat  = gBattleMons[battlerAtk].attack + (gBattleMons[battlerAtk].defense * 0.75);
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+            }
+            else
+            {
+                atkStat  = gBattleMons[battlerAtk].spAttack + (gBattleMons[battlerAtk].spDefense * 0.75);
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+            }
+            break;
+
+        case SIG_ATKSTAT_SPEED:
+            if (IsBattleMovePhysical(move))
+            {
+                atkStat  = gBattleMons[battlerAtk].attack + (gBattleMons[battlerAtk].speed * 0.75);
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+            }
+            else
+            {
+                atkStat  = gBattleMons[battlerAtk].spAttack + (gBattleMons[battlerAtk].speed * 0.75);
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+            }
+            break;
+
+        default: //failsafe, will never actually run
+            if (IsBattleMovePhysical(move))
+            {
+                atkStat  = gBattleMons[battlerAtk].attack;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+            }
+            else
+            {
+                atkStat  = gBattleMons[battlerAtk].spAttack;
+                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+            }
+            break;
+        }
+    }
     else if (BattlerHasTrait(battlerAtk, ABILITY_EQUILIBRIUM))
     {
 		if (highestAttackStat == STAT_ATK)
@@ -8776,56 +8833,6 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
 		atkStat  = gBattleMons[battlerAtk].spAttack;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
         gBattleStruct->swapDamageCategory = TRUE;
-    }
-    else if (entry)
-    {
-        switch (entry->attackStatMode)
-        {
-        case SIG_ATKSTAT_HIGHEST_OFFENSIVE:
-            if (highestAttackStat == STAT_ATK)
-            {
-                atkStat  = gBattleMons[battlerAtk].attack;
-                atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
-            }
-            else
-            {
-                atkStat  = gBattleMons[battlerAtk].spAttack;
-                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
-            }
-            break;
-
-        case SIG_ATKSTAT_DEFENSIVE:
-            if (IsBattleMovePhysical(move))
-            {
-                atkStat  = gBattleMons[battlerAtk].defense;
-                atkStage = gBattleMons[battlerAtk].statStages[STAT_DEF];
-            }
-            else
-            {
-                atkStat  = gBattleMons[battlerAtk].spDefense;
-                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
-            }
-            break;
-
-        case SIG_ATKSTAT_SPEED:
-            atkStat  = gBattleMons[battlerAtk].speed;
-            atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
-            break;
-
-        case SIG_ATKSTAT_NORMAL:
-        default:
-            if (IsBattleMovePhysical(move))
-            {
-                atkStat  = gBattleMons[battlerAtk].attack;
-                atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
-            }
-            else
-            {
-                atkStat  = gBattleMons[battlerAtk].spAttack;
-                atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
-            }
-            break;
-        }
     }
     else
     {
