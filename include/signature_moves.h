@@ -1,8 +1,6 @@
 #ifndef GUARD_SIGNATURE_MOVES_H
 #define GUARD_SIGNATURE_MOVES_H
 
-#include "global.h"
-
 enum SignaturePowerFormula
 {
     SIG_PWRFORMULA_NORMAL,
@@ -75,8 +73,9 @@ struct SignatureMoveEntry
     enum SignatureMultiHitMode multiHit;
 };
 
+const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move);
 u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower);
 s8 GetSignaturePriority(u16 species, u16 move);
-const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move);
+
 
 #endif // GUARD_SIGNATURE_MOVES_H

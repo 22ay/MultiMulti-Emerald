@@ -52,6 +52,7 @@
 #include "constants/trainers.h"
 #include "constants/weather.h"
 #include "constants/pokemon.h"
+#include "signature_moves.h"
 
 /*
 NOTE: The data and functions in this file up until (but not including) sSoundMovesTable
@@ -7817,6 +7818,112 @@ static inline u32 IsFieldWaterSportAffected(enum Type moveType)
     }
 
     return FALSE;
+}
+
+u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
+{
+    u32 i, j;
+    u32 weight, hpFraction, speed;
+
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species), gCurrentMove);
+
+    if (entry && entry->basePower != 0)
+        basePower = entry->basePower;
+
+    if (entry && entry->powerFormula != SIG_PWRFORMULA_NORMAL)
+    {
+        switch (entry->powerFormula)
+        {
+            case SIG_PWRFORMULA_REVERSAL:
+            {
+                hpFraction = GetScaledHPFraction(gBattleMons[gBattlerAttacker].hp, gBattleMons[gBattlerAttacker].maxHP, 48);
+                for (i = 0; i < sizeof(sFlailHpScaleToPowerTable); i += 2)
+                {
+                    if (hpFraction <= sFlailHpScaleToPowerTable[i])
+                        break;
+                }
+                return sFlailHpScaleToPowerTable[i + 1];
+            }
+
+            case SIG_PWRFORMULA_WATERSPOUT:
+            {
+                return gBattleMons[gBattlerAttacker].hp * 150 / gBattleMons[gBattlerAttacker].maxHP;
+            }
+
+            case SIG_PWRFORMULA_ELECTRO_BALL:
+            {
+                speed = GetBattlerTotalSpeedStat(gBattlerAttacker) / GetBattlerTotalSpeedStat(gBattlerTarget);
+                if (speed >= ARRAY_COUNT(sSpeedDiffPowerTable))
+                    speed = ARRAY_COUNT(sSpeedDiffPowerTable) - 1;
+                return sSpeedDiffPowerTable[speed];
+            }
+
+            case SIG_PWRFORMULA_GYRO_BALL:
+            {
+                u32 attackerSpeed = GetBattlerTotalSpeedStat(gBattlerAttacker);
+                if (attackerSpeed == 0)
+                {
+                    return 1;
+                }
+                else
+                {
+                    basePower = ((25 * GetBattlerTotalSpeedStat(gBattlerTarget)) / attackerSpeed) + 1;
+                    if (basePower > 150)
+                        return 150;
+                    else
+                        return basePower;
+                }
+            }
+
+            case SIG_PWRFORMULA_HEAVY_SLAM:
+            {
+                weight = GetBattlerWeight(gBattlerAttacker) / GetBattlerWeight(gBattlerTarget);
+                if (weight >= ARRAY_COUNT(sHeatCrashPowerTable))
+                    return sHeatCrashPowerTable[ARRAY_COUNT(sHeatCrashPowerTable) - 1];
+                else
+                    return sHeatCrashPowerTable[weight];
+            }
+
+            case SIG_PWRFORMULA_LOW_KICK:
+            {
+                weight = GetBattlerWeight(gBattlerTarget);
+                for (j = 0; sWeightToDamageTable[j] != 0xFFFF; j += 2)
+                {
+                    if (sWeightToDamageTable[j] > weight)
+                        break;
+                }
+                if (sWeightToDamageTable[j] != 0xFFFF)
+                    return sWeightToDamageTable[j + 1];
+                else
+                    return 120;
+            }
+
+            case SIG_PWRFORMULA_BOLT_BEAK:
+            {
+                if (!HasBattlerActedThisTurn(gBattlerTarget)
+                || gDisableStructs[gBattlerTarget].isFirstTurn == 2)
+                {
+                    return basePower * 2;
+                }
+                return basePower;
+            }
+
+            case SIG_PWRFORMULA_BRINE:
+            {
+                if (gBattleMons[gBattlerTarget].hp <= (gBattleMons[gBattlerTarget].maxHP/2))
+                {
+                    return basePower * 2;
+                }
+                return basePower;
+            }
+
+            default:
+                break;
+        }
+
+    }
+    
+    return basePower;
 }
 
 static inline u32 CalcMoveBasePower(struct DamageContext *ctx)

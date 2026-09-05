@@ -72,6 +72,7 @@
 #include "follower_npc.h"
 #include "load_save.h"
 #include "test/test_runner_battle.h"
+#include "signature_moves.h"
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
 //
