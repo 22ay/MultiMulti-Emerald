@@ -61,10 +61,10 @@ enum SignatureMultiHitMode {
 
 struct SignatureMoveEntry
 {
-    u16 species;
-    u16 move;
-    u16 basePower;
-    s8 priority;
+    u32 species;
+    u32 move;
+    u32 basePower;
+    s32 priority;
     bool8 ignoreTypeImmunity;
     bool8 alwaysCrit;
     enum SignaturePowerFormula powerFormula;
@@ -74,8 +74,8 @@ struct SignatureMoveEntry
 };
 
 const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move);
-u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower);
-s8 GetSignaturePriority(u16 species, u16 move);
+u32 GetSignatureBasePower(u32 battler, u32 move, u32 basePower);
+s32 GetSignaturePriority(u32 species, u32 move);
 
 
 #endif // GUARD_SIGNATURE_MOVES_H

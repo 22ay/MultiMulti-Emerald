@@ -4972,7 +4972,7 @@ s32 GetChosenMovePriority(u32 battler)
     return GetBattleMovePriority(battler, move);
 }
 
-s8 GetSignaturePriority(u16 species, u16 move)
+s32 GetSignaturePriority(u32 species, u32 move)
 {
     const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(species, move);
 

@@ -7820,12 +7820,12 @@ static inline u32 IsFieldWaterSportAffected(enum Type moveType)
     return FALSE;
 }
 
-u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
+u32 GetSignatureBasePower(u32 battler, u32 move, u32 basePower)
 {
     u32 i, j;
     u32 weight, hpFraction, speed;
 
-    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[attacker].species), move);
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[battler].species), move);
 
     if (entry && entry->basePower != 0)
         basePower = entry->basePower;
