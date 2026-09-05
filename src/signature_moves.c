@@ -161,15 +161,3 @@ const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move)
     }
     return NULL;
 }
-
-bool8 IsSignatureMove(u16 species, u16 move)
-{
-    for (u32 i = 0; i < ARRAY_COUNT(sSignatureMoves); i++)
-    {
-        if (sSignatureMoves[i].species == species
-         && sSignatureMoves[i].move == move)
-            return TRUE;
-    }
-
-    return FALSE;
-}

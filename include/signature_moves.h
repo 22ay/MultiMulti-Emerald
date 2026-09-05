@@ -18,15 +18,15 @@ enum SignaturePowerFormula
 
 enum SignatureAttackStatMode
 {
-    SIG_ATKSTAT_NORMAL,              // Use Attack or Sp.Atk normally
-    SIG_ATKSTAT_DEFENSIVE,           // Use Defense or Sp.Def
-    SIG_ATKSTAT_HIGHEST_OFFENSIVE,   // Use whichever is higher: Atk or SpAtk
-    SIG_ATKSTAT_SPEED,               // Use Speed
+    SIG_ATKSTAT_NORMAL,           
+    SIG_ATKSTAT_DEFENSIVE,        
+    SIG_ATKSTAT_HIGHEST_OFFENSIVE,
+    SIG_ATKSTAT_SPEED,            
 };
 
 enum SignatureEffect
 {
-    SIG_EFFECT_NONE = 0,
+    SIG_EFFECT_NONE,
     SIG_EFFECT_SUN,
     SIG_EFFECT_RAIN,
     SIG_EFFECT_SAND,
@@ -77,7 +77,6 @@ struct SignatureMoveEntry
 
 u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower);
 s8 GetSignaturePriority(u16 species, u16 move);
-bool8 IsSignatureMove(u16 species, u16 move);
 const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move);
 
 #endif // GUARD_SIGNATURE_MOVES_H

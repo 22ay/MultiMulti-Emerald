@@ -4516,7 +4516,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
 
         u8 colorId = 0; // default color
 
-        if (IsSignatureMove(summary->species, move))
+        if (GetSignatureMoveEntry(summary->species, move) != NULL)
             colorId = 1;
         
             u8 fontId = FONT_NORMAL;
