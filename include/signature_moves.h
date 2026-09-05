@@ -65,6 +65,29 @@ enum SignatureTypeMultiplier {
     SIG_TYPING_RESISTANCE,
 };
 
+enum SignatureTypeChange
+{
+    SIG_TYPE_NONE,
+    SIG_TYPE_NORMAL,
+    SIG_TYPE_FIGHTING,
+    SIG_TYPE_FLYING,
+    SIG_TYPE_POISON,
+    SIG_TYPE_GROUND,
+    SIG_TYPE_ROCK,
+    SIG_TYPE_BUG,
+    SIG_TYPE_GHOST,
+    SIG_TYPE_STEEL,
+    SIG_TYPE_FIRE,
+    SIG_TYPE_WATER,
+    SIG_TYPE_GRASS,
+    SIG_TYPE_ELECTRIC,
+    SIG_TYPE_PSYCHIC,
+    SIG_TYPE_ICE,
+    SIG_TYPE_DRAGON,
+    SIG_TYPE_DARK,
+    SIG_TYPE_FAIRY,
+};
+
 struct SignatureMoveEntry
 {
     u32 species;
@@ -77,6 +100,7 @@ struct SignatureMoveEntry
     enum SignatureAttackStatMode attackStatMode;
     enum SignatureEffect addedEffect;
     enum SignatureMultiHitMode multiHit;
+    enum SignatureTypeChange typeChange;
 };
 
 const struct SignatureMoveEntry *GetSignatureMoveEntry(u32 species, u32 move);

@@ -6051,6 +6051,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
     enum Type type1, type2, type3;
     enum Gimmick gimmick = GetActiveGimmick(battler);
     bool32 utilityUmbrellaAffected = FALSE;
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[battler].species), move);
 
     if (state == MON_IN_BATTLE)
     {
@@ -6070,6 +6071,70 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
         type2 = GetSpeciesType(species, 1);
         type3 = TYPE_MYSTERY;
         utilityUmbrellaAffected = MonHasItemHoldEffect(mon, HOLD_EFFECT_UTILITY_UMBRELLA);
+    }
+
+    if (entry && entry->typeChange != SIG_TYPE_NONE)
+    {
+        switch (entry->typeChange)
+        {
+        case SIG_TYPE_NORMAL:
+            return TYPE_NORMAL;
+
+        case SIG_TYPE_FIGHTING:
+            return TYPE_FIGHTING;
+
+        case SIG_TYPE_FLYING:
+            return TYPE_FLYING;
+
+        case SIG_TYPE_POISON:
+            return TYPE_POISON;
+
+        case SIG_TYPE_GROUND:
+            return TYPE_GROUND;
+
+        case SIG_TYPE_ROCK:
+            return TYPE_ROCK;
+
+        case SIG_TYPE_BUG:
+            return TYPE_BUG;
+
+        case SIG_TYPE_GHOST:
+            return TYPE_GHOST;
+
+        case SIG_TYPE_STEEL:
+            return TYPE_STEEL;
+
+        case SIG_TYPE_FIRE:
+            return TYPE_FIRE;
+
+        case SIG_TYPE_WATER:
+            return TYPE_WATER;
+
+        case SIG_TYPE_GRASS:
+            return TYPE_GRASS;
+
+        case SIG_TYPE_ELECTRIC:
+            return TYPE_ELECTRIC;
+
+        case SIG_TYPE_PSYCHIC:
+            return TYPE_PSYCHIC;
+
+        case SIG_TYPE_ICE:
+            return TYPE_ICE;
+
+        case SIG_TYPE_DRAGON:
+            return TYPE_DRAGON;
+
+        case SIG_TYPE_DARK:
+            return TYPE_DARK;
+
+        case SIG_TYPE_FAIRY:
+            return TYPE_FAIRY;
+            
+        default:
+            break;
+        
+        }
     }
 
     switch (moveEffect)
