@@ -12,20 +12,6 @@ static const struct SignatureMoveEntry sSignatureMoves[] =
     { SPECIES_VENUSAUR,   MOVE_CHLOROBLAST,   0, 0, FALSE, FALSE, SIG_PWRFORMULA_NORMAL,     SIG_ATKSTAT_NORMAL, SIG_EFFECT_SUN, SIG_MULTI_NONE },
 };
 
-s8 GetSignaturePriority(u16 species, u16 move)
-{
-    for (u32 i = 0; i < ARRAY_COUNT(sSignatureMoves); i++)
-    {
-        if (sSignatureMoves[i].species == species
-         && sSignatureMoves[i].move == move)
-        {
-            return sSignatureMoves[i].priority;
-        }
-    }
-
-    return 0; // default priority
-}
-
 const struct SignatureMoveEntry *GetSignatureMoveEntry(u16 species, u16 move)
 {
     for (int i = 0; i < ARRAY_COUNT(sSignatureMoves); i++)

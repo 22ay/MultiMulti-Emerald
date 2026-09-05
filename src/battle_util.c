@@ -7825,7 +7825,7 @@ u16 GetSignatureBasePower(u8 attacker, u16 move, u16 basePower)
     u32 i, j;
     u32 weight, hpFraction, speed;
 
-    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[gBattlerAttacker].species), gCurrentMove);
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[attacker].species), move);
 
     if (entry && entry->basePower != 0)
         basePower = entry->basePower;
