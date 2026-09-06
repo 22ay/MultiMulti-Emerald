@@ -8977,6 +8977,14 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
      && moveType == TYPE_FIGHTING)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
+    if (SearchTraits(battlerTraits, ABILITY_TURBOBLAZE)
+     && moveType == TYPE_FIRE)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+
+    if (SearchTraits(battlerTraits, ABILITY_TERAVOLT)
+     && moveType == TYPE_ELECTRIC)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+
     if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS)
      && !(gBattleMons[battlerAtk].volatiles.transformed))
     {
