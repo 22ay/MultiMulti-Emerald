@@ -1704,6 +1704,7 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
 {
     s32 critChance = 0;
     enum Ability abilityDef = ABILITY_NONE;
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species), move);
 
     if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_LUCKY_CHANT)
     {
@@ -1711,11 +1712,7 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
     }
     else
     {
-        // Signature move: always crit (but still blocked by crit-blocking abilities)
-        const struct SignatureMoveEntry *entry =
-            GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species), move);
-
-        if (entry && entry->alwaysCrit)
+        if (entry && entry->alwaysCrit != 0)
         {
             critChance = CRITICAL_HIT_ALWAYS;
         }

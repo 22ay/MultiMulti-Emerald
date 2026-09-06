@@ -10290,22 +10290,20 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         TryInitializeFirstSTABMoveTrainerSlide(ctx->battlerDef, ctx->battlerAtk, ctx->moveType);
 
     {
-        const struct SignatureMoveEntry *entry =
-            GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[ctx->battlerAtk].species),
-                              ctx->move);
+        const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[ctx->battlerAtk].species), ctx->move);
 
-        if (entry && entry->typeMultiplier != SIG_TYPING_NONE)
+        if (entry && entry->typeIgnore != SIG_IGNORE_NONE)
         {
-            switch (entry->typeMultiplier)
+            switch (entry->typeIgnore)
             {
-                case SIG_TYPING_IMMUNITY:
+                case SIG_IGNORE_IMMUNITY:
                 {
                     if (modifier == UQ_4_12(0.0))
                         modifier = UQ_4_12(1.0);
                 }
                 break;
 
-                case SIG_TYPING_RESISTANCE:
+                case SIG_IGNORE_RESISTANCE:
                 {
                     if (modifier <= UQ_4_12(0.5))
                         modifier = UQ_4_12(1.0);
@@ -12423,10 +12421,15 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, u32 move, enum Fu
     bool32 effect = FALSE;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
+    const struct SignatureMoveEntry *entry = GetSignatureMoveEntry(GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species), move);
 
     if ((gBattleMons[battlerDef].volatiles.lockOn && gDisableStructs[battlerDef].battlerWithSureHit == battlerAtk)
      || (GetConfig(B_TOXIC_NEVER_MISS) >= GEN_6 && nonVolatileStatus == MOVE_EFFECT_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
      || gBattleMons[battlerDef].volatiles.glaiveRush)
+    {
+        effect = TRUE;
+    }
+    else if (entry && entry->alwaysHit != 0)
     {
         effect = TRUE;
     }

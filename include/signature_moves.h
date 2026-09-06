@@ -59,10 +59,10 @@ enum SignatureMultiHitMode {
     SIG_MULTI_ALWAYS_5,
 };
 
-enum SignatureTypeMultiplier {
-    SIG_TYPING_NONE,
-    SIG_TYPING_IMMUNITY,
-    SIG_TYPING_RESISTANCE,
+enum SignatureTypeIgnore {
+    SIG_IGNORE_NONE,
+    SIG_IGNORE_IMMUNITY,
+    SIG_IGNORE_RESISTANCE,
 };
 
 enum SignatureTypeChange
@@ -95,7 +95,8 @@ struct SignatureMoveEntry
     u32 basePower;
     s32 priority;
     bool32 alwaysCrit;
-    enum SignatureTypeMultiplier typeMultiplier;
+    bool32 alwaysHit;
+    enum SignatureTypeIgnore typeIgnore;
     enum SignaturePowerFormula powerFormula;
     enum SignatureAttackStatMode attackStatMode;
     enum SignatureEffect addedEffect;
