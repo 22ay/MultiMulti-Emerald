@@ -3769,9 +3769,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_BLITZ] =
+    [ABILITY_MOMENTUM] =
     {
-        .name = _("Blitz"),
+        .name = _("Momentum"),
         .description = COMPOUND_STRING("Speed used for attacking"),
         .longDescription = COMPOUND_STRING("The Speed stat is used\n"
                                            "for damage calculcations."),
@@ -4020,9 +4020,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_MOMENTUM] =
+    [ABILITY_BLITZ] =
     {
-        .name = _("Momentum"),
+        .name = _("Blitz"),
         .description = COMPOUND_STRING("Attacks with some speed."),
         .longDescription = COMPOUND_STRING("50% of this Pokémon's speed\n"
                                            "stat is added to the\n"
@@ -4074,9 +4074,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_PRONTO] =
+    [ABILITY_IMPULSE] =
     {
-        .name = _("Pronto"),
+        .name = _("Impulse"),
         .description = COMPOUND_STRING("Speed used for Defenses."),
         .longDescription = COMPOUND_STRING("The Speed stat is used\n"
                                            "for defensive\n" 
@@ -4084,18 +4084,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_NIMBLE] =
+    [ABILITY_TWINKLE_TOES] =
     {
-        .name = _("Nimble"),
-        .description = COMPOUND_STRING("Some speed used for Defenses."),
+        .name = _("Twinkle Toes"),
+        .description = COMPOUND_STRING("Some Speed used for Defenses."),
         .longDescription = COMPOUND_STRING("50% of the Speed stat is used\n"
                                            "for defensive calculations."),
         .aiRating = 6,
     },
 
-    [ABILITY_OVERPOWER] =
+    [ABILITY_ALL_MIGHT] =
     {
-        .name = _("Overpower"),
+        .name = _("All Might"),
         .description = COMPOUND_STRING("Attack used for Defense."),
         .longDescription = COMPOUND_STRING("The Attack stat is used\n"
                                            "for defensive\n" 
@@ -4103,18 +4103,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_MIGHTY] =
+    [ABILITY_BRAWNY] =
     {
-        .name = _("Mighty"),
-        .description = COMPOUND_STRING("Some Atk used for Defense."),
+        .name = _("Brawny"),
+        .description = COMPOUND_STRING("Some Attack used for Defense."),
         .longDescription = COMPOUND_STRING("50% of the Attack stat is used\n"
                                            "for defensive calculations."),
         .aiRating = 6,
     },
 
-    [ABILITY_MYSTIC_BULWARK] =
+    [ABILITY_MIND_OVER_MATTER] =
     {
-        .name = _("Mystic Bulwark"),
+        .name = _("Mind Over Matter"),
         .description = COMPOUND_STRING("Sp.Atk used for Sp.Def."),
         .longDescription = COMPOUND_STRING("The Sp.Attack stat is used\n"
                                            "for defensive\n" 
@@ -4122,9 +4122,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_BALLISTIC_GUARD] =
+    [ABILITY_VANTAGE_POINT] =
     {
-        .name = _("Ballistic Guard"),
+        .name = _("Vantage Point"),
         .description = COMPOUND_STRING("Sp.Atk used for Sp.Def."),
         .longDescription = COMPOUND_STRING("The Sp.Attack stat is used\n"
                                            "for defensive\n" 

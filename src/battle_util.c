@@ -8778,12 +8778,12 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
         }
     }
-    else if (BattlerHasTrait(battlerAtk, ABILITY_BLITZ))
+    else if (BattlerHasTrait(battlerAtk, ABILITY_MOMENTUM))
     {
 		atkStat  = gBattleMons[battlerAtk].speed;
         atkStage = gBattleMons[battlerAtk].statStages[STAT_SPEED];
     }
-    else if (BattlerHasTrait(battlerAtk, ABILITY_MOMENTUM))
+    else if (BattlerHasTrait(battlerAtk, ABILITY_BLITZ))
     {
 		if (IsBattleMovePhysical(move))
         {
@@ -9117,7 +9117,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     def = gBattleMons[battlerDef].defense;
     spDef = gBattleMons[battlerDef].spDefense;
 
-    if (BattlerHasTrait(battlerDef, ABILITY_PRONTO))
+    if (BattlerHasTrait(battlerDef, ABILITY_IMPULSE))
     {
         if (IsBattleMovePhysical(move) || moveEffect == EFFECT_PSYSHOCK)
         {
@@ -9132,7 +9132,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
             defStage = gBattleMons[battlerDef].statStages[STAT_SPEED];
         }
     }
-    else if (BattlerHasTrait(battlerDef, ABILITY_NIMBLE))
+    else if (BattlerHasTrait(battlerDef, ABILITY_TWINKLE_TOES))
     {
         if (IsBattleMovePhysical(move) || moveEffect == EFFECT_PSYSHOCK)
         {
@@ -9165,7 +9165,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
             }
         }
     }
-    else if (BattlerHasTrait(battlerDef, ABILITY_OVERPOWER))
+    else if (BattlerHasTrait(battlerDef, ABILITY_ALL_MIGHT))
     {
         if (IsBattleMovePhysical(move) || moveEffect == EFFECT_PSYSHOCK)
         {
@@ -9180,7 +9180,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
             defStage = gBattleMons[battlerDef].statStages[STAT_SPDEF];
         }
     }
-    else if (BattlerHasTrait(battlerDef, ABILITY_MIGHTY))
+    else if (BattlerHasTrait(battlerDef, ABILITY_BRAWNY))
     {
         if (IsBattleMovePhysical(move) || moveEffect == EFFECT_PSYSHOCK)
         {
@@ -9213,7 +9213,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
             }
         }
     }
-    else if (BattlerHasTrait(battlerDef, ABILITY_MYSTIC_BULWARK) || BattlerHasTrait(battlerDef, ABILITY_BALLISTIC_GUARD))
+    else if (BattlerHasTrait(battlerDef, ABILITY_MIND_OVER_MATTER) || BattlerHasTrait(battlerDef, ABILITY_VANTAGE_POINT))
     {
         if (IsBattleMovePhysical(move) || moveEffect == EFFECT_PSYSHOCK)
         {
