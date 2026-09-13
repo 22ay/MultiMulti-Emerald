@@ -6144,6 +6144,87 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptExecute(BattleScript_ExtraMoveActivates);
             effect++;
         }
+        else if (SearchTraits(battlerTraits, ABILITY_EPICENTER)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_GROUND
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            if (IsBattleMovePhysical(gCurrentMove))
+            {
+                gCalledMove = MOVE_EARTHQUAKE;
+            }
+            else
+            {
+                gCalledMove = MOVE_EARTH_POWER;
+            }
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+            PushTraitStack(battler, ABILITY_EPICENTER);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        else if (SearchTraits(battlerTraits, ABILITY_TOXIC_WASTE)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_POISON
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            if (IsBattleMovePhysical(gCurrentMove))
+            {
+                gCalledMove = MOVE_GUNK_SHOT;
+            }
+            else
+            {
+                gCalledMove = MOVE_SLUDGE_BOMB;
+            }
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+            PushTraitStack(battler, ABILITY_TOXIC_WASTE);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        else if (SearchTraits(battlerTraits, ABILITY_DRAGONS_RAGE)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_DRAGON
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            gCalledMove = MOVE_DRAGON_RAGE;
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+            PushTraitStack(battler, ABILITY_DRAGONS_RAGE);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        else if (SearchTraits(battlerTraits, ABILITY_DARK_AURA)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_DARK
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            if (IsBattleMovePhysical(gCurrentMove))
+            {
+                gCalledMove = MOVE_KNOCK_OFF;
+            }
+            else
+            {
+                gCalledMove = MOVE_DARK_PULSE;
+            }
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+            PushTraitStack(battler, ABILITY_DARK_AURA);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
     break;
     case ABILITYEFFECT_MOVE_END_OTHER: // Abilities that activate on *another* battler's moveend: Dancer, Soul-Heart, Receiver, Symbiosis
         if (SearchTraits(battlerTraits, ABILITY_DANCER)

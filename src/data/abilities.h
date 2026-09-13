@@ -4249,5 +4249,39 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_EPICENTER] =
+    {
+        .name = _("Epicenter"),
+        .description = COMPOUND_STRING("Attacks with Ground."),
+        .longDescription = COMPOUND_STRING("If this Pokémon attacks with an\n"
+                                           "Ground-type move, the move\n"
+                                           "Earth Power or Earthquake is\n"
+                                           "triggered, depending on the\n"
+                                           "move used."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_TOXIC_WASTE] =
+    {
+        .name = _("Toxic Waste"),
+        .description = COMPOUND_STRING("Attacks with Poison."),
+        .longDescription = COMPOUND_STRING("If this Pokémon attacks with an\n"
+                                           "Poison-type move, the move\n"
+                                           "Sludge Bomb or Gunk Shot is\n"
+                                           "triggered, depending on the\n"
+                                           "move used."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_DRAGONS_RAGE] =
+    {
+        .name = _("Dragon's Rage"),
+        .description = COMPOUND_STRING("Attacks with Dragon."),
+        .longDescription = COMPOUND_STRING("If this Pokémon attacks with an\n"
+                                           "Dragon-type move, the move\n"
+                                           "Dragon Rage is triggered."),
+        .aiRating = 6,
+    },
+
 
 };
