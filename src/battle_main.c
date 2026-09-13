@@ -6036,7 +6036,7 @@ enum Type TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
         ateType = TYPE_GROUND;
     else if (BattlerHasTrait(battlerAtk, ABILITY_SPECTRALIZE))
         ateType = TYPE_GHOST;
-    else if (BattlerHasTrait(battlerAtk, ABILITY_STEELY_SPIRIT))
+    else if (BattlerHasTrait(battlerAtk, ABILITY_STEELWORKER))
         ateType = TYPE_STEEL;
 
     return ateType;
