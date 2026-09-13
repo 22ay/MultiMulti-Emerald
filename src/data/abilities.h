@@ -4293,5 +4293,15 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_FLOW_STATE] =
+    {
+        .name = _("Flow State"),
+        .description = COMPOUND_STRING("Hits with Extreme Speed."),
+        .longDescription = COMPOUND_STRING("This Pokémon negates priority\n"
+                                           "moves, then responds with\n"
+                                           "the move Extreme Speed."),
+        .aiRating = 6,
+    },
+
 
 };

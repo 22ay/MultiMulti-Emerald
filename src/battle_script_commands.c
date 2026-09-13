@@ -1346,6 +1346,23 @@ static void Cmd_attackcanceler(void)
             return;
         }
     }
+    
+    if (BattlerHasTrait(ctx.battlerDef, ABILITY_FLOW_STATE)
+        && IsBattlerAlive(ctx.battlerAtk)
+        && !gProtectStructs[ctx.battlerAtk].confusionSelfDmg
+        && gMovesInfo[gCurrentMove].power != 0
+        && gMovesInfo[gCurrentMove].priority > 0
+        && IsBattlerAlive(ctx.battlerDef)
+        && !gSpecialStatuses[ctx.battlerDef].extraMoveUsed)
+    {
+            gSpecialStatuses[ctx.battlerDef].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = ctx.battlerDef;
+            gBattlerTarget = ctx.battlerAtk;
+            gCalledMove = MOVE_EXTREME_SPEED;
+            PushTraitStack(ctx.battlerDef, ABILITY_FLOW_STATE);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            return;
+    }
 
     if (BattlerHasTrait(ctx.battlerDef, ABILITY_COLOR_CHANGE) // wip, might still be buggy
         && IsBattlerAlive(ctx.battlerDef)
