@@ -4238,13 +4238,14 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
-    [ABILITY_EMBER_ECHO] =
+    [ABILITY_AFTERSHOCK] =
     {
-        .name = _("Ember Echo"),
-        .description = COMPOUND_STRING("Attacks with Ember."),
-        .longDescription = COMPOUND_STRING("If this Pokémon attacks with a\n"
-                                           "Fire-type move, the move Ember\n"
-                                           "is triggered."),
+        .name = _("Aftershock"),
+        .description = COMPOUND_STRING("Attacks with Electric."),
+        .longDescription = COMPOUND_STRING("If this Pokémon attacks with an\n"
+                                           "Electric-type move, the move\n"
+                                           "Shock Wave or Spark is triggered,\n"
+                                           "depending on the move used."),
         .aiRating = 6,
     },
 

@@ -6056,7 +6056,29 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, EFFECT_PRIMARY);
             effect++;
         }
-        else if (SearchTraits(battlerTraits, ABILITY_EMBER_ECHO)
+        else if (SearchTraits(battlerTraits, ABILITY_OVERGROW)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_GRASS
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            if (IsBattleMovePhysical(gCurrentMove))
+            {
+                gCalledMove = MOVE_RAZOR_LEAF;
+            }
+            else
+            {
+                gCalledMove = MOVE_MAGICAL_LEAF;
+            }
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+            PushTraitStack(battler, ABILITY_OVERGROW);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        else if (SearchTraits(battlerTraits, ABILITY_BLAZE)
         && IsBattlerAlive(gBattlerTarget)
         && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
         && IsBattlerTurnDamaged(gBattlerTarget)
@@ -6065,10 +6087,60 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         {
             gSpecialStatuses[battler].extraMoveUsed = TRUE;
             gBattlerAttacker = gBattlerAbility = battler;
-            gCalledMove = MOVE_EMBER;
+            if (IsBattleMovePhysical(gCurrentMove))
+            {
+                gCalledMove = MOVE_FLAME_WHEEL;
+            }
+            else
+            {
+                gCalledMove = MOVE_EMBER;
+            }
             gBattlerTarget = gBattleStruct->moveTarget[battler];
-
-            PushTraitStack(battler, ABILITY_EMBER_ECHO);
+            PushTraitStack(battler, ABILITY_BLAZE);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        else if (SearchTraits(battlerTraits, ABILITY_TORRENT)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_WATER
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            if (IsBattleMovePhysical(gCurrentMove))
+            {
+                gCalledMove = MOVE_AQUA_JET;
+            }
+            else
+            {
+                gCalledMove = MOVE_WATER_GUN;
+            }
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+            PushTraitStack(battler, ABILITY_TORRENT);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        else if (SearchTraits(battlerTraits, ABILITY_AFTERSHOCK)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && moveType == TYPE_ELECTRIC
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            gBattlerAttacker = gBattlerAbility = battler;
+            if (IsBattleMovePhysical(gCurrentMove))
+            {
+                gCalledMove = MOVE_SPARK;
+            }
+            else
+            {
+                gCalledMove = MOVE_SHOCK_WAVE;
+            }
+            gBattlerTarget = gBattleStruct->moveTarget[battler];
+            PushTraitStack(battler, ABILITY_AFTERSHOCK);
             BattleScriptExecute(BattleScript_ExtraMoveActivates);
             effect++;
         }
