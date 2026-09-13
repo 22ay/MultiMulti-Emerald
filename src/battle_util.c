@@ -8009,7 +8009,13 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     basePower = GetSignatureBasePower(battlerAtk, move, basePower);
     u32 moveEffect = GetMoveEffect(move);
     u32 weight, hpFraction, speed;
+    
+    /*By doing this, the extra moves called via certain abilities (Aftershock, Epicenter, etc) will be fixed at 50 BP
+    This increases the amount of moves I can potentially use without them being overpowering */
 
+    if ((gSpecialStatuses[battlerAtk].extraMoveUsed == TRUE))
+        return 50; 
+        
     if (GetActiveGimmick(battlerAtk) == GIMMICK_Z_MOVE)
         return GetZMovePower(gCurrentMove);
 
