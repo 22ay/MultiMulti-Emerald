@@ -5843,6 +5843,24 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_CuteCharmActivates);
             effect++;
         }
+        if (SearchTraits(battlerTraits, ABILITY_HYPERNOVA)
+        && IsBattlerAlive(gBattlerAttacker)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            SaveBattlerTarget(gBattlerTarget);
+            SaveBattlerAttacker(gBattlerAttacker);
+            gBattlerAttacker = gBattlerTarget;
+            gCalledMove = MOVE_HYPER_BEAM;
+            gBattlerTarget = BATTLE_OPPOSITE(gBattlerAttacker);
+            PushTraitStack(battler, ABILITY_HYPERNOVA);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+
         if (SearchTraits(battlerTraits, ABILITY_ILLUSION)
          && gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON && IsBattlerTurnDamaged(gBattlerTarget))
         {
@@ -12596,7 +12614,13 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, u32 move, enum Fu
     {
         effect = TRUE;
     }
+    // Signature move entry for always hitting
     else if (entry && entry->alwaysHit != 0)
+    {
+        effect = TRUE;
+    }
+    // The extra move called should not miss
+    else if (gSpecialStatuses[gBattlerAttacker].extraMoveUsed == TRUE)
     {
         effect = TRUE;
     }

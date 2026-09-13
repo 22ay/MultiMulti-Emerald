@@ -4283,5 +4283,15 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_HYPERNOVA] =
+    {
+        .name = _("Hypernova"),
+        .description = COMPOUND_STRING("Responds with Hyper Beam."),
+        .longDescription = COMPOUND_STRING("If this Pokémon is attacked,\n"
+                                           "the move Hyper Beam is\n"
+                                           "triggered."),
+        .aiRating = 6,
+    },
+
 
 };
