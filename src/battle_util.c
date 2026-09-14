@@ -5860,6 +5860,76 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptExecute(BattleScript_ExtraMoveActivates);
             effect++;
         }
+        if (SearchTraits(battlerTraits, ABILITY_STEELY_SPIRIT)
+        && IsBattlerAlive(gBattlerAttacker)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            SaveBattlerTarget(gBattlerTarget);
+            SaveBattlerAttacker(gBattlerAttacker);
+            gBattlerAttacker = gBattlerTarget;
+            gCalledMove = MOVE_METAL_BURST;
+            gBattlerTarget = BATTLE_OPPOSITE(gBattlerAttacker);
+            PushTraitStack(battler, ABILITY_STEELY_SPIRIT);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_FAIRY_AURA)
+        && IsBattlerAlive(gBattlerAttacker)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && IsBattlerAlive(gBattlerTarget)
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            SaveBattlerTarget(gBattlerTarget);
+            SaveBattlerAttacker(gBattlerAttacker);
+            gBattlerAttacker = gBattlerTarget;
+            gCalledMove = MOVE_MOONBLAST;
+            gBattlerTarget = BATTLE_OPPOSITE(gBattlerAttacker);
+            PushTraitStack(battler, ABILITY_FAIRY_AURA);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_PARRY)
+        && IsBattlerAlive(gBattlerAttacker)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && IsBattlerAlive(gBattlerTarget)
+        && IsBattleMovePhysical(gCurrentMove)
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            SaveBattlerTarget(gBattlerTarget);
+            SaveBattlerAttacker(gBattlerAttacker);
+            gBattlerAttacker = gBattlerTarget;
+            gCalledMove = MOVE_COUNTER;
+            gBattlerTarget = BATTLE_OPPOSITE(gBattlerAttacker);
+            PushTraitStack(battler, ABILITY_PARRY);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_REFRACT)
+        && IsBattlerAlive(gBattlerAttacker)
+        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+        && IsBattlerTurnDamaged(gBattlerTarget)
+        && IsBattlerAlive(gBattlerTarget)
+        && IsBattleMoveSpecial(gCurrentMove)
+        && !gSpecialStatuses[battler].extraMoveUsed)
+        {
+            gSpecialStatuses[battler].extraMoveUsed = TRUE;
+            SaveBattlerTarget(gBattlerTarget);
+            SaveBattlerAttacker(gBattlerAttacker);
+            gBattlerAttacker = gBattlerTarget;
+            gCalledMove = MOVE_MIRROR_COAT;
+            gBattlerTarget = BATTLE_OPPOSITE(gBattlerAttacker);
+            PushTraitStack(battler, ABILITY_REFRACT);
+            BattleScriptExecute(BattleScript_ExtraMoveActivates);
+            effect++;
+        }
 
         if (SearchTraits(battlerTraits, ABILITY_ILLUSION)
          && gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON && IsBattlerTurnDamaged(gBattlerTarget))

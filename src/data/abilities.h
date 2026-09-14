@@ -4303,5 +4303,25 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_PARRY] =
+    {
+        .name = _("Parry"),
+        .description = COMPOUND_STRING("Counters attack."),
+        .longDescription = COMPOUND_STRING("When this Pokémon is hit with\n"
+                                           "a physical attack , it responds\n"
+                                           "with Counter."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_REFRACT] =
+    {
+        .name = _("Refract"),
+        .description = COMPOUND_STRING("Reflects attack."),
+        .longDescription = COMPOUND_STRING("When this Pokémon is hit with\n"
+                                           "a special attack , it responds\n"
+                                           "with Mirror Coat."),
+        .aiRating = 6,
+    },
+
 
 };
