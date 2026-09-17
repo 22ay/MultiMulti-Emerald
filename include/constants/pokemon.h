@@ -74,7 +74,8 @@ enum __attribute__((packed)) Type
 #define NATURE_SASSY    22 // +SpDef -Speed
 #define NATURE_CAREFUL  23 // +SpDef -SpAtk
 #define NATURE_QUIRKY   24 // Neutral
-#define NUM_NATURES     25
+#define NATURE_FIERCE   25 // +Atk +SpAtk -Def -SpDef
+#define NUM_NATURES     26
 
 // Pokémon Stats
 enum __attribute__((packed)) Stat
