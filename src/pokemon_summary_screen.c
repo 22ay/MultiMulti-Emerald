@@ -4297,14 +4297,26 @@ static void BufferStat(u8 *dst, enum Stat statIndex, u32 stat, u32 strId, u32 n)
     static const u8 sTextNatureNeutral[] = _("{COLOR}{01}");
     u8 *txtPtr;
 
-    if (statIndex == 0 || !P_SUMMARY_SCREEN_NATURE_COLORS || gNaturesInfo[sMonSummaryScreen->summary.mintNature].statUp == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statDown)
-        txtPtr = StringCopy(dst, sTextNatureNeutral);
-    else if (statIndex == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statUp)
-        txtPtr = StringCopy(dst, sTextNatureUp);
-    else if (statIndex == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statDown)
-        txtPtr = StringCopy(dst, sTextNatureDown);
-    else
-        txtPtr = StringCopy(dst, sTextNatureNeutral);
+    for (u8 i = 0; i < MAX_NATURE_STAT_CHANGE; i++)
+    {
+        if (statIndex == 0 || !P_SUMMARY_SCREEN_NATURE_COLORS || gNaturesInfo[sMonSummaryScreen->summary.mintNature].statUp[0] == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statDown[0])
+            {
+                txtPtr = StringCopy(dst, sTextNatureNeutral);
+                break;
+            }
+        else if (statIndex == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statUp[i])
+            {
+                txtPtr = StringCopy(dst, sTextNatureUp);
+                break;
+            }
+        else if (statIndex == gNaturesInfo[sMonSummaryScreen->summary.mintNature].statDown[i])
+            {
+                txtPtr = StringCopy(dst, sTextNatureDown);
+                break;
+            }
+        else
+            txtPtr = StringCopy(dst, sTextNatureNeutral);
+    }
 
     if (!P_SUMMARY_SCREEN_IV_EV_VALUES
         && sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS)

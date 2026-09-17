@@ -386,8 +386,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_HARDY] =
     {
         .name = COMPOUND_STRING("Hardy"),
-        .statUp = STAT_ATK,
-        .statDown = STAT_ATK,
+        .statUp = { STAT_ATK },
+        .statDown = { STAT_ATK },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_HARDY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
@@ -398,8 +398,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_LONELY] =
     {
         .name = COMPOUND_STRING("Lonely"),
-        .statUp = STAT_ATK,
-        .statDown = STAT_DEF,
+        .statUp = { STAT_ATK },
+        .statDown = { STAT_DEF },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_LONELY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighAttackLow,
@@ -410,8 +410,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_BRAVE] =
     {
         .name = COMPOUND_STRING("Brave"),
-        .statUp = STAT_ATK,
-        .statDown = STAT_SPEED,
+        .statUp = { STAT_ATK },
+        .statDown = { STAT_SPEED },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_BRAVE, AFFINE_TURN_UP},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighDefenseLow,
@@ -422,8 +422,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_ADAMANT] =
     {
         .name = COMPOUND_STRING("Adamant"),
-        .statUp = STAT_ATK,
-        .statDown = STAT_SPATK,
+        .statUp = { STAT_ATK },
+        .statDown = { STAT_SPATK },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_ADAMANT, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
@@ -434,8 +434,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_NAUGHTY] =
     {
         .name = COMPOUND_STRING("Naughty"),
-        .statUp = STAT_ATK,
-        .statDown = STAT_SPDEF,
+        .statUp = { STAT_ATK },
+        .statDown = { STAT_SPDEF },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_NAUGHTY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighAttackLow,
@@ -446,8 +446,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_BOLD] =
     {
         .name = COMPOUND_STRING("Bold"),
-        .statUp = STAT_DEF,
-        .statDown = STAT_ATK,
+        .statUp = { STAT_DEF },
+        .statDown = { STAT_ATK },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_BOLD, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighDefenseLow,
@@ -458,8 +458,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_DOCILE] =
     {
         .name = COMPOUND_STRING("Docile"),
-        .statUp = STAT_DEF,
-        .statDown = STAT_DEF,
+        .statUp = { STAT_DEF },
+        .statDown = { STAT_DEF },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_DOCILE, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
@@ -470,8 +470,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_RELAXED] =
     {
         .name = COMPOUND_STRING("Relaxed"),
-        .statUp = STAT_DEF,
-        .statDown = STAT_SPEED,
+        .statUp = { STAT_DEF },
+        .statDown = { STAT_SPEED },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_RELAXED, AFFINE_TURN_UP_AND_DOWN},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighAttackLow,
@@ -482,8 +482,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_IMPISH] =
     {
         .name = COMPOUND_STRING("Impish"),
-        .statUp = STAT_DEF,
-        .statDown = STAT_SPATK,
+        .statUp = { STAT_DEF },
+        .statDown = { STAT_SPATK },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_IMPISH, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighDefenseLow,
@@ -494,8 +494,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_LAX] =
     {
         .name = COMPOUND_STRING("Lax"),
-        .statUp = STAT_DEF,
-        .statDown = STAT_SPDEF,
+        .statUp = { STAT_DEF },
+        .statDown = { STAT_SPDEF },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_LAX, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow,
@@ -506,8 +506,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_TIMID] =
     {
         .name = COMPOUND_STRING("Timid"),
-        .statUp = STAT_SPEED,
-        .statDown = STAT_ATK,
+        .statUp = { STAT_SPEED },
+        .statDown = { STAT_ATK },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_TIMID, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighSupportLow,
@@ -518,8 +518,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_HASTY] =
     {
         .name = COMPOUND_STRING("Hasty"),
-        .statUp = STAT_SPEED,
-        .statDown = STAT_DEF,
+        .statUp = { STAT_SPEED },
+        .statDown = { STAT_DEF },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_HASTY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
@@ -530,8 +530,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_SERIOUS] =
     {
         .name = COMPOUND_STRING("Serious"),
-        .statUp = STAT_SPEED,
-        .statDown = STAT_SPEED,
+        .statUp = { STAT_SPEED },
+        .statDown = { STAT_SPEED },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_SERIOUS, AFFINE_TURN_DOWN},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow,
@@ -542,8 +542,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_JOLLY] =
     {
         .name = COMPOUND_STRING("Jolly"),
-        .statUp = STAT_SPEED,
-        .statDown = STAT_SPATK,
+        .statUp = { STAT_SPEED },
+        .statDown = { STAT_SPATK },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_JOLLY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighDefenseLow,
@@ -554,8 +554,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_NAIVE] =
     {
         .name = COMPOUND_STRING("Naive"),
-        .statUp = STAT_SPEED,
-        .statDown = STAT_SPDEF,
+        .statUp = { STAT_SPEED },
+        .statDown = { STAT_SPDEF },
         .backAnim = 0,
         .pokeBlockAnim = {ANIM_NAIVE, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
@@ -566,8 +566,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_MODEST] =
     {
         .name = COMPOUND_STRING("Modest"),
-        .statUp = STAT_SPATK,
-        .statDown = STAT_ATK,
+        .statUp = { STAT_SPATK },
+        .statDown = { STAT_ATK },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_MODEST, AFFINE_TURN_DOWN_SLOW},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow,
@@ -578,8 +578,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_MILD] =
     {
         .name = COMPOUND_STRING("Mild"),
-        .statUp = STAT_SPATK,
-        .statDown = STAT_DEF,
+        .statUp = { STAT_SPATK },
+        .statDown = { STAT_DEF },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_MILD, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighSupportLow,
@@ -590,8 +590,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_QUIET] =
     {
         .name = COMPOUND_STRING("Quiet"),
-        .statUp = STAT_SPATK,
-        .statDown = STAT_SPEED,
+        .statUp = { STAT_SPATK },
+        .statDown = { STAT_SPEED },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_QUIET, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
@@ -602,8 +602,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_BASHFUL] =
     {
         .name = COMPOUND_STRING("Bashful"),
-        .statUp = STAT_SPATK,
-        .statDown = STAT_SPATK,
+        .statUp = { STAT_SPATK },
+        .statDown = { STAT_SPATK },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_BASHFUL, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow,
@@ -614,8 +614,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_RASH] =
     {
         .name = COMPOUND_STRING("Rash"),
-        .statUp = STAT_SPATK,
-        .statDown = STAT_SPDEF,
+        .statUp = { STAT_SPATK },
+        .statDown = { STAT_SPDEF },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_RASH, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow,
@@ -626,8 +626,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_CALM] =
     {
         .name = COMPOUND_STRING("Calm"),
-        .statUp = STAT_SPDEF,
-        .statDown = STAT_ATK,
+        .statUp = { STAT_SPDEF },
+        .statDown = { STAT_ATK },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_CALM, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow,
@@ -638,8 +638,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_GENTLE] =
     {
         .name = COMPOUND_STRING("Gentle"),
-        .statUp = STAT_SPDEF,
-        .statDown = STAT_DEF,
+        .statUp = { STAT_SPDEF },
+        .statDown = { STAT_DEF },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_GENTLE, AFFINE_TURN_DOWN_SLIGHT},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighAttackLow,
@@ -650,8 +650,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_SASSY] =
     {
         .name = COMPOUND_STRING("Sassy"),
-        .statUp = STAT_SPDEF,
-        .statDown = STAT_SPEED,
+        .statUp = { STAT_SPDEF },
+        .statDown = { STAT_SPEED },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_SASSY, AFFINE_TURN_UP_HIGH},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighSupportLow,
@@ -662,8 +662,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_CAREFUL] =
     {
         .name = COMPOUND_STRING("Careful"),
-        .statUp = STAT_SPDEF,
-        .statDown = STAT_SPATK,
+        .statUp = { STAT_SPDEF },
+        .statDown = { STAT_SPATK },
         .backAnim = 2,
         .pokeBlockAnim = {ANIM_CAREFUL, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlDefenseHighSupportLow,
@@ -674,8 +674,8 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
     [NATURE_QUIRKY] =
     {
         .name = COMPOUND_STRING("Quirky"),
-        .statUp = STAT_SPDEF,
-        .statDown = STAT_SPDEF,
+        .statUp = { STAT_SPDEF },
+        .statDown = { STAT_SPDEF },
         .backAnim = 1,
         .pokeBlockAnim = {ANIM_QUIRKY, AFFINE_NONE},
         .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
@@ -5189,14 +5189,17 @@ u8 GetTrainerEncounterMusicId(u16 trainerOpponentId)
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex)
 {
     // Don't modify HP, Accuracy, or Evasion by nature
-    if (statIndex <= STAT_HP || statIndex > NUM_NATURE_STATS || gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
-        return stat;
-    else if (statIndex == gNaturesInfo[nature].statUp)
-        return stat * 110 / 100;
-    else if (statIndex == gNaturesInfo[nature].statDown)
-        return stat * 90 / 100;
-    else
-        return stat;
+    for (u8 i = 0; i < MAX_NATURE_STAT_CHANGE; i++)
+    {
+        if (statIndex <= STAT_HP || statIndex > NUM_NATURE_STATS || gNaturesInfo[nature].statUp[0] == gNaturesInfo[nature].statDown[0])
+            return stat;
+        else if (statIndex == gNaturesInfo[nature].statUp[i])
+            return stat * 110 / 100;
+        else if (statIndex == gNaturesInfo[nature].statDown[i])
+            return stat * 90 / 100;
+    }
+
+    return stat; 
 }
 
 void AdjustFriendship(struct Pokemon *mon, u8 event)

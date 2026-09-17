@@ -1476,14 +1476,14 @@ static void PrintStatsTab(void)
         nature = GetMonData(GetBattlerMon(battler), MON_DATA_HIDDEN_NATURE, NULL);
 
         StringCopy(gStringVar1, gNaturesInfo[nature].name);
-        if (gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
+        if (gNaturesInfo[nature].statUp[0] == gNaturesInfo[nature].statDown[0])
         {
             //No Stat Up or Down
             StringExpandPlaceholders(gStringVar4, sText_Title_Nature_NoStat);
         }
         else
         {
-            switch (gNaturesInfo[nature].statUp)
+            switch (gNaturesInfo[nature].statUp[0])
             {
             case STAT_ATK:
                 StringCopy(gStringVar2, sText_Attack);
@@ -1504,7 +1504,7 @@ static void PrintStatsTab(void)
                 break;
             }
 
-            switch (gNaturesInfo[nature].statDown)
+            switch (gNaturesInfo[nature].statDown[0])
             {
             case STAT_ATK:
                 StringCopy(gStringVar3, sText_Attack);

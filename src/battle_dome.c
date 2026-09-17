@@ -4431,15 +4431,15 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                 else
                     nature = gSaveBlock2Ptr->frontier.domePlayerPartyData[i].nature;
 
-                if (gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
+                if (gNaturesInfo[nature].statUp[0] == gNaturesInfo[nature].statDown[0])
                 {
                     allocatedArray[j + NUM_STATS + 1] += allocatedArray[j + 1];
                 }
-                else if (gNaturesInfo[nature].statUp == j + 1)
+                else if (gNaturesInfo[nature].statUp[0] == j + 1)
                 {
                     allocatedArray[j + NUM_STATS + 1] += (allocatedArray[j + 1] * 110) / 100;
                 }
-                else if (gNaturesInfo[nature].statDown == j + 1)
+                else if (gNaturesInfo[nature].statDown[0] == j + 1)
                 {
                     allocatedArray[j + NUM_STATS + 1] += (allocatedArray[j + 1] * 90) / 100;
                     allocatedArray[j + NUM_STATS + NUM_NATURE_STATS + 2]++;
@@ -4473,15 +4473,15 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
             {
                 nature = gFacilityTrainerMons[DOME_MONS[trainerTourneyId][i]].nature;
 
-                if (gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
+                if (gNaturesInfo[nature].statUp[0] == gNaturesInfo[nature].statDown[0])
                 {
                     allocatedArray[j + NUM_STATS + 1] += allocatedArray[j + 1];
                 }
-                else if (gNaturesInfo[nature].statUp == j + 1)
+                else if (gNaturesInfo[nature].statUp[0] == j + 1)
                 {
                     allocatedArray[j + NUM_STATS + 1] += (allocatedArray[j + 1] * 110) / 100;
                 }
-                else if (gNaturesInfo[nature].statDown == j + 1)
+                else if (gNaturesInfo[nature].statDown[0] == j + 1)
                 {
                     allocatedArray[j + NUM_STATS + 1] += (allocatedArray[j + 1] * 90) / 100;
                     allocatedArray[j + NUM_STATS + NUM_NATURE_STATS + 2]++;

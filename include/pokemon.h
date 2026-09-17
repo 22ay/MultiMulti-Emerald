@@ -606,11 +606,13 @@ enum {
 #define PALACE_TARGET_WEAKER   1
 #define PALACE_TARGET_RANDOM   2
 
+#define MAX_NATURE_STAT_CHANGE 5
+
 struct NatureInfo
 {
     const u8 *name;
-    enum Stat statUp;
-    enum Stat statDown;
+    enum Stat statUp[MAX_NATURE_STAT_CHANGE];
+    enum Stat statDown[MAX_NATURE_STAT_CHANGE];
     u8 backAnim;
     u8 pokeBlockAnim[2];
     u8 battlePalacePercents[4];
