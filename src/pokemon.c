@@ -695,6 +695,54 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
         .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
         .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
     },
+    [NATURE_CARELESS] =
+    {
+        .name = COMPOUND_STRING("Careless"),
+        .statUp = { STAT_SPEED },
+        .statDown = { STAT_DEF, STAT_SPDEF },
+        .backAnim = 1,
+        .pokeBlockAnim = {ANIM_QUIRKY, AFFINE_NONE},
+        .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
+        .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
+        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
+    },
+    [NATURE_WARY] =
+    {
+        .name = COMPOUND_STRING("Wary"),
+        .statUp = { STAT_DEF, STAT_SPDEF },
+        .statDown = { STAT_ATK, STAT_SPATK },
+        .backAnim = 1,
+        .pokeBlockAnim = {ANIM_QUIRKY, AFFINE_NONE},
+        .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
+        .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
+        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
+    },
+    [NATURE_PLAYFUL] =
+    {
+        .name = COMPOUND_STRING("Playful"),
+        .statUp = { STAT_SPEED },
+        .statDown = { STAT_ATK, STAT_SPATK },
+        .backAnim = 1,
+        .pokeBlockAnim = {ANIM_QUIRKY, AFFINE_NONE},
+        .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
+        .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
+        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
+    },
+    [NATURE_VALIANT] =
+    {
+        .name = COMPOUND_STRING("Valiant"),
+        .statUp = { STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED },
+        .statDown = { 0 },
+        .backAnim = 1,
+        .pokeBlockAnim = {ANIM_QUIRKY, AFFINE_NONE},
+        .natureGirlMessage = BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow,
+        .battlePalacePercents = PALACE_STYLE(56, 22, 56, 22), //22%, 22%
+        .battlePalaceFlavorText = B_MSG_EAGER_FOR_MORE,
+        .battlePalaceSmokescreen = PALACE_TARGET_STRONGER,
+    },
 };
 
 #include "data/graphics/pokemon.h"
@@ -5205,10 +5253,22 @@ u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex)
     {
         if (statIndex <= STAT_HP || statIndex > NUM_NATURE_STATS || gNaturesInfo[nature].statUp[0] == gNaturesInfo[nature].statDown[0])
             return stat;
+
         else if (statIndex == gNaturesInfo[nature].statUp[i])
-            return stat * 110 / 100;
+        {
+            if (nature == NATURE_FIERCE || nature == NATURE_CARELESS || nature == NATURE_WARY || nature == NATURE_PLAYFUL)
+                return stat * 133 / 100;
+            else
+                return stat * 110 / 100;
+        }
+        
         else if (statIndex == gNaturesInfo[nature].statDown[i])
-            return stat * 90 / 100;
+        {
+            if (nature == NATURE_FIERCE || nature == NATURE_CARELESS || nature == NATURE_WARY || nature == NATURE_PLAYFUL)
+                return stat * 50 / 100;
+            else
+                return stat * 90 / 100;
+        }
     }
 
     return stat; 
