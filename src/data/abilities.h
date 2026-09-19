@@ -4326,11 +4326,22 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_EQUIPOISE] =
     {
         .name = _("Equipoise"),
-        .description = COMPOUND_STRING("Uses highest defense stat"),
+        .description = COMPOUND_STRING("Uses highest defense stat."),
         .longDescription = COMPOUND_STRING("The higher of the two\n"
                                            "defensive stats is\n"
                                            "used during damage\n"
                                            "calculations."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_FIELD_SPECIALIST] =
+    {
+        .name = _("Field Specialist"),
+        .description = COMPOUND_STRING("Stronger field moves."),
+        .longDescription = COMPOUND_STRING("The field moves this Pokémon\n"
+                                           "uses are 30% stronger. This\n"
+                                           "includes HM moves and other\n"
+                                           "field moves."),
         .aiRating = 6,
     },
 

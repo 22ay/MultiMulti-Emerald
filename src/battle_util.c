@@ -8590,6 +8590,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 
     if (SearchTraits(battlerTraits, ABILITY_STRIKER) && IsKickingMove(move))
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+    
+    if (SearchTraits(battlerTraits, ABILITY_FIELD_SPECIALIST) && IsFieldMove(move))
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
 
     if (SearchTraits(battlerTraits, ABILITY_SHEER_FORCE) && MoveIsAffectedBySheerForce(move))
         {modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));}
