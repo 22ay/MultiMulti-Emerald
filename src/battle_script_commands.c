@@ -10742,7 +10742,15 @@ static void Cmd_tryhealhalfhealth(void)
     if (cmd->battler == BS_ATTACKER)
         gBattlerTarget = gBattlerAttacker;
 
-    SetHealAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 2);
+    if (BattlerHasTrait(gBattlerTarget, ABILITY_FIELD_SPECIALIST) && GetMoveEffect(gCurrentMove) == EFFECT_SOFTBOILED)
+    {
+        SetHealAmount(gBattlerTarget, 20 * GetNonDynamaxMaxHP(gBattlerTarget) / 30);
+    }
+    else
+    {
+        SetHealAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 2);
+    }
+        
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
         gBattlescriptCurrInstr = failInstr;
     else
