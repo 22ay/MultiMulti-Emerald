@@ -453,12 +453,28 @@ BattleScript_MoveEffectSaltCure::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_MoveEffectDeepCut::
+	printstring STRINGID_TARGETISDEEPLYCUT
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_SaltCureExtraDamage::
 	playanimation BS_ATTACKER, B_ANIM_SALT_CURE_DAMAGE, NULL
 	waitanimation
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	printstring STRINGID_TARGETISHURTBYSALTCURE
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_ATTACKER
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD
+	end2
+
+BattleScript_DeepCutExtraDamage::
+	playanimation BS_ATTACKER, B_ANIM_DEEP_CUT, NULL
+	waitanimation
+	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	printstring STRINGID_TARGETISHURTBYDEEPCUT
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD

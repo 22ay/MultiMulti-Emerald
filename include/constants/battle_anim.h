@@ -599,7 +599,8 @@
 #define B_ANIM_REFLECT                  58
 #define B_ANIM_LIGHTSCREEN              59
 #define B_ANIM_AURORAVEIL               60
-#define NUM_B_ANIMS_GENERAL             61
+#define B_ANIM_DEEP_CUT                 61
+#define NUM_B_ANIMS_GENERAL             62
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

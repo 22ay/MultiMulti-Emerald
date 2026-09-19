@@ -4032,6 +4032,14 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             }
         }
         break;
+    case MOVE_EFFECT_DEEP_CUT:
+        if (!gBattleMons[gBattlerTarget].volatiles.deepCut)
+        {
+            gBattleMons[gBattlerTarget].volatiles.deepCut = TRUE;
+            BattleScriptPush(battleScript);
+            gBattlescriptCurrInstr = BattleScript_MoveEffectDeepCut;
+        }
+        break;
     case MOVE_EFFECT_RAISE_TEAM_ATTACK:
         if (!NoAliveMonsForEitherParty())
         {

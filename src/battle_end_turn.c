@@ -718,7 +718,9 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
 
     if (gBattleMons[battler].volatiles.saltCure
      && IsBattlerAlive(battler)
-     && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
+     && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
+     && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
     {
         s32 saltCureDamage = 0;
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
@@ -728,6 +730,31 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
         SetPassiveDamageAmount(battler, saltCureDamage);
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);
         BattleScriptExecute(BattleScript_SaltCureExtraDamage);
+        effect = TRUE;
+    }
+
+    return effect;
+}
+
+static bool32 HandleEndTurnDeepCut(u32 battler)
+{
+    bool32 effect = FALSE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (gBattleMons[battler].volatiles.deepCut
+     && IsBattlerAlive(battler)
+     && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD)
+     && !IsAbilityAndRecord(battler, ABILITY_INDOMITABLE)
+     && !IsAbilityAndRecord(battler, ABILITY_THICK_FAT))
+    {
+        s32 deepCutDamage = 0;
+        if (IS_BATTLER_ANY_TYPE(battler, TYPE_GRASS, TYPE_DRAGON))
+            deepCutDamage = GetNonDynamaxMaxHP(battler) / 4;
+        else
+            deepCutDamage = GetNonDynamaxMaxHP(battler) / 8;
+        SetPassiveDamageAmount(battler, deepCutDamage);
+        BattleScriptExecute(BattleScript_DeepCutExtraDamage);
         effect = TRUE;
     }
 
@@ -1539,6 +1566,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_CURSE] = HandleEndTurnCurse,
     [ENDTURN_WRAP] = HandleEndTurnWrap,
     [ENDTURN_SALT_CURE] = HandleEndTurnSaltCure,
+    [ENDTURN_DEEP_CUT] = HandleEndTurnDeepCut,
     [ENDTURN_OCTOLOCK] = HandleEndTurnOctolock,
     [ENDTURN_SYRUP_BOMB] = HandleEndTurnSyrupBomb,
     [ENDTURN_TAUNT] = HandleEndTurnTaunt,
