@@ -3751,7 +3751,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Equilibrium"),
         .description = COMPOUND_STRING("Uses highest attack stat"),
         .longDescription = COMPOUND_STRING("The higher of the two\n"
-                                           "raw attacking stats is\n"
+                                           "attacking stats is\n"
                                            "used during damage\n"
                                            "calculations."),
         .aiRating = 6,
@@ -4320,6 +4320,17 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("When this Pokémon is hit with\n"
                                            "a special attack , it responds\n"
                                            "with Mirror Coat."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_EQUIPOISE] =
+    {
+        .name = _("Equipoise"),
+        .description = COMPOUND_STRING("Uses highest defense stat"),
+        .longDescription = COMPOUND_STRING("The higher of the two\n"
+                                           "defensive stats is\n"
+                                           "used during damage\n"
+                                           "calculations."),
         .aiRating = 6,
     },
 

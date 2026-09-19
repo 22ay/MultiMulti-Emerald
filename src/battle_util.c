@@ -8898,9 +8898,19 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     u32 battlerAtk = ctx->battlerAtk;
     u32 battlerDef = ctx->battlerDef;
     u32 move = ctx->move;
+
     u32 atkStatCheck = gBattleMons[battlerAtk].attack;
+    atkStage = gBattleMons[battlerAtk].statStages[STAT_ATK];
+    atkStatCheck *= gStatStageRatios[atkStage][0];
+    atkStatCheck /= gStatStageRatios[atkStage][1];
+
     u32 spAtkStatCheck = gBattleMons[battlerAtk].spAttack;
+    atkStage = gBattleMons[battlerAtk].statStages[STAT_SPATK];
+    spAtkStatCheck *= gStatStageRatios[atkStage][0];
+    spAtkStatCheck /= gStatStageRatios[atkStage][1];
+    
     u8  highestAttackStat = STAT_ATK;
+
     enum Type moveType = ctx->moveType;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     enum Ability battlerTraits[MAX_MON_TRAITS];
@@ -9369,10 +9379,59 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     enum Ability battlerTraits[MAX_MON_TRAITS];
 
+    u32 defStatCheck = gBattleMons[battlerDef].defense;
+    defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
+    defStatCheck *= gStatStageRatios[defStage][0];
+    defStatCheck /= gStatStageRatios[defStage][1];
+
+    u32 spDefStatCheck = gBattleMons[battlerDef].spDefense;
+    defStage = gBattleMons[battlerDef].statStages[STAT_SPDEF];
+    spDefStatCheck *= gStatStageRatios[defStage][0];
+    spDefStatCheck /= gStatStageRatios[defStage][1];
+    
+    u8  highestDefenseStat = STAT_DEF;
+
     def = gBattleMons[battlerDef].defense;
     spDef = gBattleMons[battlerDef].spDefense;
 
-    if (BattlerHasTrait(battlerDef, ABILITY_IMPULSE))
+    if (spDefStatCheck > defStatCheck)
+        highestDefenseStat = STAT_SPDEF;
+
+    if (BattlerHasTrait(battlerDef, ABILITY_EQUIPOISE))
+    {
+        if (highestDefenseStat == STAT_DEF)
+        {
+            if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM)
+            {
+                defStat = gBattleMons[battlerDef].spDefense;
+                usesDefStat = FALSE;
+                defStage = gBattleMons[battlerDef].statStages[STAT_SPDEF];
+            }
+            else
+            {
+                defStat = gBattleMons[battlerDef].defense;
+                usesDefStat = TRUE;
+                defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
+            }
+        }
+        else
+        {
+            if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM)
+            {
+                defStat = gBattleMons[battlerDef].defense;
+                usesDefStat = TRUE;
+                defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
+            }
+            else
+            {
+                defStat = gBattleMons[battlerDef].spDefense;
+                usesDefStat = FALSE;
+                defStage = gBattleMons[battlerDef].statStages[STAT_SPDEF];
+            }
+        }
+    }
+
+    else if (BattlerHasTrait(battlerDef, ABILITY_IMPULSE))
     {
         if (IsBattleMovePhysical(move) || moveEffect == EFFECT_PSYSHOCK)
         {
