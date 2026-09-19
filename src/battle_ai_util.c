@@ -2018,9 +2018,8 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 move)
     u32 accuracy = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
 
     gPotentialItemEffectBattler = battlerDef;
-    if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FOCUS_BAND, gAiLogicData) && (Random() % 100) < gAiLogicData->holdEffectParams[battlerDef][GetBattlerHeldItemSlotWithEffect(battlerDef, HOLD_EFFECT_FOCUS_BAND, TRUE)])
-        return FALSE;   //probabilistically speaking, focus band should activate so dont OHKO
-    else if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FOCUS_SASH, gAiLogicData) && AI_BattlerAtMaxHp(battlerDef))
+
+    if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FOCUS_SASH, gAiLogicData) && AI_BattlerAtMaxHp(battlerDef))
         return FALSE;
 
     if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, move) && AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_STURDY))

@@ -145,7 +145,7 @@ static const u16 sLongStreakPrizeItems[] =
     ITEM_LEFTOVERS,
     ITEM_MENTAL_HERB,
     ITEM_KINGS_ROCK,
-    ITEM_FOCUS_BAND,
+    ITEM_FOCUS_SASH,
     ITEM_SCOPE_LENS,
     ITEM_CHOICE_BAND,
 };

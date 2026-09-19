@@ -2030,14 +2030,6 @@ static void Cmd_adjustdamage(void)
         if (gBattleMons[battlerDef].hp > gBattleStruct->moveDamage[battlerDef])
             continue;
 
-        for (u32 i = 0; i < MAX_MON_ITEMS; i++)
-        {
-            item = GetSlotHeldItem(battlerDef, i, TRUE);
-
-            if (GetBattlerItemHoldEffect(battlerDef, item) == HOLD_EFFECT_FOCUS_BAND && (bandParam == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
-                bandParam += (100 - bandParam) * GetItemHoldEffectParam(item) / 100;
-        }
-
         STORE_BATTLER_ITEMS(battlerDef);
         affectionScore = GetBattlerAffectionHearts(battlerDef);
 
@@ -2051,14 +2043,6 @@ static void Cmd_adjustdamage(void)
         {
             enduredHit |= 1u << battlerDef;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED;
-        }
-        else if (rand < bandParam)
-        {
-            gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND);
-            enduredHit |= 1u << battlerDef;
-            RecordItemEffectBattle(battlerDef, HOLD_EFFECT_FOCUS_BAND);
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_FOCUS_BAND, TRUE);
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
         }
         else if (GetConfig(B_STURDY) >= GEN_5 && BattlerHasTrait(battlerDef, ABILITY_STURDY) && IsBattlerAtMaxHp(battlerDef))
         {
@@ -2144,9 +2128,7 @@ static void Cmd_multihitresultmessage(void)
         else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
         {
             if (IsBattlerAtMaxHp(gBattlerTarget))
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
-            if (gLastUsedItem == ITEM_NONE)
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
+            gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
             gPotentialItemEffectBattler = gBattlerTarget;
             gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_HUNG_ON);
             BattleScriptCall(BattleScript_HangedOnMsg);
@@ -2862,9 +2844,7 @@ static void Cmd_resultmessage(void)
             break;
         case MOVE_RESULT_FOE_HUNG_ON:
             if (IsBattlerAtMaxHp(gBattlerTarget))
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
-            if (gLastUsedItem == ITEM_NONE)
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
+            gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
             gPotentialItemEffectBattler = gBattlerTarget;
             *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
             BattleScriptCall(BattleScript_HangedOnMsg);
@@ -2893,8 +2873,6 @@ static void Cmd_resultmessage(void)
             else if (*moveResultFlags & MOVE_RESULT_FOE_HUNG_ON)
             {
                 gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
-                    if (gLastUsedItem == ITEM_NONE)
-                        gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
                 gPotentialItemEffectBattler = gBattlerTarget;
                 *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
                 BattleScriptCall(BattleScript_HangedOnMsg);
@@ -11890,8 +11868,7 @@ static void Cmd_setlightscreen(void)
 // for var endured
 #define NOT_ENDURED       0
 #define FOCUS_SASHED      1
-#define FOCUS_BANDED      2
-#define AFFECTION_ENDURED 3
+#define AFFECTION_ENDURED 2
 static void Cmd_tryKO(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -11913,13 +11890,7 @@ static void Cmd_tryKO(void)
     }
 
     gPotentialItemEffectBattler = gBattlerTarget;
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND)
-        && (Random() % 100) < GetBattlerItemHoldEffectParam(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND))
-    {
-        endured = FOCUS_BANDED;
-        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND);
-    }
-    else if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH) && IsBattlerAtMaxHp(gBattlerTarget))
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH) && IsBattlerAtMaxHp(gBattlerTarget))
     {
         endured = FOCUS_SASHED;
         RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH);
@@ -11934,8 +11905,7 @@ static void Cmd_tryKO(void)
         // Block if Endure, Sturdy, Focus Sash, or Focus Band already apply 
         else if (gSpecialStatuses[gBattlerTarget].enduredDamage == TRUE 
             || GetBattlerAbility(gBattlerTarget) == ABILITY_STURDY 
-            || BattlerHasHeldItemEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE) 
-            || BattlerHasHeldItemEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE)) 
+            || BattlerHasHeldItemEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE)) 
         { 
             // Do nothing — skip affection endurance 
         } 
@@ -11987,14 +11957,11 @@ static void Cmd_tryKO(void)
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].hp - 1;
                 gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FOE_ENDURED;
             }
-            else if (endured == FOCUS_BANDED || endured == FOCUS_SASHED)
+            else if (endured == FOCUS_SASHED)
             {
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].hp - 1;
                 gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FOE_HUNG_ON;
-                if(endured == FOCUS_SASHED)
-                    gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH);
-                else
-                    gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND);
+                gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH);
             }
             else if (endured == AFFECTION_ENDURED)
             {
@@ -12024,7 +11991,6 @@ static void Cmd_tryKO(void)
 #undef SURE_HIT
 #undef NOT_ENDURED
 #undef FOCUS_SASHED
-#undef FOCUS_BANDED
 #undef AFFECTION_ENDURED
 
 static void Cmd_checknonvolatiletrigger(void)

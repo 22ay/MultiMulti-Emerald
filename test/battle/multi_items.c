@@ -1002,20 +1002,6 @@ SINGLE_BATTLE_TEST("Multi - Scope Lens effect stacks when dupes enabled")
     }
 }
 
-// Manual tests pass, 2 Focus Bands is 19% chance
-TO_DO_BATTLE_TEST("Multi - Focus Band effect stacks when dupes enabled")
-TO_DO_BATTLE_TEST("Multi - Focus Band effect don't stack when dupes disabled")
-// SINGLE_BATTLE_TEST("Multi - BAND")
-// {
-//     GIVEN {
-//         WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
-//         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_FOCUS_BAND, ITEM_FOCUS_BAND); MaxHP(100); HP(3); }
-//         OPPONENT(SPECIES_WOBBUFFET){ Items(ITEM_FOCUS_BAND); MaxHP(100); HP(3); }
-//     } WHEN {
-//         TURN { MOVE(player, MOVE_HYPER_BEAM); MOVE(opponent, MOVE_HYPER_BEAM); }
-//     }
-// }
-
 SINGLE_BATTLE_TEST("Multi - Light Clay effect stacks when dupes enabled")
 {
     bool16 dupe = FALSE;

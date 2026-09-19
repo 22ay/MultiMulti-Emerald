@@ -1974,8 +1974,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Stance Change"),
         .description = COMPOUND_STRING("Transforms as it battles."),
-        .longDescription = COMPOUND_STRING("Transforms as it.\n"
-                                           "battles                 \n"
+        .longDescription = COMPOUND_STRING("Transforms as it\n"
+                                           "battles.                 \n"
                                            "                        \n"
                                            "               "),
         .aiRating = 10,

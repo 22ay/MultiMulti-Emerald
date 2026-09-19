@@ -43,7 +43,7 @@ static const u16 sFrontierExchangeCorner_HoldItems[] =
     ITEM_BRIGHT_POWDER,
     ITEM_CHOICE_BAND,
     ITEM_KINGS_ROCK,
-    ITEM_FOCUS_BAND,
+    ITEM_FOCUS_SASH,
     ITEM_SCOPE_LENS,
     ITEM_LIST_END
 };

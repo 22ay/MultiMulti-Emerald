@@ -317,7 +317,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_SWAMPERT,
-                .heldItem = { ITEM_FOCUS_BAND },
+                .heldItem = { ITEM_FOCUS_SASH },
                 .fixedIV = 20,
                 .nature = NATURE_BRAVE,
                 .evs = {152, 152, 106, 0, 100, 0},
@@ -572,7 +572,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_SEVIPER,
-                .heldItem = { ITEM_FOCUS_BAND },
+                .heldItem = { ITEM_FOCUS_SASH },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BOLD,
                 .evs = {252, 0, 0, 0, 252, 6},

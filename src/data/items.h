@@ -10337,9 +10337,9 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_SmokeBall,
     },
 
-    [ITEM_FOCUS_BAND] =
+    [ITEM_STRONG_BAND] =
     {
-        .name = ITEM_NAME("Focus Band"),
+        .name = ITEM_NAME("Strong Band"),
     #if I_PRICE >= GEN_9
         .price = 10000,
     #elif I_PRICE >= GEN_7
@@ -10347,12 +10347,12 @@ const struct Item gItemsInfo[] =
     #else
         .price = 200,
     #endif
-        .holdEffect = HOLD_EFFECT_FOCUS_BAND,
+        .holdEffect = HOLD_EFFECT_STRONG_BAND,
         .holdEffectParam = 10,
         .description = COMPOUND_STRING(
             "A hold item that\n"
-            "occasionally\n"
-            "prevents fainting."),
+            "enables the use\n"
+            "of Strong Style."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_HELD_ITEM,
         .heldSlot = 0,
