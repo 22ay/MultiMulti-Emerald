@@ -3861,10 +3861,12 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         break;
     case MOVE_EFFECT_SECRET_POWER:
         moveEffect = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect;
+        u32 attackerTerrain = GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY;
+        u32 attackerWeather = GetAttackerWeather(battler, GetWeather()) & B_WEATHER_ANY;
 
-        if (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
+        if (attackerTerrain)
         {
-            switch (GetAttackerTerrain(battler, GetTerrain()) & BATTLE_FIELD_TERRAIN_ANY)
+            switch (attackerTerrain)
             {
             case BATTLE_FIELD_MISTY_TERRAIN:
                 moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
@@ -3881,6 +3883,30 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             default:
                 moveEffect = MOVE_EFFECT_PARALYSIS;
                 break;
+            }
+        }
+        else if (attackerWeather)
+        {
+            switch (attackerWeather)
+            {
+                case B_WEATHER_SUN:
+                    moveEffect = MOVE_EFFECT_BURN;
+                    break;
+                case B_WEATHER_RAIN:
+                    moveEffect = MOVE_EFFECT_ATK_MINUS_1;
+                    break;
+                case B_WEATHER_SANDSTORM:
+                    moveEffect = MOVE_EFFECT_ACC_MINUS_1;
+                    break;
+                case B_WEATHER_SNOW:
+                    moveEffect = MOVE_EFFECT_FROSTBITE;
+                    break;
+                case B_WEATHER_FOG:
+                    moveEffect = MOVE_EFFECT_FLINCH;
+                    break;
+                default:
+                    moveEffect = MOVE_EFFECT_PARALYSIS;
+                    break;
             }
         }
         SetMoveEffect(battler, effectBattler, moveEffect, battleScript, effectFlags);
