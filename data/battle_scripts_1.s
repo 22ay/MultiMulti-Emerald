@@ -9433,6 +9433,17 @@ BattleScript_TargetAbilityStatRaiseRetStamina::
 BattleScript_TargetAbilityStatRaiseRetStamina_End:
 	return
 
+BattleScript_TargetAbilityStatRaiseRetStamina2::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_DEF, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetStamina2_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetStamina2_End:
+	restoreattacker
+	return
+
 BattleScript_TargetAbilityStatRaiseRetBerserk::
 	saveattacker
 	copybyte gBattlerAttacker, gEffectBattler
@@ -9444,15 +9455,50 @@ BattleScript_TargetAbilityStatRaiseRetBerserk_End:
 	restoreattacker
 	return
 
-BattleScript_TargetAbilityStatRaiseRetVitalSpirit::
+BattleScript_TargetAbilityStatRaiseRetBerserk2::
+	setstatchanger STAT_SPATK, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_TARGET, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetBerserk2_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetBerserk2_End:
+	return
+
+BattleScript_TargetAbilityStatRaiseRetAngerPoint::
 	saveattacker
 	copybyte gBattlerAttacker, gEffectBattler
 	setstatchanger STAT_ATK, 1, FALSE
 	call BattleScript_AbilityPopUp
-	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetVitalSpirit_End
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetAngerPoint_End
 	call BattleScript_StatUp
-BattleScript_TargetAbilityStatRaiseRetVitalSpirit_End:
+BattleScript_TargetAbilityStatRaiseRetAngerPoint_End:
 	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetAngerPoint2::
+	setstatchanger STAT_ATK, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_TARGET, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetAngerPoint2_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetAngerPoint2_End:
+	return
+
+BattleScript_TargetAbilityStatRaiseRetRunAway::
+	saveattacker
+	copybyte gBattlerAttacker, gEffectBattler
+	setstatchanger STAT_SPEED, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetRunAway_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetRunAway_End:
+	restoreattacker
+	return
+
+BattleScript_TargetAbilityStatRaiseRetRunAway2::
+	setstatchanger STAT_SPEED, 1, FALSE
+	call BattleScript_AbilityPopUp
+	statbuffchange BS_TARGET, STAT_CHANGE_CERTAIN, BattleScript_TargetAbilityStatRaiseRetRunAway2_End
+	call BattleScript_StatUp
+BattleScript_TargetAbilityStatRaiseRetRunAway2_End:
 	return
 
 BattleScript_TargetAbilityStatRaiseRetSteam::

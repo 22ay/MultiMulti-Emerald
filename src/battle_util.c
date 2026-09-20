@@ -5387,15 +5387,37 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetBerserk);
             effect++;
         }
-        if (SearchTraits(battlerTraits, ABILITY_VITAL_SPIRIT)
+        if (SearchTraits(battlerTraits, ABILITY_ANGER_POINT)
          && IsBattlerTurnDamaged(battler)
          && IsBattlerAlive(battler)
          && HadMoreThanHalfHpNowDoesnt(battler)
          && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
         {
             gEffectBattler = battler;
-            PushTraitStack(battler, ABILITY_VITAL_SPIRIT);
-            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetVitalSpirit);
+            PushTraitStack(battler, ABILITY_ANGER_POINT);
+            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetAngerPoint);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_STAMINA)
+         && IsBattlerTurnDamaged(battler)
+         && IsBattlerAlive(battler)
+         && HadMoreThanHalfHpNowDoesnt(battler)
+         && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            gEffectBattler = battler;
+            PushTraitStack(battler, ABILITY_STAMINA);
+            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetStamina2);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_RUN_AWAY)
+         && IsBattlerTurnDamaged(battler)
+         && IsBattlerAlive(battler)
+         && HadMoreThanHalfHpNowDoesnt(battler)
+         && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            gEffectBattler = battler;
+            PushTraitStack(battler, ABILITY_RUN_AWAY);
+            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetRunAway);
             effect++;
         }
         if (SearchTraits(battlerTraits, ABILITY_ANGER_SHELL)
@@ -5460,6 +5482,39 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             gEffectBattler = gBattlerAbility = battler;
             PushTraitStack(battler, ABILITY_STAMINA);
             BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetStamina);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_BERSERK)
+         && gBattlerAttacker != gBattlerTarget
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsBattlerAlive(battler)
+         && CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            gEffectBattler = gBattlerAbility = battler;
+            PushTraitStack(battler, ABILITY_BERSERK);
+            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetBerserk2);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_ANGER_POINT)
+         && gBattlerAttacker != gBattlerTarget
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsBattlerAlive(battler)
+         && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            gEffectBattler = gBattlerAbility = battler;
+            PushTraitStack(battler, ABILITY_ANGER_POINT);
+            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetAngerPoint2);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_RUN_AWAY)
+         && gBattlerAttacker != gBattlerTarget
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsBattlerAlive(battler)
+         && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            gEffectBattler = gBattlerAbility = battler;
+            PushTraitStack(battler, ABILITY_RUN_AWAY);
+            BattleScriptCall(BattleScript_TargetAbilityStatRaiseRetRunAway2);
             effect++;
         }
         if (SearchTraits(battlerTraits, ABILITY_WEAK_ARMOR)
@@ -5574,6 +5629,39 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         {
             SET_STATCHANGER(STAT_ATK, MAX_STAT_STAGE - gBattleMons[battler].statStages[STAT_ATK], FALSE);
             PushTraitStack(battler, ABILITY_ANGER_POINT);
+            BattleScriptCall(BattleScript_TargetsStatWasMaxedOut);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_BERSERK)
+         && gSpecialStatuses[battler].criticalHit
+         && IsBattlerTurnDamaged(battler)
+         && IsBattlerAlive(battler)
+         && CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            SET_STATCHANGER(STAT_SPATK, MAX_STAT_STAGE - gBattleMons[battler].statStages[STAT_SPATK], FALSE);
+            PushTraitStack(battler, ABILITY_BERSERK);
+            BattleScriptCall(BattleScript_TargetsStatWasMaxedOut);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_STAMINA)
+        && gSpecialStatuses[battler].criticalHit
+        && IsBattlerTurnDamaged(battler)
+        && IsBattlerAlive(battler)
+        && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            SET_STATCHANGER(STAT_DEF, MAX_STAT_STAGE - gBattleMons[battler].statStages[STAT_DEF], FALSE);
+            PushTraitStack(battler, ABILITY_STAMINA);
+            BattleScriptCall(BattleScript_TargetsStatWasMaxedOut);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_RUN_AWAY)
+        && gSpecialStatuses[battler].criticalHit
+        && IsBattlerTurnDamaged(battler)
+        && IsBattlerAlive(battler)
+        && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+        {
+            SET_STATCHANGER(STAT_SPEED, MAX_STAT_STAGE - gBattleMons[battler].statStages[STAT_SPEED], FALSE);
+            PushTraitStack(battler, ABILITY_RUN_AWAY);
             BattleScriptCall(BattleScript_TargetsStatWasMaxedOut);
             effect++;
         }
@@ -6755,6 +6843,8 @@ u32 IsAbilityPreventingEscape(u32 battler)
 {
     if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return 0;
+    if (BattlerHasTrait(battler, ABILITY_RUN_AWAY))
+        return 0;
 
     bool32 isBattlerGrounded = IsBattlerGrounded(battler);
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -6793,6 +6883,8 @@ bool32 CanBattlerEscape(u32 battler) // no ability check
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
         return FALSE;
     else if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+        return TRUE;
+    else if (BattlerHasTrait(battler, ABILITY_RUN_AWAY))
         return TRUE;
     else if (gBattleMons[battler].volatiles.escapePrevention)
         return FALSE;
