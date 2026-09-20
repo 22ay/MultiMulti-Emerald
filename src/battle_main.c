@@ -4937,6 +4937,10 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
                 firstChoice = FALSE;
                 speed = (speed * 150) / 100;
             }
+        if ((itemEffect == HOLD_EFFECT_AGILE_FEATHER))
+            {
+                speed = (speed * 150) / 100;
+            }
         if ((itemEffect == HOLD_EFFECT_QUICK_POWDER) && gBattleMons[battler].species == SPECIES_DITTO
          && !(gBattleMons[battler].volatiles.transformed) && (firstQuick || GetConfig(B_ALLOW_HELD_DUPES)))
             {

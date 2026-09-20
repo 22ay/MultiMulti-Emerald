@@ -1173,8 +1173,8 @@ static enum ItemEffect TryAgileFeather(u32 battler, ActivationTiming timing)
         && IsBattlerAlive(gBattlerTarget)
         && IsBattlerAlive(gBattlerAttacker)
         && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
-        && gMovesInfo[originallyUsedMove].effect != EFFECT_NON_VOLATILE_STATUS // This is so moves like Toxic don't go off twice
-        && gMovesInfo[originallyUsedMove].effect != EFFECT_MULTI_HIT // Multi-hit moves don't benefit
+        && !IsBattleMoveStatus(originallyUsedMove) //Status moves won't move twice
+        && gMovesInfo[originallyUsedMove].effect != EFFECT_MULTI_HIT // Multi-hit moves won't move twice
         && gMovesInfo[originallyUsedMove].strikeCount == 0
         && !WasUnableToUseMove(gBattlerAttacker)
         && !gSpecialStatuses[gBattlerAttacker].extraMoveUsed)
@@ -1186,7 +1186,7 @@ static enum ItemEffect TryAgileFeather(u32 battler, ActivationTiming timing)
         }
     }
 
-    return effect; //If a status move were to fail the 2nd time its used, it would still be used regardless. Will try to find a fix later
+    return effect;
 }
 
 enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, ActivationTiming timing)
