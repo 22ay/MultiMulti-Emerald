@@ -2201,6 +2201,7 @@ static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_CAN_ALWAYS_RUN]   = COMPOUND_STRING("Can Always Run"),
     [HOLD_EFFECT_PREVENT_EVOLVE]   = COMPOUND_STRING("Prevent Evolve"),
     [HOLD_EFFECT_STRONG_BAND]      = COMPOUND_STRING("Strong Band"),
+    [HOLD_EFFECT_AGILE_FEATHER]    = COMPOUND_STRING("Agile Feather"),
     [HOLD_EFFECT_LUCKY_EGG]        = COMPOUND_STRING("Lucky Egg"),
     [HOLD_EFFECT_SCOPE_LENS]       = COMPOUND_STRING("Scope Lens"),
     [HOLD_EFFECT_LEFTOVERS]        = COMPOUND_STRING("Leftovers"),

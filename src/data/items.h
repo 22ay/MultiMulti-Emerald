@@ -3249,16 +3249,17 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_OddKeystone,
     },
 
-    [ITEM_PRETTY_FEATHER] =
+    [ITEM_AGILE_FEATHER] =
     {
-        .name = ITEM_NAME("Pretty Feather"),
-        .price = (I_PRICE >= GEN_7) ? 1000 * TREASURE_FACTOR: 200,
+        .name = ITEM_NAME("Agile Feather"),
+        .price = (I_PRICE >= GEN_7) ? 10000: 200,
+        .holdEffect = HOLD_EFFECT_AGILE_FEATHER,
         .description = COMPOUND_STRING(
-            "A beautiful yet\n"
-            "plain feather that\n"
-            "does nothing."),
+            "A hold item that\n"
+            "enables the use\n"
+            "of Agile Style."),
         .pocket = POCKET_ITEMS,
-        .sortType = ITEM_TYPE_SELLABLE,
+        .sortType = ITEM_TYPE_HELD_ITEM,
         .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
@@ -10348,7 +10349,6 @@ const struct Item gItemsInfo[] =
         .price = 200,
     #endif
         .holdEffect = HOLD_EFFECT_STRONG_BAND,
-        .holdEffectParam = 10,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "enables the use\n"

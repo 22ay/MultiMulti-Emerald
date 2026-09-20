@@ -2510,7 +2510,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .catchRate = 190,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 54 : 64,
         .evYield_Speed = 1,
-        .itemCommon = ITEM_PRETTY_FEATHER,
+        .itemCommon = ITEM_LUCKY_EGG,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
@@ -2591,7 +2591,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .expYield = 164,
     #endif
         .evYield_Defense = 2,
-        .itemCommon = ITEM_PRETTY_FEATHER,
+        .itemCommon = ITEM_LUCKY_EGG,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
