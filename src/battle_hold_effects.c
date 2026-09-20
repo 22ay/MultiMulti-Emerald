@@ -1162,6 +1162,79 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTimin
     return effect;
 }
 
+static bool32 CanAgileFeatherMoveSucceed(u32 move)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    u32 targetSide = GetBattlerSide(gBattlerTarget);
+
+    if (!IsBattleMoveStatus(move))
+        return TRUE;
+
+    // Nonvolatile status moves, such as Thunder Wave.
+    if (GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE
+     && !CanSetNonVolatileStatus(
+            gBattlerAttacker,
+            gBattlerTarget,
+            GetMoveNonVolatileStatus(move),
+            CHECK_TRIGGER))
+        return FALSE;
+
+    if (DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, move))
+        return FALSE;
+
+    switch (effect)
+    {
+    case EFFECT_SPIKES:
+        return gSideTimers[targetSide].spikesAmount < 3;
+
+    case EFFECT_TOXIC_SPIKES:
+        return gSideTimers[targetSide].toxicSpikesAmount < 2;
+
+    case EFFECT_STEALTH_ROCK:
+        return !IsHazardOnSide(targetSide, HAZARDS_STEALTH_ROCK);
+
+    case EFFECT_STICKY_WEB:
+        return !IsHazardOnSide(targetSide, HAZARDS_STICKY_WEB);
+
+    case EFFECT_LEECH_SEED:
+        return !IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_GRASS)
+            && !gBattleMons[gBattlerTarget].volatiles.leechSeed;
+
+    case EFFECT_YAWN:
+        return !gBattleMons[gBattlerTarget].volatiles.yawn
+            && !(gBattleMons[gBattlerTarget].status1 & STATUS1_ANY)
+            && CanBeSlept(gBattlerTarget, gBattlerTarget, BLOCKED_BY_SLEEP_CLAUSE);
+
+    case EFFECT_CONFUSE:
+        return CanBeConfused(gBattlerTarget);
+
+    case EFFECT_SUBSTITUTE:
+        return gBattleMons[gBattlerAttacker].hp
+            > GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
+
+    case EFFECT_TAUNT:
+        return gDisableStructs[gBattlerTarget].tauntTimer == 0;
+
+    case EFFECT_TORMENT:
+        return !gBattleMons[gBattlerTarget].volatiles.torment;
+
+    case EFFECT_DISABLE:
+        return gDisableStructs[gBattlerTarget].disableTimer == 0;
+
+    case EFFECT_ENCORE:
+        return gDisableStructs[gBattlerTarget].encoreTimer == 0;
+
+    case EFFECT_IMPRISON:
+        return !gBattleMons[gBattlerAttacker].volatiles.imprison;
+
+    case EFFECT_PERISH_SONG:
+        return !gBattleMons[gBattlerTarget].volatiles.perishSong;
+
+    default:
+        return TRUE;
+    }
+}
+
 static enum ItemEffect TryAgileFeather(u32 battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
@@ -1169,15 +1242,15 @@ static enum ItemEffect TryAgileFeather(u32 battler, ActivationTiming timing)
 
     if (timing == IsOnAttackerAfterHitActivation)
     {
-        if (BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_AGILE_FEATHER, TRUE) 
-        && IsBattlerAlive(gBattlerTarget)
-        && IsBattlerAlive(gBattlerAttacker)
-        && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
-        && !IsBattleMoveStatus(originallyUsedMove) //Status moves won't move twice
-        && gMovesInfo[originallyUsedMove].effect != EFFECT_MULTI_HIT // Multi-hit moves won't move twice
-        && gMovesInfo[originallyUsedMove].strikeCount == 0
-        && !WasUnableToUseMove(gBattlerAttacker)
-        && !gSpecialStatuses[gBattlerAttacker].extraMoveUsed)
+        if (BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_AGILE_FEATHER, TRUE)
+         && IsBattlerAlive(gBattlerTarget)
+         && IsBattlerAlive(gBattlerAttacker)
+         && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+         && gMovesInfo[originallyUsedMove].effect != EFFECT_MULTI_HIT
+         && gMovesInfo[originallyUsedMove].strikeCount == 0
+         && !WasUnableToUseMove(gBattlerAttacker)
+         && !gSpecialStatuses[gBattlerAttacker].extraMoveUsed
+         && CanAgileFeatherMoveSucceed(originallyUsedMove))
         {
             gSpecialStatuses[gBattlerAttacker].extraMoveUsed = TRUE;
             gCalledMove = originallyUsedMove;
