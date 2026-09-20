@@ -1990,7 +1990,7 @@ static void Cmd_adjustdamage(void)
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
-    u32 enduredHit = 0, bandParam = 0, item = 0;
+    u32 enduredHit = 0;
     u16 battlerItems[MAX_MON_ITEMS];
 
 
@@ -3267,6 +3267,8 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     else if (!IsBattlerAlive(gEffectBattler) && !IgnoreTargetingForMoveEffect(moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
     else if (DoesSubstituteBlockMove(gBattlerAttacker, gEffectBattler, gCurrentMove) && !affectsUser)
+        moveEffect = MOVE_EFFECT_NONE;
+    else if (!primary && BattlerHasHeldItemEffect(battler, HOLD_EFFECT_AGILE_FEATHER, TRUE))
         moveEffect = MOVE_EFFECT_NONE;
 
     enum Ability battlerTraits[MAX_MON_TRAITS];
@@ -11180,6 +11182,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
     if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE) && !flags.onlyChecking)
     {
         statValue = (SET_STAT_BUFF_VALUE(GET_STAT_BUFF_VALUE(statValue) * 2)) | ((statValue <= -1) ? STAT_BUFF_NEGATIVE : 0);
+        RecordItemEffectBattle(battler, HOLD_EFFECT_STRONG_BAND);
     }
 
     PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);

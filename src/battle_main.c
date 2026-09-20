@@ -5051,9 +5051,13 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
     {
         priority += 3;
     }
-    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE) && priority >= 1)
+    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE) && priority > 0)
     {
         priority = 0; //If a Pokemon holding Strong Band uses a priority move, the priority gets set to 0
+    }
+    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_AGILE_FEATHER, TRUE))
+    {
+        priority += 2;
     }
 
     return priority;

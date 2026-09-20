@@ -8180,9 +8180,10 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     u32 weight, hpFraction, speed;
     
     /*By doing this, the extra moves called via certain abilities (Aftershock, Epicenter, etc) will be fixed at 50 BP
-    This increases the amount of moves I can potentially use without them being overpowering */
+    This increases the amount of moves I can potentially use without them being overpowering. When using Agile Feather,
+    this interaction does not happen, and the move called uses its normal base power */
 
-    if ((gSpecialStatuses[battlerAtk].extraMoveUsed == TRUE))
+    if ((gSpecialStatuses[battlerAtk].extraMoveUsed == TRUE) && !BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_AGILE_FEATHER, TRUE))
         return 50; 
         
     if (GetActiveGimmick(battlerAtk) == GIMMICK_Z_MOVE)
@@ -9365,6 +9366,11 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     if (SearchItemSlots(battlerItems, HOLD_EFFECT_STRONG_BAND)){
         if (GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    }
+
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_AGILE_FEATHER)){
+        if (GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.8));
     }
 
     modifier = ApplyOffensiveBadgeBoost(modifier, battlerAtk, move);
@@ -12955,6 +12961,9 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move)
     if(BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_ZOOM_LENS, TRUE)){
         calc = (calc * (100 + GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHeldItemWithEffect(battlerAtk, HOLD_EFFECT_WIDE_LENS, TRUE)))) / 100;
     }
+
+    if (BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_AGILE_FEATHER, TRUE))
+        calc = (calc * 90) / 100; //If a Pokemon holds Agile Feather, they lose 10% in accuracy
 
     // Target's hold effect
     if(BattlerHasHeldItemEffect(battlerDef, HOLD_EFFECT_EVASION_UP, TRUE))

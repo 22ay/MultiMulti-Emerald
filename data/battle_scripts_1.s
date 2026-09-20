@@ -8446,6 +8446,11 @@ BattleScript_ExtraMoveActivates::
 	waitmessage B_WAIT_TIME_SHORT
 	jumptocalledmove TRUE
 
+BattleScript_AgileFeatherActivates::
+	printstring STRINGID_MOVINGSWIFTLY
+	waitmessage B_WAIT_TIME_SHORT
+	jumptocalledmove TRUE
+
 BattleScript_SynchronizeActivates::
 	waitstate
 	call BattleScript_AbilityPopUp

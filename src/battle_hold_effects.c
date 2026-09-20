@@ -1162,6 +1162,33 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTimin
     return effect;
 }
 
+static enum ItemEffect TryAgileFeather(u32 battler, ActivationTiming timing)
+{
+    enum ItemEffect effect = ITEM_NO_EFFECT;
+    u32 originallyUsedMove = gChosenMove;
+
+    if (timing == IsOnAttackerAfterHitActivation)
+    {
+        if (BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_AGILE_FEATHER, TRUE) 
+        && IsBattlerAlive(gBattlerTarget)
+        && IsBattlerAlive(gBattlerAttacker)
+        && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+        && gMovesInfo[originallyUsedMove].effect != EFFECT_NON_VOLATILE_STATUS // This is so moves like Toxic don't go off twice
+        && gMovesInfo[originallyUsedMove].effect != EFFECT_MULTI_HIT // Multi-hit moves don't benefit
+        && gMovesInfo[originallyUsedMove].strikeCount == 0
+        && !WasUnableToUseMove(gBattlerAttacker)
+        && !gSpecialStatuses[gBattlerAttacker].extraMoveUsed)
+        {
+            gSpecialStatuses[gBattlerAttacker].extraMoveUsed = TRUE;
+            gCalledMove = originallyUsedMove;
+            BattleScriptExecute(BattleScript_AgileFeatherActivates);
+            effect = ITEM_EFFECT_OTHER;
+        }
+    }
+
+    return effect; //If a status move were to fail the 2nd time its used, it would still be used regardless. Will try to find a fix later
+}
+
 enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
@@ -1363,6 +1390,9 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, Activat
             break;
         case HOLD_EFFECT_MICLE_BERRY:
             effect = TrySetMicleBerry(itemBattler, item, timing);
+            break;
+        case HOLD_EFFECT_AGILE_FEATHER:
+            effect = TryAgileFeather(itemBattler, timing);
             break;
         default:
             break;
