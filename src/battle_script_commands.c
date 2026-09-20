@@ -10720,7 +10720,8 @@ static void Cmd_tryhealhalfhealth(void)
     if (cmd->battler == BS_ATTACKER)
         gBattlerTarget = gBattlerAttacker;
 
-    if (BattlerHasTrait(gBattlerTarget, ABILITY_FIELD_SPECIALIST) && GetMoveEffect(gCurrentMove) == EFFECT_SOFTBOILED)
+    if ((BattlerHasTrait(gBattlerTarget, ABILITY_FIELD_SPECIALIST) && GetMoveEffect(gCurrentMove) == EFFECT_SOFTBOILED)
+    || BattlerHasHeldItemEffect(gBattlerTarget, HOLD_EFFECT_STRONG_BAND, TRUE))
     {
         SetHealAmount(gBattlerTarget, 20 * GetNonDynamaxMaxHP(gBattlerTarget) / 30);
     }
@@ -11175,6 +11176,10 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
     {
         statValue = (SET_STAT_BUFF_VALUE(GET_STAT_BUFF_VALUE(statValue) * 2)) | ((statValue <= -1) ? STAT_BUFF_NEGATIVE : 0);
         RecordAbilityBattle(battler, battlerAbility);
+    }
+    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE) && !flags.onlyChecking)
+    {
+        statValue = (SET_STAT_BUFF_VALUE(GET_STAT_BUFF_VALUE(statValue) * 2)) | ((statValue <= -1) ? STAT_BUFF_NEGATIVE : 0);
     }
 
     PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);

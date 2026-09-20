@@ -9362,6 +9362,11 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     }
 
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_STRONG_BAND)){
+        if (GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    }
+
     modifier = ApplyOffensiveBadgeBoost(modifier, battlerAtk, move);
 
     return uq4_12_multiply_by_int_half_down(modifier, atkStat);
@@ -9772,6 +9777,10 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
          && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
          && !usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    }
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_STRONG_BAND))
+    {
+        gBattleMons[battlerDef].volatiles.glaiveRush = TRUE;
     }
 
     // sandstorm sp.def boost for rock types
@@ -12124,15 +12133,32 @@ u32 CalcSecondaryEffectChance(u32 battler, const struct AdditionalEffect *additi
 {
     bool8 hasSereneGrace = (BattlerHasTrait(battler, ABILITY_SERENE_GRACE));
     bool8 hasRainbow = (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_RAINBOW) != 0;
+    bool8 hasStrongBand = (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE));
     u16 secondaryEffectChance = additionalEffect->chance;
 
     if (hasRainbow && hasSereneGrace && additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
         return secondaryEffectChance * 2;
 
+    if (hasStrongBand && (hasRainbow || hasSereneGrace))
+    {
+        if (additionalEffect->moveEffect == MOVE_EFFECT_FLINCH || additionalEffect->moveEffect == MOVE_EFFECT_ALL_STATS_UP)
+            return secondaryEffectChance *= 2;
+        else
+            return secondaryEffectChance = 100;
+    }
+        
+
     if (hasSereneGrace)
         secondaryEffectChance *= 2;
     if (hasRainbow && additionalEffect->moveEffect != MOVE_EFFECT_SECRET_POWER)
         secondaryEffectChance *= 2;
+    if (hasStrongBand)
+    {
+        if (additionalEffect->moveEffect == MOVE_EFFECT_FLINCH || additionalEffect->moveEffect == MOVE_EFFECT_ALL_STATS_UP)
+            secondaryEffectChance *= 2;
+        else
+            secondaryEffectChance = 100;
+    }
 
     return secondaryEffectChance;
 }
@@ -12761,6 +12787,11 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, u32 move, enum Fu
     }
     // Signature move entry for always hitting
     else if (entry && entry->alwaysHit != 0)
+    {
+        effect = TRUE;
+    }
+    // Holding Strong Band makes it so mon always hits
+    else if (BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_STRONG_BAND, TRUE))
     {
         effect = TRUE;
     }

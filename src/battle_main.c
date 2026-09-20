@@ -5048,7 +5048,13 @@ s32 GetBattleMovePriority(u32 battler, u32 move)
         priority++;
     }
     if (SearchTraits(battlerTraits, ABILITY_TRIAGE) && IsHealingMove(move))
+    {
         priority += 3;
+    }
+    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE) && priority >= 1)
+    {
+        priority = 0; //If a Pokemon holding Strong Band uses a priority move, the priority gets set to 0
+    }
 
     return priority;
 }
