@@ -1209,8 +1209,9 @@ static bool32 CanAgileFeatherMoveSucceed(u32 move)
         return CanBeConfused(gBattlerTarget);
 
     case EFFECT_SUBSTITUTE:
-        return gBattleMons[gBattlerAttacker].hp
-            > GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
+        return !gBattleMons[gBattlerAttacker].volatiles.substitute
+            && gBattleMons[gBattlerAttacker].hp
+                > GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
 
     case EFFECT_TAUNT:
         return gDisableStructs[gBattlerTarget].tauntTimer == 0;
@@ -1229,6 +1230,63 @@ static bool32 CanAgileFeatherMoveSucceed(u32 move)
 
     case EFFECT_PERISH_SONG:
         return !gBattleMons[gBattlerTarget].volatiles.perishSong;
+
+    case EFFECT_DESTINY_BOND:
+        return !gBattleMons[gBattlerAttacker].volatiles.destinyBond;
+
+    case EFFECT_NIGHTMARE:
+        return (gBattleMons[gBattlerTarget].status1 & STATUS1_SLEEP)
+            && !gBattleMons[gBattlerTarget].volatiles.nightmare;
+
+    case EFFECT_CURSE:
+        if (IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
+            return !gBattleMons[gBattlerTarget].volatiles.cursed;
+        return !gBattleMons[gBattlerAttacker].volatiles.cursed;
+
+    case EFFECT_FOCUS_ENERGY:
+        return !gBattleMons[gBattlerAttacker].volatiles.focusEnergy;
+
+    case EFFECT_INGRAIN:
+        return !gBattleMons[gBattlerAttacker].volatiles.root;
+
+    case EFFECT_AQUA_RING:
+        return !gBattleMons[gBattlerAttacker].volatiles.aquaRing;
+
+    case EFFECT_POWER_TRICK:
+        return !gBattleMons[gBattlerAttacker].volatiles.powerTrick;
+
+    case EFFECT_LASER_FOCUS:
+        return !gBattleMons[gBattlerAttacker].volatiles.laserFocus;
+
+    case EFFECT_MAGNET_RISE:
+        return !gBattleMons[gBattlerAttacker].volatiles.magnetRise;
+
+    case EFFECT_TELEKINESIS:
+        return !gBattleMons[gBattlerTarget].volatiles.telekinesis;
+
+    case EFFECT_EMBARGO:
+        return !gBattleMons[gBattlerTarget].volatiles.embargo;
+
+    case EFFECT_HEAL_BLOCK:
+        return !gBattleMons[gBattlerTarget].volatiles.healBlock;
+
+    case EFFECT_GASTRO_ACID:
+        return !gBattleMons[gBattlerTarget].volatiles.gastroAcid;
+
+    case EFFECT_MIRACLE_EYE:
+        return !gBattleMons[gBattlerTarget].volatiles.miracleEye;
+
+    case EFFECT_SMACK_DOWN:
+        return !gBattleMons[gBattlerTarget].volatiles.smackDown;
+
+    case EFFECT_NO_RETREAT:
+        return !gBattleMons[gBattlerAttacker].volatiles.noRetreat;
+
+    case MOVE_EFFECT_SALT_CURE:
+        return !gBattleMons[gBattlerTarget].volatiles.saltCure;
+
+    case MOVE_EFFECT_SYRUP_BOMB:
+        return !gBattleMons[gBattlerTarget].volatiles.syrupBomb;
 
     default:
         return TRUE;
