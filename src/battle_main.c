@@ -4955,7 +4955,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
 
     // paralysis drop
     if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && !SearchTraits(battlerTraits, ABILITY_QUICK_FEET))
-        speed /= GetConfig(B_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
+        speed /= 4; //Paralysis no longer stops attacks, but speed is now quartered
 
     if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SWAMP)
         speed /= 4;

@@ -2485,22 +2485,6 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
-static enum MoveCanceler CancelerParalyzed(struct BattleContext *ctx)
-{
-    if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS
-        && !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(ctx->battlerAtk, ABILITY_MAGIC_GUARD))
-        && !RandomPercentage(RNG_PARALYSIS, 75))
-    {
-        gProtectStructs[ctx->battlerAtk].nonVolatileStatusImmobility = TRUE;
-        // This is removed in FRLG and Emerald for some reason
-        //CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELER_CHECK);
-        gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
-        gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
-        return MOVE_STEP_FAILURE;
-    }
-    return MOVE_STEP_SUCCESS;
-}
-
 static enum MoveCanceler CancelerInfatuation(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.infatuation)
@@ -3244,7 +3228,6 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_TAUNTED] = CancelerTaunted,
     [CANCELER_IMPRISONED] = CancelerImprisoned,
     [CANCELER_CONFUSED] = CancelerConfused,
-    [CANCELER_PARALYZED] = CancelerParalyzed,
     [CANCELER_INFATUATION] = CancelerInfatuation,
     [CANCELER_BIDE] = CancelerBide,
     [CANCELER_Z_MOVES] = CancelerZMoves,
@@ -9982,6 +9965,20 @@ static inline uq4_12_t GetBurnOrFrostBiteModifier(struct DamageContext *ctx)
     return UQ_4_12(1.0);
 }
 
+/*Paralysis and Sleep have been changed. Paralysis no longer paralyzes, but
+quarters speed and doubles special damage received. Sleep is now always 3
+turns (similar to Rest), but doubles physical damage received.*/
+static inline uq4_12_t GetParalysisOrSleepModifier(struct DamageContext *ctx)
+{
+    if (gBattleMons[ctx->battlerDef].status1 & STATUS1_SLEEP
+        && IsBattleMovePhysical(ctx->move))
+        return UQ_4_12(2.0);
+    if (gBattleMons[ctx->battlerDef].status1 & STATUS1_PARALYSIS
+        && IsBattleMoveSpecial(ctx->move))
+        return UQ_4_12(2.0);
+    return UQ_4_12(1.0);
+}
+
 static inline uq4_12_t GetCriticalModifier(bool32 isCrit)
 {
     if (isCrit)
@@ -10333,6 +10330,7 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
     DAMAGE_APPLY_MODIFIER(GetWeatherDamageModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetCriticalModifier(ctx->isCrit));
     DAMAGE_APPLY_MODIFIER(GetGlaiveRushModifier(ctx->battlerDef));
+    DAMAGE_APPLY_MODIFIER(GetParalysisOrSleepModifier(ctx));
 
     if (ctx->randomFactor)
     {
