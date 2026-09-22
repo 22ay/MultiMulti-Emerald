@@ -550,6 +550,7 @@ extern const u8 BattleScript_RuinAbilityActivatesTablets[];
 extern const u8 BattleScript_RuinAbilityActivatesBeads[];
 extern const u8 BattleScript_CudChewActivates[];
 extern const u8 BattleScript_SupremeOverlordActivates[];
+extern const u8 BattleScript_QueenlyMajestyActivates[];
 extern const u8 BattleScript_CostarActivates[];
 extern const u8 BattleScript_ZeroToHeroActivates[];
 extern const u8 BattleScript_CommanderActivates[];

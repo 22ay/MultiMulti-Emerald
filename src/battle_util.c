@@ -2973,6 +2973,13 @@ bool32 HasDazzlingAbility(u32 battlerDef)
         gLastUsedAbility = ABILITY_ARMOR_TAIL;
         return TRUE;
     }
+    if (gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerDef, ABILITY_SUPREME_OVERLORD) : BattlerHasTrait(battlerDef, ABILITY_SUPREME_OVERLORD))
+    {
+        if (!gAiLogicData->aiCalcInProgress)
+            PushTraitStack(battlerDef, ABILITY_SUPREME_OVERLORD);
+        gLastUsedAbility = ABILITY_SUPREME_OVERLORD;
+        return TRUE;
+    }
 
     return FALSE;
 }
@@ -3607,6 +3614,12 @@ static inline u8 GetBattlerSideFaintCounter(u32 battler)
 static inline uq4_12_t GetSupremeOverlordModifier(u32 battler)
 {
     return UQ_4_12(1.0) + (PercentToUQ4_12(gBattleStruct->supremeOverlordCounter[battler] * 10));
+}
+
+// Queenly Majesty now subtracts 0.1 from modifier for each ally that faints
+static inline uq4_12_t GetQueenlyMajestyModifier(u32 battler)
+{
+    return UQ_4_12(1.5) - (PercentToUQ4_12(gBattleStruct->supremeOverlordCounter[battler] * 10));
 }
 
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
@@ -4755,6 +4768,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             gBattleStruct->supremeOverlordCounter[battler] = min(5, GetBattlerSideFaintCounter(battler));
             if (gBattleStruct->supremeOverlordCounter[battler] > 0)
                 effect += CommonSwitchInAbilities(battler, ABILITY_SUPREME_OVERLORD, traitCheck, BattleScript_SupremeOverlordActivates);
+        }
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_QUEENLY_MAJESTY)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        {
+            gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1] = TRUE;
+            gBattleStruct->supremeOverlordCounter[battler] = min(5, GetBattlerSideFaintCounter(battler));
+            if (gBattleStruct->supremeOverlordCounter[battler] < 5)
+                effect += CommonSwitchInAbilities(battler, ABILITY_QUEENLY_MAJESTY, traitCheck, BattleScript_QueenlyMajestyActivates);
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_COSTAR)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && IsDoubleBattle()
@@ -8736,6 +8756,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 
     if (SearchTraits(battlerTraits, ABILITY_SUPREME_OVERLORD))
         modifier = uq4_12_multiply(modifier, GetSupremeOverlordModifier(battlerAtk));
+
+    if (SearchTraits(battlerTraits, ABILITY_QUEENLY_MAJESTY))
+        modifier = uq4_12_multiply(modifier, GetQueenlyMajestyModifier(battlerAtk));
     
     if (SearchTraits(battlerTraits, ABILITY_AQUATIC) && moveType == TYPE_WATER && gBattleMons[battlerAtk].types[2] != TYPE_WATER )
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));

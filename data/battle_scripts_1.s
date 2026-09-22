@@ -7497,6 +7497,13 @@ BattleScript_SupremeOverlordActivates::
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
+BattleScript_QueenlyMajestyActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ATTACKERGAINEDSTRENGTHFROMALLIES
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
 BattleScript_CostarActivates::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
