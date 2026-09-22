@@ -11174,7 +11174,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
         statValue = (SET_STAT_BUFF_VALUE(GET_STAT_BUFF_VALUE(statValue) * 2)) | ((statValue <= -1) ? STAT_BUFF_NEGATIVE : 0);
         RecordAbilityBattle(battler, battlerAbility);
     }
-    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE) && !flags.onlyChecking)
+    else if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STRONG_BAND, TRUE) && !flags.onlyChecking)
     {
         statValue = (SET_STAT_BUFF_VALUE(GET_STAT_BUFF_VALUE(statValue) * 2)) | ((statValue <= -1) ? STAT_BUFF_NEGATIVE : 0);
         RecordItemEffectBattle(battler, HOLD_EFFECT_STRONG_BAND);
