@@ -5208,7 +5208,7 @@ BattleScript_VitalSpiritHeal::
 	datahpupdate BS_TARGET, PASSIVE_HP_UPDATE
 	printstring STRINGID_VITALSPIRITHPGAIN
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	return
 
 BattleScript_HoneyGatherHeal::
 	call BattleScript_AbilityPopUp

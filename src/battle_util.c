@@ -6136,7 +6136,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             GetBattlerPartyState(gBattlerTarget)->onlyOnce = TRUE;
             gBattlerTarget = gBattlerAbility;
             PushTraitStack(battler, ABILITY_VITAL_SPIRIT);
-            BattleScriptExecute(BattleScript_VitalSpiritHeal);
+            BattleScriptCall(BattleScript_VitalSpiritHeal);
             SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 2);
             effect++;
         }
