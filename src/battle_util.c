@@ -6126,6 +6126,20 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_ToxicDebrisActivates);
             effect++;
         }
+        if (SearchTraits(battlerTraits, ABILITY_VITAL_SPIRIT)
+         && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsBattlerAlive(gBattlerTarget)
+         && gBattleMons[gBattlerTarget].hp <= (gBattleMons[gBattlerTarget].maxHP / 2)
+         && !GetBattlerPartyState(gBattlerTarget)->onlyOnce)
+        {
+            GetBattlerPartyState(gBattlerTarget)->onlyOnce = TRUE;
+            gBattlerTarget = gBattlerAbility;
+            PushTraitStack(battler, ABILITY_VITAL_SPIRIT);
+            BattleScriptExecute(BattleScript_VitalSpiritHeal);
+            SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 2);
+            effect++;
+        }
     break;
     case ABILITYEFFECT_MOVE_END_ATTACKER: // Same as above, but for attacker
         STORE_BATTLER_TRAITS(gBattlerAttacker);

@@ -5201,6 +5201,15 @@ BattleScript_RegeneratorHeal::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
+BattleScript_VitalSpiritHeal::
+	call BattleScript_AbilityPopUp
+	playanimation BS_TARGET, B_ANIM_SIMPLE_HEAL
+	healthbarupdate BS_TARGET, PASSIVE_HP_UPDATE
+	datahpupdate BS_TARGET, PASSIVE_HP_UPDATE
+	printstring STRINGID_VITALSPIRITHPGAIN
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
 BattleScript_HoneyGatherHeal::
 	call BattleScript_AbilityPopUp
 	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL

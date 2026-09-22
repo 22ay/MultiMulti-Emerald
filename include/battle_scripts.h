@@ -64,6 +64,7 @@ extern const u8 BattleScript_ExtraMoveActivates[];
 extern const u8 BattleScript_AgileFeatherActivates[];
 extern const u8 BattleScript_RegeneratorHeal[];
 extern const u8 BattleScript_HoneyGatherHeal[];
+extern const u8 BattleScript_VitalSpiritHeal[];
 extern const u8 BattleScript_OverworldStatusStarts[];
 extern const u8 BattleScript_OverworldWeatherStarts[];
 extern const u8 BattleScript_OverworldTerrain[];

@@ -593,7 +593,8 @@ struct PartyState
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
     u32 sentOut:1;
-    u32 padding:9;
+    u32 onlyOnce:1; //Makes more sense to make multiple of these for future abilities, but might not need to if those abilities won't overlap anyway
+    u32 padding:8;
     u16 usedHeldItems[MAX_MON_ITEMS];
 };
 
