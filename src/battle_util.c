@@ -2485,29 +2485,6 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
-static enum MoveCanceler CancelerInfatuation(struct BattleContext *ctx)
-{
-    if (gBattleMons[ctx->battlerAtk].volatiles.infatuation)
-    {
-        gBattleScripting.battler = gBattleMons[ctx->battlerAtk].volatiles.infatuation - 1;
-        if (!RandomPercentage(RNG_INFATUATION, 50))
-        {
-            BattleScriptCall(BattleScript_MoveUsedIsInLove);
-            return MOVE_STEP_BREAK;
-        }
-        else
-        {
-            BattleScriptPush(BattleScript_MoveUsedIsInLoveCantAttack);
-            gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
-            gProtectStructs[ctx->battlerAtk].unableToUseMove = TRUE;
-            CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
-            gBattlescriptCurrInstr = BattleScript_MoveUsedIsInLove;
-            return MOVE_STEP_FAILURE;
-        }
-    }
-    return MOVE_STEP_SUCCESS;
-}
-
 static enum MoveCanceler CancelerBide(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.bideTurns)
@@ -3228,7 +3205,6 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_TAUNTED] = CancelerTaunted,
     [CANCELER_IMPRISONED] = CancelerImprisoned,
     [CANCELER_CONFUSED] = CancelerConfused,
-    [CANCELER_INFATUATION] = CancelerInfatuation,
     [CANCELER_BIDE] = CancelerBide,
     [CANCELER_Z_MOVES] = CancelerZMoves,
     [CANCELER_CHOICE_LOCK] = CancelerChoiceLock,
@@ -8762,6 +8738,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     if (SearchTraits(battlerTraits, ABILITY_METALLIC) && moveType == TYPE_STEEL && gBattleMons[battlerAtk].types[2] != TYPE_STEEL )
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
+    if (SearchTraits(battlerTraits, ABILITY_HEART_BREAKER) && (gBattleMons[battlerDef].volatiles.infatuation))
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+
     // field abilities
     if ((IsAbilityOnField(ABILITY_DARK_AURA) && moveType == TYPE_DARK)
      || (IsAbilityOnField(ABILITY_FAIRY_AURA) && moveType == TYPE_FAIRY))
@@ -9994,6 +9973,13 @@ static inline uq4_12_t GetGlaiveRushModifier(u32 battlerDef)
     return UQ_4_12(1.0);
 }
 
+static inline uq4_12_t GetInfatuatedModifier(struct DamageContext *ctx)
+{
+    if (gBattleMons[ctx->battlerAtk].volatiles.infatuation)
+        return UQ_4_12(0.5);
+    return UQ_4_12(1.0);
+}
+
 static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageContext *ctx)
 {
     if (!IsZMove(ctx->move) && !IsMaxMove(ctx->move))
@@ -10361,6 +10347,7 @@ s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
         DAMAGE_APPLY_MODIFIER(GetSameTypeAttackBonusModifier(ctx));
     DAMAGE_APPLY_MODIFIER(ctx->typeEffectivenessModifier);
     DAMAGE_APPLY_MODIFIER(GetBurnOrFrostBiteModifier(ctx));
+    DAMAGE_APPLY_MODIFIER(GetInfatuatedModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetZMaxMoveAgainstProtectionModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetOtherModifiers(ctx));
 

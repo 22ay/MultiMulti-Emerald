@@ -4345,5 +4345,15 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_HEART_BREAKER] =
+    {
+        .name = _("Heart Breaker"),
+        .description = COMPOUND_STRING("Tough on love."),
+        .longDescription = COMPOUND_STRING("This Pokémon moves are 50%\n"
+                                           "stronger against foes who\n"
+                                           "are infatuated"),
+        .aiRating = 6,
+    },
+
 
 };
