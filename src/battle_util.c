@@ -9967,11 +9967,12 @@ static inline uq4_12_t GetBurnOrFrostBiteModifier(struct DamageContext *ctx)
 
 /*Paralysis and Sleep have been changed. Paralysis no longer paralyzes, but
 quarters speed and doubles special damage received. Sleep is now always 3
-turns (similar to Rest), but doubles physical damage received.*/
+turns (similar to Rest), but doubles physical damage received. If the Pokemon 
+has Comatose, the sleep debuff does not apply*/
 static inline uq4_12_t GetParalysisOrSleepModifier(struct DamageContext *ctx)
 {
     if (gBattleMons[ctx->battlerDef].status1 & STATUS1_SLEEP
-        && IsBattleMovePhysical(ctx->move))
+        && IsBattleMovePhysical(ctx->move) && !BattlerHasTrait(ctx->battlerDef, ABILITY_COMATOSE))
         return UQ_4_12(2.0);
     if (gBattleMons[ctx->battlerDef].status1 & STATUS1_PARALYSIS
         && IsBattleMoveSpecial(ctx->move))
