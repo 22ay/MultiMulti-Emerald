@@ -6174,6 +6174,62 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_AccursedBodyActivates);
             effect++;
         }
+        if (SearchTraits(battlerTraits, ABILITY_SPICY_SPRAY)
+         && IsBattlerAlive(gBattlerAttacker)
+         && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && CanBeBurned(gBattlerTarget, gBattlerAttacker))
+        {
+            gEffectBattler = gBattlerAttacker;
+            gBattleScripting.battler = gBattlerTarget;
+            gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
+            gLastUsedAbility = ABILITY_SPICY_SPRAY;
+            PushTraitStack(battler, gLastUsedAbility);
+            BattleScriptCall(BattleScript_AbilityStatusEffectDef);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_LIQUID_OOZE)
+         && IsBattlerAlive(gBattlerAttacker)
+         && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && CanBePoisoned(gBattlerTarget, gBattlerAttacker))
+        {
+            gEffectBattler = gBattlerAttacker;
+            gBattleScripting.battler = gBattlerTarget;
+            gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
+            gLastUsedAbility = ABILITY_LIQUID_OOZE;
+            PushTraitStack(battler, gLastUsedAbility);
+            BattleScriptCall(BattleScript_AbilityStatusEffectDef);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_PERMAFROST)
+         && IsBattlerAlive(gBattlerAttacker)
+         && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && CanGetFrostbite(gBattlerTarget, gBattlerAttacker))
+        {
+            gEffectBattler = gBattlerAttacker;
+            gBattleScripting.battler = gBattlerTarget;
+            gBattleScripting.moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE;
+            gLastUsedAbility = ABILITY_PERMAFROST;
+            PushTraitStack(battler, gLastUsedAbility);
+            BattleScriptCall(BattleScript_AbilityStatusEffectDef);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_HIGH_VOLTAGE)
+         && IsBattlerAlive(gBattlerAttacker)
+         && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && CanBeParalyzed(gBattlerTarget, gBattlerAttacker))
+        {
+            gEffectBattler = gBattlerAttacker;
+            gBattleScripting.battler = gBattlerTarget;
+            gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
+            gLastUsedAbility = ABILITY_HIGH_VOLTAGE;
+            PushTraitStack(battler, gLastUsedAbility);
+            BattleScriptCall(BattleScript_AbilityStatusEffectDef);
+            effect++;
+        }
     break;
     case ABILITYEFFECT_MOVE_END_ATTACKER: // Same as above, but for attacker
         STORE_BATTLER_TRAITS(gBattlerAttacker);

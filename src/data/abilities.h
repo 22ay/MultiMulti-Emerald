@@ -4366,5 +4366,33 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_SPICY_SPRAY] =
+    {
+        .name = _("Spicy Spray"),
+        .description = COMPOUND_STRING("Burns the foe."),
+        .longDescription = COMPOUND_STRING("When this Pokémon is hit by a\n"
+                                           "move, the attacker is burned."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_PERMAFROST] =
+    {
+        .name = _("Permafrost"),
+        .description = COMPOUND_STRING("Frostbites the foe."),
+        .longDescription = COMPOUND_STRING("When this Pokémon is attacked\n"
+                                           "the attacker is frostbitten."),
+        .aiRating = 6,
+    },
+
+    [ABILITY_HIGH_VOLTAGE] =
+    {
+        .name = _("High Voltage"),
+        .description = COMPOUND_STRING("Paralyzes the foe."),
+        .longDescription = COMPOUND_STRING("When this Pokémon is hit by a\n"
+                                           "move, the attacker is paralyzed."),
+        .aiRating = 6,
+    },
+
+
 
 };
