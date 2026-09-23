@@ -7895,6 +7895,12 @@ BattleScript_CursedBodyActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_AccursedBodyActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ACCURSEDBODY
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_MummyActivates::
 	setbyte sFIXED_ABILITY_POPUP, TRUE
 	call BattleScript_AbilityPopUpTarget

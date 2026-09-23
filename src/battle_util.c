@@ -6154,10 +6154,24 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
          && !GetBattlerPartyState(gBattlerTarget)->onlyOnce)
         {
             GetBattlerPartyState(gBattlerTarget)->onlyOnce = TRUE;
-            gBattlerTarget = gBattlerAbility;
+            gBattlerTarget = gBattlerAbility = battler;
             PushTraitStack(battler, ABILITY_VITAL_SPIRIT);
             BattleScriptCall(BattleScript_VitalSpiritHeal);
             SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 2);
+            effect++;
+        }
+        if (SearchTraits(battlerTraits, ABILITY_ACCURSED_BODY)
+         && IsBattlerAlive(gBattlerAttacker)
+         && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsBattlerAlive(gBattlerTarget)
+         && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_ACCURSED_BODY, 30) : RandomChance(RNG_ACCURSED_BODY, 1, 3))
+         && !(gBattleMons[gBattlerAttacker].volatiles.cursed)
+         && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, move))
+        {
+            gBattleMons[gBattlerAttacker].volatiles.cursed = TRUE;
+            PushTraitStack(battler, ABILITY_ACCURSED_BODY);
+            BattleScriptCall(BattleScript_AccursedBodyActivates);
             effect++;
         }
     break;

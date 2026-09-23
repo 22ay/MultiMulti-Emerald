@@ -4355,5 +4355,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 6,
     },
 
+    [ABILITY_ACCURSED_BODY] =
+    {
+        .name = _("Accursed Body"),
+        .description = COMPOUND_STRING("Curses on contact"),
+        .longDescription = COMPOUND_STRING("When hit by a contact\n"
+                                           "move, has a 30% chance\n"
+                                           "of cursing the"
+                                           "attacker."),
+        .aiRating = 6,
+    },
+
 
 };
