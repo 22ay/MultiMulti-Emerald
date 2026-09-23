@@ -6165,7 +6165,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
          && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
          && IsBattlerTurnDamaged(gBattlerTarget)
          && IsBattlerAlive(gBattlerTarget)
-         && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_ACCURSED_BODY, 30) : RandomChance(RNG_ACCURSED_BODY, 1, 3))
+         && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_ACCURSED_BODY, 100) : RandomChance(RNG_ACCURSED_BODY, 1, 3))
          && !(gBattleMons[gBattlerAttacker].volatiles.cursed)
          && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, move))
         {
@@ -6188,7 +6188,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_AbilityStatusEffectDef);
             effect++;
         }
-        if (SearchTraits(battlerTraits, ABILITY_LIQUID_OOZE)
+        else if (SearchTraits(battlerTraits, ABILITY_LIQUID_OOZE)
          && IsBattlerAlive(gBattlerAttacker)
          && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
          && IsBattlerTurnDamaged(gBattlerTarget)
@@ -6202,7 +6202,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_AbilityStatusEffectDef);
             effect++;
         }
-        if (SearchTraits(battlerTraits, ABILITY_PERMAFROST)
+        else if (SearchTraits(battlerTraits, ABILITY_PERMAFROST)
          && IsBattlerAlive(gBattlerAttacker)
          && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
          && IsBattlerTurnDamaged(gBattlerTarget)
@@ -6216,7 +6216,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             BattleScriptCall(BattleScript_AbilityStatusEffectDef);
             effect++;
         }
-        if (SearchTraits(battlerTraits, ABILITY_HIGH_VOLTAGE)
+        else if (SearchTraits(battlerTraits, ABILITY_HIGH_VOLTAGE)
          && IsBattlerAlive(gBattlerAttacker)
          && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
          && IsBattlerTurnDamaged(gBattlerTarget)
