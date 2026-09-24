@@ -337,6 +337,7 @@ static bool32 ShouldShowMoveRelearner(void);
 static bool32 ShouldShowRename(void);
 static bool32 ShouldShowIvEvPrompt(void);
 static bool32 TryChangeAbility(void);
+static bool32 TryChangeNature(void);
 static void BufferLeftColumnIvEvStats(void);
 static void CB2_ReturnToSummaryScreenFromNamingScreen(void);
 static void CB2_PssChangePokemonNickname(void);
@@ -1916,6 +1917,14 @@ static void Task_HandleInput(u8 taskId)
                 {
                     PlaySE(SE_SELECT);
                     PrintTraits();
+                }
+            }
+            if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
+            {
+                if (TryChangeNature())
+                {
+                    PlaySE(SE_SELECT);
+                    PrintSkillsPageText();
                 }
             }
         }
@@ -4035,10 +4044,7 @@ static void PrintMonTraits(u8 innateIndex)
 {
     u16 trait = 0;
     struct PokeSummary* sum = &sMonSummaryScreen->summary;
-
     u8 windowId = AddWindowFromTemplateList(sPageTraitsTemplate, innateIndex);
-    
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
 
     if (innateIndex == 0)
         trait = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
@@ -5241,23 +5247,57 @@ static inline bool32 TryChangeAbility(void)
     u32 abilityNum = sMonSummaryScreen->summary.abilityNum;
     u32 newAbilityNum;
 
-    newAbilityNum = (abilityNum + 1) % 3;
+    newAbilityNum = (abilityNum + 1) % NUM_ABILITY_SLOTS;
+    FillWindowPixelBuffer(AddWindowFromTemplateList(sPageTraitsTemplate, PSS_DATA_WINDOW_TRAITS1), PIXEL_FILL(0));
 
     if (newAbilityNum == abilityNum
      || sMonSummaryScreen->lockMovesFlag
      || sMonSummaryScreen->summary.isEgg
      || sMonSummaryScreen->isBoxMon
+     || sMonSummaryScreen->isEnemyMon
      || sMonSummaryScreen->mode == SUMMARY_MODE_BOX
      || sMonSummaryScreen->mode == SUMMARY_MODE_BOX_CURSOR
      || InBattleFactory()
-     || InSlateportBattleTent()
-     || GetPlayerIDAsU32() != sMonSummaryScreen->summary.OTID)
+     || InSlateportBattleTent())
     {
         return FALSE;
     }
 
     SetMonData(mon, MON_DATA_ABILITY_NUM, &newAbilityNum);
     sMonSummaryScreen->summary.abilityNum = newAbilityNum;
+
+    return TRUE;
+}
+
+static inline bool32 TryChangeNature(void) 
+{
+    struct Pokemon *mon = &gPlayerParty[sMonSummaryScreen->curMonIndex];
+    u32 currentNature = sMonSummaryScreen->summary.mintNature;
+    u32 newNature;
+
+    newNature = (currentNature + 1) % NUM_NATURES;
+     /*Trying to show new calculated stats via FillWindowPixelBuffer, but it is not currently working. The nature colors are 
+     changing correctly, and when the player comes back to the skills page from a different window, the new calculated stats
+     reflect the nature change, but if the player stays on the skills window, the color changes only. Look into this later*/
+    FillWindowPixelBuffer(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_LEFT), PIXEL_FILL(0));
+    FillWindowPixelBuffer(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_RIGHT), PIXEL_FILL(0));
+
+    if (newNature == currentNature
+     || sMonSummaryScreen->lockMovesFlag
+     || sMonSummaryScreen->summary.isEgg
+     || sMonSummaryScreen->isBoxMon
+     || sMonSummaryScreen->isEnemyMon
+     || sMonSummaryScreen->mode == SUMMARY_MODE_BOX
+     || sMonSummaryScreen->mode == SUMMARY_MODE_BOX_CURSOR
+     || InBattleFactory()
+     || InSlateportBattleTent())
+    {
+        return FALSE;
+    }
+
+    SetMonData(mon, MON_DATA_HIDDEN_NATURE, &newNature);
+    CalculateMonStats(mon);
+    sMonSummaryScreen->summary.mintNature = newNature;
 
     return TRUE;
 }
