@@ -5276,9 +5276,6 @@ static inline bool32 TryChangeNature(void)
     u32 newNature;
 
     newNature = (currentNature + 1) % NUM_NATURES;
-     /*Trying to show new calculated stats via FillWindowPixelBuffer, but it is not currently working. The nature colors are 
-     changing correctly, and when the player comes back to the skills page from a different window, the new calculated stats
-     reflect the nature change, but if the player stays on the skills window, the color changes only. Look into this later*/
     FillWindowPixelBuffer(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_LEFT), PIXEL_FILL(0));
     FillWindowPixelBuffer(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_RIGHT), PIXEL_FILL(0));
 
@@ -5297,7 +5294,9 @@ static inline bool32 TryChangeNature(void)
 
     SetMonData(mon, MON_DATA_HIDDEN_NATURE, &newNature);
     CalculateMonStats(mon);
-    sMonSummaryScreen->summary.mintNature = newNature;
+    CopyMonToSummaryStruct(&sMonSummaryScreen->currentMon);
+    ExtractMonSkillStatsData(&sMonSummaryScreen->currentMon, &sMonSummaryScreen->summary);/*Old stats do not clear unless entire
+    summary screen is refreshed, so CopyMonToSummaryStruct and ExtractMonSkillStatsData need to be called here*/
 
     return TRUE;
 }
